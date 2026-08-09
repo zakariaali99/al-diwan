@@ -1,12 +1,24 @@
-# cPanel Git Version Control deploy hook. Full runbook (Python App setup,
-# env vars, cron, DNS) lands in Phase 6 — this wires the automatic steps
-# that run on every deploy once that's configured.
+# cPanel Git Version Control deploy hook.
+#
+# Runs on every `git push` to the cPanel-hosted repository. Replace USERNAME
+# with the cPanel account name and adjust the paths if the app lives elsewhere
+# (see DEPLOYMENT.md for the full runbook).
+#
+# NOTE: cPanel runs these as plain shell lines with no shared state between
+# them, so each task that needs the virtualenv re-activates it.
 ---
 deployment:
   tasks:
     - export DEPLOYPATH=/home/USERNAME/al-diwan.ly
-    - /bin/cp -R * $DEPLOYPATH
-    - source /home/USERNAME/virtualenv/al-diwan.ly/*/bin/activate && cd $DEPLOYPATH && pip install -r requirements.txt
-    - source /home/USERNAME/virtualenv/al-diwan.ly/*/bin/activate && cd $DEPLOYPATH && python manage.py migrate --noinput
-    - source /home/USERNAME/virtualenv/al-diwan.ly/*/bin/activate && cd $DEPLOYPATH && python manage.py collectstatic --noinput
-    - touch $DEPLOYPATH/tmp/restart.txt
+    - export VENV=/home/USERNAME/virtualenv/al-diwan.ly/3.12/bin/activate
+
+    # Sync the working tree, excluding local-only artefacts.
+    - /bin/cp -R config accounts api dashboard messaging pages posts services siteconfig templates static locale manage.py requirements.txt $DEPLOYPATH/
+
+    - source $VENV && cd $DEPLOYPATH && pip install --quiet -r requirements.txt
+    - source $VENV && cd $DEPLOYPATH && python manage.py migrate --noinput
+    - source $VENV && cd $DEPLOYPATH && python manage.py collectstatic --noinput
+
+    # Passenger reloads the app when this file's mtime changes.
+    - /bin/mkdir -p $DEPLOYPATH/tmp
+    - /bin/touch $DEPLOYPATH/tmp/restart.txt
