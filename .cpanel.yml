@@ -1,0 +1,12 @@
+# cPanel Git Version Control deploy hook. Full runbook (Python App setup,
+# env vars, cron, DNS) lands in Phase 6 — this wires the automatic steps
+# that run on every deploy once that's configured.
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/USERNAME/al-diwan.ly
+    - /bin/cp -R * $DEPLOYPATH
+    - source /home/USERNAME/virtualenv/al-diwan.ly/*/bin/activate && cd $DEPLOYPATH && pip install -r requirements.txt
+    - source /home/USERNAME/virtualenv/al-diwan.ly/*/bin/activate && cd $DEPLOYPATH && python manage.py migrate --noinput
+    - source /home/USERNAME/virtualenv/al-diwan.ly/*/bin/activate && cd $DEPLOYPATH && python manage.py collectstatic --noinput
+    - touch $DEPLOYPATH/tmp/restart.txt

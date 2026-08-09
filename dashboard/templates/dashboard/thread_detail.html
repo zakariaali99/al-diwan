@@ -1,0 +1,46 @@
+{% extends "dashboard/base.html" %}
+{% block dashboard_content %}
+<div class="toolbar">
+  <div>
+    <h1 style="margin-bottom:.25rem;">{{ thread.subject }}</h1>
+    <div style="font-size:.85rem; color:#6b7280;">
+      {{ thread.correspondent.name }} &lt;{{ thread.correspondent.email }}&gt;
+      · <span class="badge {{ thread.status }}">{{ thread.get_status_display }}</span>
+      {% if thread.assigned_to %} · مسندة إلى {{ thread.assigned_to }}{% endif %}
+    </div>
+  </div>
+  <div>
+    <a class="btn secondary" href="{% url 'dashboard:inbox_list' %}">رجوع</a>
+    {% if perms.messaging.change_thread %}
+    <form method="post" action="{% url 'dashboard:thread_assign_to_me' thread.pk %}" style="display:inline;">
+      {% csrf_token %}<button type="submit" class="btn secondary">إسناد إليّ</button>
+    </form>
+    <form method="post" action="{% url 'dashboard:thread_close' thread.pk %}" style="display:inline;">
+      {% csrf_token %}<button type="submit" class="btn secondary">إغلاق</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  {% for message in messages_list %}
+  <div class="msg {{ message.direction }}">
+    <div class="meta">
+      {% if message.direction == "out" %}{{ message.sent_by|default:"—" }} · {{ message.to_email }}{% else %}{{ message.from_email }}{% endif %}
+      · {{ message.created_at|date:"Y-m-d H:i" }}
+    </div>
+    {{ message.body|linebreaksbr }}
+    {% for attachment in message.attachments.all %}
+      <div><a href="{{ attachment.file.url }}">📎 {{ attachment.filename }}</a></div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+
+<form method="post" class="card">
+  {% csrf_token %}
+  <label for="{{ form.body.id_for_label }}">الرد</label>
+  {{ form.body }}{{ form.body.errors }}
+  <button type="submit" class="btn" style="margin-top:.75rem;">إرسال</button>
+</form>
+{% endblock %}

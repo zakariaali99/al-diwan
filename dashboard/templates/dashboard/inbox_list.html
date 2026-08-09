@@ -1,0 +1,35 @@
+{% extends "dashboard/base.html" %}
+{% block dashboard_content %}
+<div class="toolbar">
+  <h1>الرسائل</h1>
+  {% if perms.messaging.add_thread %}<a class="btn" href="{% url 'dashboard:thread_compose' %}">+ رسالة جديدة</a>{% endif %}
+</div>
+
+<div style="margin-bottom: 1rem; font-size: .9rem;">
+  <a href="?">الكل</a> ·
+  <a href="?status=open">مفتوحة</a> ·
+  <a href="?status=pending">بانتظار الرد</a> ·
+  <a href="?status=closed">مغلقة</a> ·
+  <a href="?mine=1">المسندة إليّ</a>
+</div>
+
+<table>
+  <thead>
+    <tr><th></th><th>الموضوع</th><th>من</th><th>مسندة إلى</th><th>الحالة</th><th>آخر تحديث</th></tr>
+  </thead>
+  <tbody>
+    {% for thread in threads %}
+    <tr>
+      <td>{% if thread.is_unread %}<span class="badge unread">جديد</span>{% endif %}</td>
+      <td><a href="{% url 'dashboard:thread_detail' thread.pk %}">{{ thread.subject }}</a></td>
+      <td>{{ thread.correspondent }}</td>
+      <td>{{ thread.assigned_to|default:"—" }}</td>
+      <td><span class="badge {{ thread.status }}">{{ thread.get_status_display }}</span></td>
+      <td>{{ thread.updated_at|date:"Y-m-d H:i" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">لا توجد رسائل.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

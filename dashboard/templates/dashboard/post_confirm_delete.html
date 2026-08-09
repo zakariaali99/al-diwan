@@ -1,0 +1,11 @@
+{% extends "dashboard/base.html" %}
+{% block dashboard_content %}
+<div class="card">
+  <p>هل تريد حذف المنشور "<strong>{{ post.title }}</strong>"؟ لا يمكن التراجع عن هذا الإجراء.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn danger">تأكيد الحذف</button>
+    <a class="btn secondary" href="{% url 'dashboard:post_list' %}">إلغاء</a>
+  </form>
+</div>
+{% endblock %}
