@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sitemaps",
     # third-party
     "rest_framework",
     "parler",
@@ -133,9 +134,12 @@ PARLER_LANGUAGES = {
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+# Plain storage by default: the hashed-manifest backend requires collectstatic
+# to have run and every referenced file to be present, which breaks dev and
+# tests. production.py swaps in the compressed, hashed variant.
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 
 MEDIA_URL = "media/"

@@ -1,0 +1,82 @@
+{% load i18n %}
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 48 48" role="img" aria-label="{% trans 'شعار شركة الديوان' %}">
+            <rect width="48" height="48" rx="12" fill="rgba(255,255,255,.06)"/>
+            <path d="M24 9.5 37 15v10.5c0 8-5.6 12.6-13 15-7.4-2.4-13-7-13-15V15z" fill="none" stroke="var(--gold-400)" stroke-width="2"/>
+            <path d="m18 24.4 4.4 4.4L31 20.2" fill="none" stroke="var(--brand-400)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="brand-text">
+            <strong>{% trans "شركة الديوان" %}</strong>
+            <span>{% trans "للتفتيش والمطابقة" %}</span>
+          </span>
+        </div>
+        <p>{% trans "شركة مستقلة مقرها مصراتة، ليبيا. نعمل كطرف ثالث محايد في خدمات التفتيش ومراقبة الجودة وفق المعايير الدولية." %}</p>
+        <div class="social-row">
+          {% if site_settings.facebook_url %}
+            <a href="{{ site_settings.facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'فيسبوك' %}">
+              <svg width="18" height="18" aria-hidden="true"><use href="#icon-facebook"></use></svg>
+            </a>
+          {% endif %}
+          {% if site_settings.instagram_url %}
+            <a href="{{ site_settings.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'إنستغرام' %}">
+              <svg width="18" height="18" aria-hidden="true"><use href="#icon-instagram"></use></svg>
+            </a>
+          {% endif %}
+          {% if site_settings.x_url %}
+            <a href="{{ site_settings.x_url }}" target="_blank" rel="noopener noreferrer" aria-label="X">
+              <svg width="16" height="16" aria-hidden="true"><use href="#icon-x"></use></svg>
+            </a>
+          {% endif %}
+          {% if site_settings.whatsapp_url %}
+            <a href="{{ site_settings.whatsapp_url }}" target="_blank" rel="noopener noreferrer" aria-label="{% trans 'واتساب' %}">
+              <svg width="18" height="18" aria-hidden="true"><use href="#icon-whatsapp"></use></svg>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div>
+        <h4>{% trans "روابط" %}</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'pages:home' %}">{% trans "الرئيسية" %}</a></li>
+          <li><a href="{% url 'pages:services' %}">{% trans "خدماتنا" %}</a></li>
+          <li><a href="{% url 'pages:about' %}">{% trans "من نحن" %}</a></li>
+          <li><a href="{% url 'posts:list' %}">{% trans "المدونة" %}</a></li>
+          <li><a href="{% url 'pages:contact' %}">{% trans "تواصل معنا" %}</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>{% trans "الاعتمادات" %}</h4>
+        <ul class="footer-links">
+          <li>ISO 9001:2015</li>
+          <li>ISO/IEC 17020:2012</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>{% trans "تواصل" %}</h4>
+        <ul class="footer-links">
+          {% if site_settings.phone %}
+            <li><a href="{{ site_settings.whatsapp_url|default:'#' }}" dir="ltr">{{ site_settings.phone }}</a></li>
+          {% endif %}
+          {% if site_settings.email %}
+            <li><a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a></li>
+          {% endif %}
+          {% if site_settings.address %}
+            <li><a href="{{ site_settings.map_url|default:'#' }}" target="_blank" rel="noopener noreferrer">{{ site_settings.address }}</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; {% now "Y" %} {% trans "شركة الديوان للتفتيش والمطابقة. جميع الحقوق محفوظة." %}</span>
+      <span>{% trans "مصراتة، ليبيا" %}</span>
+    </div>
+  </div>
+</footer>

@@ -8,7 +8,7 @@ from parler.models import TranslatableModel, TranslatedFields
 class Category(TranslatableModel):
     translations = TranslatedFields(
         name=models.CharField(max_length=100),
-        slug=models.SlugField(max_length=100, blank=True),
+        slug=models.SlugField(max_length=100, blank=True, allow_unicode=True),
     )
 
     class Meta:
@@ -27,7 +27,7 @@ class Post(TranslatableModel):
 
     translations = TranslatedFields(
         title=models.CharField(max_length=255),
-        slug=models.SlugField(max_length=255, blank=True),
+        slug=models.SlugField(max_length=255, blank=True, allow_unicode=True),
         excerpt=models.CharField(max_length=500, blank=True),
         body=RichTextField(blank=True),
         seo_title=models.CharField(max_length=255, blank=True),

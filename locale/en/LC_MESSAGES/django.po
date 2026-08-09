@@ -1,0 +1,513 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-09 13:52+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: pages/forms.py:10
+msgid "الاسم"
+msgstr "Name"
+
+#: pages/forms.py:12
+msgid "اسمك الكامل"
+msgstr "Your full name"
+
+#: pages/forms.py:15 pages/templates/pages/contact.html:41
+msgid "البريد الإلكتروني"
+msgstr "Email"
+
+#: pages/forms.py:19
+msgid "الموضوع"
+msgstr "Subject"
+
+#: pages/forms.py:22
+msgid "مثال: طلب عرض سعر لفحص شحنة"
+msgstr "e.g. Quote request for shipment inspection"
+
+#: pages/forms.py:25
+msgid "رسالتك"
+msgstr "Your message"
+
+#: pages/forms.py:26
+msgid "اشرح لنا احتياجك بإيجاز…"
+msgstr "Briefly describe what you need…"
+
+#: pages/templates/pages/about.html:4
+msgid "من نحن — شركة الديوان للتفتيش والمطابقة"
+msgstr "About — Al-Diwan Inspection & Conformity"
+
+#: pages/templates/pages/about.html:5
+msgid ""
+"شركة مستقلة مقرها مصراتة، ليبيا، تعمل كطرف ثالث محايد في خدمات مراقبة الجودة "
+"والتفتيش الصناعي وفق الأنظمة الدولية."
+msgstr "An independent company based in Misrata, Libya, acting as a neutral third party in quality-control and industrial-inspection services under international regulations."
+
+#: pages/templates/pages/about.html:11 pages/templates/pages/contact.html:11
+#: pages/templates/pages/services.html:11
+#: posts/templates/posts/post_detail.html:34
+#: posts/templates/posts/post_list.html:11 templates/partials/footer.html:45
+#: templates/partials/header.html:17
+msgid "الرئيسية"
+msgstr "Home"
+
+#: pages/templates/pages/about.html:13 pages/templates/pages/home.html:148
+#: templates/partials/footer.html:47 templates/partials/header.html:19
+msgid "من نحن"
+msgstr "About"
+
+#: pages/templates/pages/about.html:15
+msgid "الشركة"
+msgstr "The company"
+
+#: pages/templates/pages/about.html:16
+msgid "طرف ثالث محايد، مقره مصراتة"
+msgstr "An independent third party, based in Misrata"
+
+#: pages/templates/pages/about.html:19
+msgid "شركة مستقلة متخصصة في خدمات التفتيش والمطابقة وفقًا للأنظمة الدولية."
+msgstr "An independent company specialising in inspection and conformity services under international regulations."
+
+#: pages/templates/pages/about.html:27
+msgid "فريق العمل"
+msgstr "Our team"
+
+#: pages/templates/pages/about.html:29
+msgid "فريق مدرب بالكامل"
+msgstr "A fully trained team"
+
+#: pages/templates/pages/about.html:58 pages/templates/pages/home.html:186
+msgid "سياسة الجودة"
+msgstr "Quality policy"
+
+#: pages/templates/pages/about.html:65 pages/templates/pages/home.html:31
+msgid "نظام إدارة الجودة"
+msgstr "Quality management system"
+
+#: pages/templates/pages/about.html:69 pages/templates/pages/home.html:35
+msgid "متطلبات هيئات التفتيش"
+msgstr "Requirements for inspection bodies"
+
+#: pages/templates/pages/about.html:89
+msgid "شبكتنا"
+msgstr "Our network"
+
+#: pages/templates/pages/about.html:98
+msgid "نعمل معك كطرف محايد"
+msgstr "We work with you as a neutral party"
+
+#: pages/templates/pages/about.html:99
+msgid "استقلاليتنا هي ما يجعل تقاريرنا ذات قيمة. تواصل معنا لمناقشة احتياجك."
+msgstr "Our independence is what gives our reports their value. Get in touch to discuss what you need."
+
+#: pages/templates/pages/about.html:102 pages/templates/pages/contact.html:13
+#: pages/templates/pages/home.html:228 templates/partials/footer.html:49
+#: templates/partials/header.html:21
+msgid "تواصل معنا"
+msgstr "Contact"
+
+#: pages/templates/pages/contact.html:4
+msgid "تواصل معنا — شركة الديوان للتفتيش والمطابقة"
+msgstr "Contact — Al-Diwan Inspection & Conformity"
+
+#: pages/templates/pages/contact.html:5
+msgid ""
+"تواصل مع شركة الديوان للتفتيش والمطابقة — مصراتة، ليبيا. اطلب عرض سعر لفحص "
+"شحنتك أو استفسر عن خدماتنا."
+msgstr "Contact Al-Diwan Inspection & Conformity — Misrata, Libya. Request a quote for your shipment or ask about our services."
+
+#: pages/templates/pages/contact.html:15
+msgid "كيفية التواصل؟"
+msgstr "How to reach us"
+
+#: pages/templates/pages/contact.html:16
+msgid "يمكنك دائمًا العثور علينا هنا"
+msgstr "You can always find us here"
+
+#: pages/templates/pages/contact.html:17
+msgid "أرسل تفاصيل شحنتك أو استفسارك، وسيصلك الرد من فريقنا مباشرة."
+msgstr "Send your shipment details or a question, and our team will reply directly."
+
+#: pages/templates/pages/contact.html:25
+msgid "معلومات الاتصال"
+msgstr "Contact details"
+
+#: pages/templates/pages/contact.html:31 pages/templates/pages/home.html:234
+#: templates/partials/footer.html:35
+msgid "واتساب"
+msgstr "WhatsApp"
+
+#: pages/templates/pages/contact.html:51
+msgid "الموقع"
+msgstr "Location"
+
+#: pages/templates/pages/contact.html:52 templates/partials/footer.html:79
+msgid "مصراتة، ليبيا"
+msgstr "Misrata, Libya"
+
+#: pages/templates/pages/contact.html:61
+msgid "صفحة فيسبوك"
+msgstr "Facebook page"
+
+#: pages/templates/pages/contact.html:69
+msgid "أرسل لنا رسالة"
+msgstr "Send us a message"
+
+#: pages/templates/pages/contact.html:109
+msgid "اترك هذا الحقل فارغًا"
+msgstr "Leave this field empty"
+
+#: pages/templates/pages/contact.html:114
+msgid "إرسال الرسالة"
+msgstr "Send message"
+
+#: pages/templates/pages/home.html:4
+msgid "شركة الديوان للتفتيش والمطابقة — مصراتة، ليبيا"
+msgstr "Al-Diwan Inspection & Conformity — Misrata, Libya"
+
+#: pages/templates/pages/home.html:5
+msgid ""
+"طرف ثالث محايد لخدمات التفتيش والمطابقة ومراقبة الجودة في ليبيا وخارجها، وفق "
+"ISO 9001:2015 و ISO/IEC 17020:2012."
+msgstr "An independent third party for inspection, conformity and quality-control services in Libya and beyond, under ISO 9001:2015 and ISO/IEC 17020:2012."
+
+#: pages/templates/pages/home.html:13 pages/templates/pages/home.html:64
+msgid "طرف ثالث محايد"
+msgstr "Independent third party"
+
+#: pages/templates/pages/home.html:14
+msgid "التفتيش والمطابقة، بدقة تُبنى عليها القرارات."
+msgstr "Inspection and conformity, precise enough to decide on."
+
+#: pages/templates/pages/home.html:17
+msgid ""
+"نقدم خدمات التفتيش والمطابقة وفقًا للقواعد الدولية المعتمدة في هذا الشأن."
+msgstr "We provide inspection and conformity services in line with the recognised international rules governing this field."
+
+#: pages/templates/pages/home.html:22
+msgid "اطلب عرض سعر"
+msgstr "Request a quote"
+
+#: pages/templates/pages/home.html:25
+msgid "استعرض خدماتنا"
+msgstr "Explore our services"
+
+#: pages/templates/pages/home.html:41
+msgid "نطاق التغطية"
+msgstr "Scope of coverage"
+
+#: pages/templates/pages/home.html:44
+msgid "مجالات تفتيش متخصصة — من الأدوية إلى النفط الخام"
+msgstr "specialised inspection fields — from pharmaceuticals to crude oil"
+
+#: pages/templates/pages/home.html:47
+msgid "محليًا وعالميًا"
+msgstr "Local and global"
+
+#: pages/templates/pages/home.html:48
+msgid "تفتيش في مواقع الإنتاج داخل ليبيا وخارجها، أثناء التصنيع وبعده"
+msgstr "Inspection at production sites inside and outside Libya, during and after manufacturing"
+
+#: pages/templates/pages/home.html:52
+msgid "مراحل تغطي دورة الشحنة كاملة حتى التسليم النهائي"
+msgstr "stages covering the full shipment cycle through to final delivery"
+
+#: pages/templates/pages/home.html:59
+msgid "مؤشرات الثقة"
+msgstr "Trust indicators"
+
+#: pages/templates/pages/home.html:63
+msgid "مستقلة"
+msgstr "Independent"
+
+#: pages/templates/pages/home.html:67
+msgid "معتمدة"
+msgstr "Accredited"
+
+#: pages/templates/pages/home.html:68
+msgid "وفق المعايير الدولية"
+msgstr "To international standards"
+
+#: pages/templates/pages/home.html:71
+msgid "مصراتة"
+msgstr "Misrata"
+
+#: pages/templates/pages/home.html:72
+msgid "المقر الرئيسي، ليبيا"
+msgstr "Head office, Libya"
+
+#: pages/templates/pages/home.html:75
+msgid "فريق مؤهل"
+msgstr "Qualified team"
+
+#: pages/templates/pages/home.html:76
+msgid "مهندسون ومتخصصون فنيون"
+msgstr "Engineers and technical specialists"
+
+#: pages/templates/pages/home.html:86 pages/templates/pages/services.html:13
+#: templates/partials/footer.html:46 templates/partials/header.html:18
+msgid "خدماتنا"
+msgstr "Services"
+
+#: pages/templates/pages/home.html:87
+msgid "تغطية تشمل كل ما يُفحص ويُشحن"
+msgstr "Coverage for everything inspected and shipped"
+
+#: pages/templates/pages/home.html:88
+msgid ""
+"نقدم خدمات تفتيش شاملة على جميع المستويات، محليًا وعالميًا، بما يضمن الالتزام "
+"بمعايير إدارة الجودة ومعايير هيئات التفتيش."
+msgstr "We provide comprehensive inspection services at every level, locally and globally, ensuring compliance with quality-management and inspection-body standards."
+
+#: pages/templates/pages/home.html:104
+#, python-format
+msgid "+ %(count)s عناصر أخرى"
+msgstr "+ %(count)s more"
+
+#: pages/templates/pages/home.html:112
+msgid "تفاصيل كل الخدمات"
+msgstr "See all services"
+
+#: pages/templates/pages/home.html:124
+msgid "منهجية العمل"
+msgstr "How we work"
+
+#: pages/templates/pages/home.html:125
+msgid "نرافق الشحنة من المصنع حتى التسليم"
+msgstr "We follow the shipment from factory to delivery"
+
+#: pages/templates/pages/home.html:126
+msgid ""
+"أربع مراحل متصلة، كل واحدة منها موثّقة بتقرير، فلا تصل بضاعتك دون أن تعرف "
+"بالضبط ما جرى لها."
+msgstr "Four connected stages, each documented in a report — so your goods never arrive without you knowing exactly what happened to them."
+
+#: pages/templates/pages/home.html:150
+msgid "الشغف بإنجاز العمل على أكمل وجه"
+msgstr "A commitment to getting the work right"
+
+#: pages/templates/pages/home.html:157
+msgid "تعرّف على الشركة"
+msgstr "About the company"
+
+#: pages/templates/pages/home.html:187
+msgid "الالتزام ليس شعارًا، بل نظام إداري موثّق"
+msgstr "Commitment isn't a slogan — it's a documented management system"
+
+#: pages/templates/pages/home.html:208
+#: posts/templates/posts/post_detail.html:36
+#: posts/templates/posts/post_list.html:13
+#: posts/templates/posts/post_list.html:15 templates/partials/footer.html:48
+#: templates/partials/header.html:20
+msgid "المدونة"
+msgstr "Blog"
+
+#: pages/templates/pages/home.html:209
+msgid "آخر الأخبار والمقالات"
+msgstr "Latest news and articles"
+
+#: pages/templates/pages/home.html:224
+msgid "لديك شحنة تحتاج تفتيشًا؟"
+msgstr "Have a shipment that needs inspecting?"
+
+#: pages/templates/pages/home.html:225
+msgid "أرسل لنا تفاصيل الشحنة أو المنتج، وسنعود إليك بخطة تفتيش وعرض سعر واضح."
+msgstr "Send us the shipment or product details and we'll come back with an inspection plan and a clear quote."
+
+#: pages/templates/pages/services.html:4
+msgid "خدماتنا — شركة الديوان للتفتيش والمطابقة"
+msgstr "Services — Al-Diwan Inspection & Conformity"
+
+#: pages/templates/pages/services.html:5
+msgid ""
+"خدمات التفتيش الطبي والصناعي والغذائي وفحص الزيوت وأخذ العينات، وتفتيش "
+"الشحنات من ما قبل التصنيع حتى الوصول."
+msgstr "Medical, industrial and food inspection, oil testing and sampling, plus shipment inspection from pre-manufacturing through arrival."
+
+#: pages/templates/pages/services.html:15
+msgid "ما نقدمه"
+msgstr "What we offer"
+
+#: pages/templates/pages/services.html:16
+msgid "خدمات التفتيش والمطابقة"
+msgstr "Inspection and conformity services"
+
+#: pages/templates/pages/services.html:19
+msgid "نقدم خدمات تفتيش شاملة على جميع المستويات، محليًا وعالميًا."
+msgstr "We provide comprehensive inspection services at every level, locally and globally."
+
+#: pages/templates/pages/services.html:27
+msgid "حسب القطاع"
+msgstr "By sector"
+
+#: pages/templates/pages/services.html:28
+msgid "قطاعات نغطيها"
+msgstr "Sectors we cover"
+
+#: pages/templates/pages/services.html:51
+msgid "دورة الشحنة"
+msgstr "Shipment cycle"
+
+#: pages/templates/pages/services.html:52
+msgid "مراحل التفتيش من المصنع إلى التسليم"
+msgstr "Inspection stages from factory to delivery"
+
+#: pages/templates/pages/services.html:73
+msgid "لم تجد الخدمة التي تبحث عنها؟"
+msgstr "Didn't find the service you're looking for?"
+
+#: pages/templates/pages/services.html:74
+msgid "قائمتنا تغطي أكثر ما يُشحن ويُفحص، لكنها ليست حصرية. أخبرنا بما لديك."
+msgstr "Our list covers most of what gets shipped and inspected, but it isn't exhaustive. Tell us what you have."
+
+#: pages/templates/pages/services.html:77
+msgid "اسألنا مباشرة"
+msgstr "Ask us directly"
+
+#: pages/views.py:86
+msgid "تم استلام رسالتك. سنتواصل معك قريبًا."
+msgstr "Your message has been received. We'll be in touch shortly."
+
+#: posts/templates/posts/post_detail.html:4 templates/base.html:17
+#: templates/partials/footer.html:13 templates/partials/header.html:11
+msgid "شركة الديوان"
+msgstr "Al-Diwan"
+
+#: posts/templates/posts/post_detail.html:67
+msgid "اقرأ أيضًا"
+msgstr "Read next"
+
+#: posts/templates/posts/post_detail.html:68
+msgid "منشورات ذات صلة"
+msgstr "Related posts"
+
+#: posts/templates/posts/post_list.html:4
+msgid "المدونة — شركة الديوان للتفتيش والمطابقة"
+msgstr "Blog — Al-Diwan Inspection & Conformity"
+
+#: posts/templates/posts/post_list.html:5
+msgid ""
+"أخبار ومقالات شركة الديوان للتفتيش والمطابقة حول معايير التفتيش ومراقبة "
+"الجودة."
+msgstr "News and articles from Al-Diwan Inspection & Conformity on inspection and quality-control standards."
+
+#: posts/templates/posts/post_list.html:16
+msgid "أخبار ومقالات"
+msgstr "News and articles"
+
+#: posts/templates/posts/post_list.html:17
+msgid "تحديثات من الشركة، ومواد حول معايير التفتيش ومراقبة الجودة."
+msgstr "Company updates and material on inspection and quality-control standards."
+
+#: posts/templates/posts/post_list.html:24
+msgid "تصفية حسب التصنيف"
+msgstr "Filter by category"
+
+#: posts/templates/posts/post_list.html:25
+msgid "الكل"
+msgstr "All"
+
+#: posts/templates/posts/post_list.html:41
+msgid "تنقل بين الصفحات"
+msgstr "Pagination"
+
+#: posts/templates/posts/post_list.html:43
+msgid "السابق"
+msgstr "Previous"
+
+#: posts/templates/posts/post_list.html:45
+#, python-format
+msgid "صفحة %(current)s من %(total)s"
+msgstr "Page %(current)s of %(total)s"
+
+#: posts/templates/posts/post_list.html:47
+msgid "التالي"
+msgstr "Next"
+
+#: posts/templates/posts/post_list.html:53
+msgid "لا توجد منشورات منشورة بعد."
+msgstr "No published posts yet."
+
+#: templates/base.html:7 templates/base.html:19
+msgid "شركة الديوان للتفتيش والمطابقة"
+msgstr "Al-Diwan Inspection & Conformity"
+
+#: templates/base.html:8
+msgid ""
+"شركة الديوان للتفتيش والمطابقة — شركة مستقلة مقرها مصراتة، ليبيا، تقدم خدمات "
+"التفتيش ومراقبة الجودة وفق المعايير الدولية ISO 9001 و ISO/IEC 17020."
+msgstr "Al-Diwan Inspection & Conformity — an independent company based in Misrata, Libya, providing inspection and quality-control services under the ISO 9001 and ISO/IEC 17020 international standards."
+
+#: templates/base.html:20
+msgid "خدمات التفتيش والمطابقة وفق المعايير الدولية المعتمدة."
+msgstr "Inspection and conformity services in line with recognised international standards."
+
+#: templates/base.html:67
+msgid "تخطى إلى المحتوى"
+msgstr "Skip to content"
+
+#: templates/partials/footer.html:7 templates/partials/header.html:5
+msgid "شعار شركة الديوان"
+msgstr "Al-Diwan company logo"
+
+#: templates/partials/footer.html:14 templates/partials/header.html:12
+msgid "للتفتيش والمطابقة"
+msgstr "Inspection & Conformity"
+
+#: templates/partials/footer.html:17
+msgid ""
+"شركة مستقلة مقرها مصراتة، ليبيا. نعمل كطرف ثالث محايد في خدمات التفتيش "
+"ومراقبة الجودة وفق المعايير الدولية."
+msgstr "An independent company based in Misrata, Libya. We act as a neutral third party in inspection and quality-control services under international standards."
+
+#: templates/partials/footer.html:20
+msgid "فيسبوك"
+msgstr "Facebook"
+
+#: templates/partials/footer.html:25
+msgid "إنستغرام"
+msgstr "Instagram"
+
+#: templates/partials/footer.html:43
+msgid "روابط"
+msgstr "Links"
+
+#: templates/partials/footer.html:54
+msgid "الاعتمادات"
+msgstr "Accreditations"
+
+#: templates/partials/footer.html:62
+msgid "تواصل"
+msgstr "Contact"
+
+#: templates/partials/footer.html:78
+msgid "شركة الديوان للتفتيش والمطابقة. جميع الحقوق محفوظة."
+msgstr "Al-Diwan Inspection & Conformity. All rights reserved."
+
+#: templates/partials/header.html:16
+msgid "التنقل الرئيسي"
+msgstr "Main navigation"
+
+#: templates/partials/header.html:42 templates/partials/header.html:43
+msgid "تبديل المظهر الداكن"
+msgstr "Switch to dark mode"
+
+#: templates/partials/header.html:44
+msgid "تبديل المظهر الفاتح"
+msgstr "Switch to light mode"
+
+#: templates/partials/header.html:51
+msgid "فتح القائمة"
+msgstr "Open menu"

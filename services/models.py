@@ -8,7 +8,7 @@ class ServiceCategory(TranslatableModel):
 
     translations = TranslatedFields(
         name=models.CharField(max_length=255),
-        slug=models.SlugField(max_length=255, blank=True),
+        slug=models.SlugField(max_length=255, blank=True, allow_unicode=True),
     )
     icon = models.CharField(
         max_length=50,

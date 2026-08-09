@@ -1,12 +1,83 @@
 {% load i18n static %}<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" class="no-js">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% trans "شركة الديوان" %}{% endblock %}</title>
+
+  <title>{% block title %}{% trans "شركة الديوان للتفتيش والمطابقة" %}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{% trans "شركة الديوان للتفتيش والمطابقة — شركة مستقلة مقرها مصراتة، ليبيا، تقدم خدمات التفتيش ومراقبة الجودة وفق المعايير الدولية ISO 9001 و ISO/IEC 17020." %}{% endblock %}">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+  {# Tell search engines about the other language version of this page #}
+  {% for code, name in LANGUAGES %}
+    <link rel="alternate" hreflang="{{ code }}" href="{{ request.scheme }}://{{ request.get_host }}/{{ code }}{{ request.path|slice:'3:' }}">
+  {% endfor %}
+
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:site_name" content="{% trans "شركة الديوان" %}">
+  <meta property="og:locale" content="{{ LANGUAGE_CODE }}">
+  <meta property="og:title" content="{% block og_title %}{% trans "شركة الديوان للتفتيش والمطابقة" %}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{% trans "خدمات التفتيش والمطابقة وفق المعايير الدولية المعتمدة." %}{% endblock %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  {% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/og-default.svg' %}">{% endblock %}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#071C2E">
+
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+
+  {# Preload the Arabic body weight — it's on the critical render path #}
+  <link rel="preload" href="{% static 'fonts/plex-arabic-arabic-400.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+
+  {# Applied before first paint so a dark-mode visitor never sees a white flash #}
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("al-diwan-theme");
+        if (saved) document.documentElement.setAttribute("data-theme", saved);
+      } catch (e) {}
+    })();
+  </script>
+
+  {% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "شركة الديوان للتفتيش والمطابقة",
+    "alternateName": "Al-Diwan Inspection & Conformity",
+    "url": "{{ request.scheme }}://{{ request.get_host }}",
+    "description": "خدمات التفتيش والمطابقة ومراقبة الجودة وفق المعايير الدولية.",
+    {% if site_settings.email %}"email": "{{ site_settings.email }}",{% endif %}
+    {% if site_settings.phone %}"telephone": "{{ site_settings.phone }}",{% endif %}
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "{{ site_settings.address|default:'' }}",
+      "addressLocality": "مصراتة",
+      "addressCountry": "LY"
+    },
+    "hasCredential": ["ISO 9001:2015", "ISO/IEC 17020:2012"]
+  }
+  </script>
+  {% endblock %}
+
   {% block extra_head %}{% endblock %}
 </head>
 <body>
-  {% block content %}{% endblock %}
+  <a class="skip-link" href="#main">{% trans "تخطى إلى المحتوى" %}</a>
+  {% include "partials/icons.html" %}
+
+  <div class="page-shell">
+    {% include "partials/header.html" %}
+
+    <main id="main">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% include "partials/footer.html" %}
+  </div>
+
+  <script src="{% static 'js/site.js' %}" defer></script>
+  {% block extra_body %}{% endblock %}
 </body>
 </html>
