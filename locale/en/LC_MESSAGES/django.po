@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 13:52+0200\n"
+"POT-Creation-Date: 2026-08-09 22:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,292 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: dashboard/templates/dashboard/base.html:12
+#: dashboard/templates/dashboard/inbox_list.html:4
+#: dashboard/templates/dashboard/post_confirm_delete.html:4
+#: dashboard/templates/dashboard/post_form.html:4
+#: dashboard/templates/dashboard/post_list.html:4
+#: dashboard/templates/dashboard/thread_compose.html:4
+#: dashboard/templates/dashboard/thread_detail.html:4
+#, fuzzy
+#| msgid "شركة الديوان"
+msgid "لوحة تحكم الديوان"
+msgstr "Al-Diwan"
+
+#: dashboard/templates/dashboard/base.html:28 templates/base.html:67
+msgid "تخطى إلى المحتوى"
+msgstr "Skip to content"
+
+#: dashboard/templates/dashboard/base.html:31
+#, fuzzy
+#| msgid "تنقل بين الصفحات"
+msgid "تنقل لوحة التحكم"
+msgstr "Pagination"
+
+#: dashboard/templates/dashboard/base.html:38
+#, fuzzy
+#| msgid "دورة الشحنة"
+msgid "لوحة التحكم"
+msgstr "Shipment cycle"
+
+#: dashboard/templates/dashboard/base.html:44
+#: dashboard/templates/dashboard/post_list.html:4
+#: dashboard/templates/dashboard/post_list.html:8
+#, fuzzy
+#| msgid "منشورات ذات صلة"
+msgid "المنشورات"
+msgstr "Related posts"
+
+#: dashboard/templates/dashboard/base.html:49
+#: dashboard/templates/dashboard/inbox_list.html:4
+#: dashboard/templates/dashboard/inbox_list.html:8
+#, fuzzy
+#| msgid "إرسال الرسالة"
+msgid "الرسائل"
+msgstr "Send message"
+
+#: dashboard/templates/dashboard/base.html:52
+#, fuzzy
+#| msgid "الموقع"
+msgid "عرض الموقع"
+msgstr "Location"
+
+#: dashboard/templates/dashboard/base.html:54
+#, fuzzy
+#| msgid "نظام إدارة الجودة"
+msgid "الإدارة الكاملة"
+msgstr "Quality management system"
+
+#: dashboard/templates/dashboard/base.html:61
+#, fuzzy
+#| msgid "تفاصيل كل الخدمات"
+msgid "تسجيل الخروج"
+msgstr "See all services"
+
+#: dashboard/templates/dashboard/home.html:5
+msgid ""
+"لا تملك صلاحيات وصول لأي قسم بعد. تواصل مع المسؤول لإضافتك إلى مجموعة عمل "
+"(المحررون أو الدعم)."
+msgstr "You don't have access to any section yet. Ask an administrator to add you to a group (Editors or Support)."
+
+#: dashboard/templates/dashboard/inbox_list.html:10
+#: dashboard/templates/dashboard/thread_compose.html:4
+#: dashboard/templates/dashboard/thread_compose.html:8
+#, fuzzy
+#| msgid "إرسال الرسالة"
+msgid "رسالة جديدة"
+msgstr "Send message"
+
+#: dashboard/templates/dashboard/inbox_list.html:14
+#, fuzzy
+#| msgid "تصفية حسب التصنيف"
+msgid "تصفية المحادثات"
+msgstr "Filter by category"
+
+#: dashboard/templates/dashboard/inbox_list.html:15
+#: posts/templates/posts/post_list.html:25
+msgid "الكل"
+msgstr "All"
+
+#: dashboard/templates/dashboard/inbox_list.html:16
+msgid "مفتوحة"
+msgstr "Open"
+
+#: dashboard/templates/dashboard/inbox_list.html:17
+msgid "بانتظار الرد"
+msgstr "Awaiting reply"
+
+#: dashboard/templates/dashboard/inbox_list.html:18
+msgid "مغلقة"
+msgstr "Closed"
+
+#: dashboard/templates/dashboard/inbox_list.html:19
+msgid "المسندة إليّ"
+msgstr "Assigned to me"
+
+#: dashboard/templates/dashboard/inbox_list.html:26
+msgid "غير مقروءة"
+msgstr "Unread"
+
+#: dashboard/templates/dashboard/inbox_list.html:27 pages/forms.py:19
+msgid "الموضوع"
+msgstr "Subject"
+
+#: dashboard/templates/dashboard/inbox_list.html:28
+msgid "من"
+msgstr "From"
+
+#: dashboard/templates/dashboard/inbox_list.html:29
+msgid "مسندة إلى"
+msgstr "Assigned to"
+
+#: dashboard/templates/dashboard/inbox_list.html:30
+#: dashboard/templates/dashboard/post_list.html:21
+msgid "الحالة"
+msgstr "Status"
+
+#: dashboard/templates/dashboard/inbox_list.html:31
+msgid "آخر تحديث"
+msgstr "Updated"
+
+#: dashboard/templates/dashboard/inbox_list.html:37
+msgid "جديد"
+msgstr "New"
+
+#: dashboard/templates/dashboard/inbox_list.html:45
+msgid "لا توجد رسائل."
+msgstr "No messages."
+
+#: dashboard/templates/dashboard/login.html:6
+msgid "تسجيل الدخول — لوحة تحكم الديوان"
+msgstr "Sign in — Al-Diwan dashboard"
+
+#: dashboard/templates/dashboard/login.html:21
+#: posts/templates/posts/post_detail.html:4 templates/base.html:17
+#: templates/partials/footer.html:13 templates/partials/header.html:11
+msgid "شركة الديوان"
+msgstr "Al-Diwan"
+
+#: dashboard/templates/dashboard/login.html:22
+msgid "لوحة تحكم الموظفين"
+msgstr "Staff dashboard"
+
+#: dashboard/templates/dashboard/login.html:27
+msgid "اسم المستخدم أو كلمة المرور غير صحيحة."
+msgstr "Incorrect username or password."
+
+#: dashboard/templates/dashboard/login.html:32
+msgid "اسم المستخدم"
+msgstr "Username"
+
+#: dashboard/templates/dashboard/login.html:36
+#, fuzzy
+#| msgid "كيفية التواصل؟"
+msgid "كلمة المرور"
+msgstr "How to reach us"
+
+#: dashboard/templates/dashboard/login.html:40
+msgid "دخول"
+msgstr "Sign in"
+
+#: dashboard/templates/dashboard/login.html:43
+#, fuzzy
+#| msgid "تخطى إلى المحتوى"
+msgid "العودة إلى الموقع"
+msgstr "Skip to content"
+
+#: dashboard/templates/dashboard/post_confirm_delete.html:4
+#: dashboard/templates/dashboard/post_confirm_delete.html:7
+msgid "حذف منشور"
+msgstr "Delete post"
+
+#: dashboard/templates/dashboard/post_confirm_delete.html:9
+#, python-format
+msgid "هل تريد حذف المنشور \"%(title)s\"؟ لا يمكن التراجع عن هذا الإجراء."
+msgstr "Delete the post \"%(title)s\"? This cannot be undone."
+
+#: dashboard/templates/dashboard/post_confirm_delete.html:12
+msgid "تأكيد الحذف"
+msgstr "Confirm delete"
+
+#: dashboard/templates/dashboard/post_confirm_delete.html:13
+msgid "إلغاء"
+msgstr "Cancel"
+
+#: dashboard/templates/dashboard/post_form.html:4
+#: dashboard/templates/dashboard/post_form.html:10
+msgid "تعديل منشور"
+msgstr "Edit post"
+
+#: dashboard/templates/dashboard/post_form.html:4
+#: dashboard/templates/dashboard/post_form.html:10
+#: dashboard/templates/dashboard/post_list.html:10
+#, fuzzy
+#| msgid "منشورات ذات صلة"
+msgid "منشور جديد"
+msgstr "Related posts"
+
+#: dashboard/templates/dashboard/post_form.html:11
+#: dashboard/templates/dashboard/thread_compose.html:9
+#: dashboard/templates/dashboard/thread_detail.html:17
+msgid "رجوع"
+msgstr "Back"
+
+#: dashboard/templates/dashboard/post_form.html:15
+#, fuzzy
+#| msgid "نطاق التغطية"
+msgid "لغة التحرير"
+msgstr "Scope of coverage"
+
+#: dashboard/templates/dashboard/post_form.html:16
+msgid "العربية"
+msgstr "Arabic"
+
+#: dashboard/templates/dashboard/post_form.html:20
+msgid "تحرّر الآن النسخة المعروضة أعلاه فقط — النسخ الأخرى لا تتأثر."
+msgstr "You are editing only the language shown above — the other versions are unaffected."
+
+#: dashboard/templates/dashboard/post_form.html:37
+msgid "حفظ"
+msgstr "Save"
+
+#: dashboard/templates/dashboard/post_list.html:18
+msgid "العنوان"
+msgstr "Title"
+
+#: dashboard/templates/dashboard/post_list.html:19
+#, fuzzy
+#| msgid "تصفية حسب التصنيف"
+msgid "التصنيف"
+msgstr "Filter by category"
+
+#: dashboard/templates/dashboard/post_list.html:20
+msgid "الكاتب"
+msgstr "Author"
+
+#: dashboard/templates/dashboard/post_list.html:22
+msgid "تاريخ النشر"
+msgstr "Published"
+
+#: dashboard/templates/dashboard/post_list.html:23
+msgid "إجراءات"
+msgstr "Actions"
+
+#: dashboard/templates/dashboard/post_list.html:29
+msgid "(بدون عنوان)"
+msgstr "(untitled)"
+
+#: dashboard/templates/dashboard/post_list.html:40
+msgid "حذف"
+msgstr "Delete"
+
+#: dashboard/templates/dashboard/post_list.html:45
+#, fuzzy
+#| msgid "لا توجد منشورات منشورة بعد."
+msgid "لا توجد منشورات بعد."
+msgstr "No published posts yet."
+
+#: dashboard/templates/dashboard/thread_compose.html:22
+#: dashboard/templates/dashboard/thread_detail.html:59
+#, fuzzy
+#| msgid "رسالتك"
+msgid "إرسال"
+msgstr "Your message"
+
+#: dashboard/templates/dashboard/thread_detail.html:13
+#, python-format
+msgid "مسندة إلى %(agent)s"
+msgstr "Assigned to %(agent)s"
+
+#: dashboard/templates/dashboard/thread_detail.html:20
+msgid "إسناد إليّ"
+msgstr "Assign to me"
+
+#: dashboard/templates/dashboard/thread_detail.html:24
+msgid "إغلاق"
+msgstr "Close"
+
 #: pages/forms.py:10
 msgid "الاسم"
 msgstr "Name"
@@ -28,10 +314,6 @@ msgstr "Your full name"
 #: pages/forms.py:15 pages/templates/pages/contact.html:41
 msgid "البريد الإلكتروني"
 msgstr "Email"
-
-#: pages/forms.py:19
-msgid "الموضوع"
-msgstr "Subject"
 
 #: pages/forms.py:22
 msgid "مثال: طلب عرض سعر لفحص شحنة"
@@ -53,7 +335,10 @@ msgstr "About — Al-Diwan Inspection & Conformity"
 msgid ""
 "شركة مستقلة مقرها مصراتة، ليبيا، تعمل كطرف ثالث محايد في خدمات مراقبة الجودة "
 "والتفتيش الصناعي وفق الأنظمة الدولية."
-msgstr "An independent company based in Misrata, Libya, acting as a neutral third party in quality-control and industrial-inspection services under international regulations."
+msgstr ""
+"An independent company based in Misrata, Libya, acting as a neutral third "
+"party in quality-control and industrial-inspection services under "
+"international regulations."
 
 #: pages/templates/pages/about.html:11 pages/templates/pages/contact.html:11
 #: pages/templates/pages/services.html:11
@@ -78,7 +363,9 @@ msgstr "An independent third party, based in Misrata"
 
 #: pages/templates/pages/about.html:19
 msgid "شركة مستقلة متخصصة في خدمات التفتيش والمطابقة وفقًا للأنظمة الدولية."
-msgstr "An independent company specialising in inspection and conformity services under international regulations."
+msgstr ""
+"An independent company specialising in inspection and conformity services "
+"under international regulations."
 
 #: pages/templates/pages/about.html:27
 msgid "فريق العمل"
@@ -110,7 +397,9 @@ msgstr "We work with you as a neutral party"
 
 #: pages/templates/pages/about.html:99
 msgid "استقلاليتنا هي ما يجعل تقاريرنا ذات قيمة. تواصل معنا لمناقشة احتياجك."
-msgstr "Our independence is what gives our reports their value. Get in touch to discuss what you need."
+msgstr ""
+"Our independence is what gives our reports their value. Get in touch to "
+"discuss what you need."
 
 #: pages/templates/pages/about.html:102 pages/templates/pages/contact.html:13
 #: pages/templates/pages/home.html:228 templates/partials/footer.html:49
@@ -126,7 +415,9 @@ msgstr "Contact — Al-Diwan Inspection & Conformity"
 msgid ""
 "تواصل مع شركة الديوان للتفتيش والمطابقة — مصراتة، ليبيا. اطلب عرض سعر لفحص "
 "شحنتك أو استفسر عن خدماتنا."
-msgstr "Contact Al-Diwan Inspection & Conformity — Misrata, Libya. Request a quote for your shipment or ask about our services."
+msgstr ""
+"Contact Al-Diwan Inspection & Conformity — Misrata, Libya. Request a quote "
+"for your shipment or ask about our services."
 
 #: pages/templates/pages/contact.html:15
 msgid "كيفية التواصل؟"
@@ -138,7 +429,8 @@ msgstr "You can always find us here"
 
 #: pages/templates/pages/contact.html:17
 msgid "أرسل تفاصيل شحنتك أو استفسارك، وسيصلك الرد من فريقنا مباشرة."
-msgstr "Send your shipment details or a question, and our team will reply directly."
+msgstr ""
+"Send your shipment details or a question, and our team will reply directly."
 
 #: pages/templates/pages/contact.html:25
 msgid "معلومات الاتصال"
@@ -181,7 +473,9 @@ msgstr "Al-Diwan Inspection & Conformity — Misrata, Libya"
 msgid ""
 "طرف ثالث محايد لخدمات التفتيش والمطابقة ومراقبة الجودة في ليبيا وخارجها، وفق "
 "ISO 9001:2015 و ISO/IEC 17020:2012."
-msgstr "An independent third party for inspection, conformity and quality-control services in Libya and beyond, under ISO 9001:2015 and ISO/IEC 17020:2012."
+msgstr ""
+"An independent third party for inspection, conformity and quality-control "
+"services in Libya and beyond, under ISO 9001:2015 and ISO/IEC 17020:2012."
 
 #: pages/templates/pages/home.html:13 pages/templates/pages/home.html:64
 msgid "طرف ثالث محايد"
@@ -194,7 +488,9 @@ msgstr "Inspection and conformity, precise enough to decide on."
 #: pages/templates/pages/home.html:17
 msgid ""
 "نقدم خدمات التفتيش والمطابقة وفقًا للقواعد الدولية المعتمدة في هذا الشأن."
-msgstr "We provide inspection and conformity services in line with the recognised international rules governing this field."
+msgstr ""
+"We provide inspection and conformity services in line with the recognised "
+"international rules governing this field."
 
 #: pages/templates/pages/home.html:22
 msgid "اطلب عرض سعر"
@@ -218,7 +514,9 @@ msgstr "Local and global"
 
 #: pages/templates/pages/home.html:48
 msgid "تفتيش في مواقع الإنتاج داخل ليبيا وخارجها، أثناء التصنيع وبعده"
-msgstr "Inspection at production sites inside and outside Libya, during and after manufacturing"
+msgstr ""
+"Inspection at production sites inside and outside Libya, during and after "
+"manufacturing"
 
 #: pages/templates/pages/home.html:52
 msgid "مراحل تغطي دورة الشحنة كاملة حتى التسليم النهائي"
@@ -269,7 +567,10 @@ msgstr "Coverage for everything inspected and shipped"
 msgid ""
 "نقدم خدمات تفتيش شاملة على جميع المستويات، محليًا وعالميًا، بما يضمن الالتزام "
 "بمعايير إدارة الجودة ومعايير هيئات التفتيش."
-msgstr "We provide comprehensive inspection services at every level, locally and globally, ensuring compliance with quality-management and inspection-body standards."
+msgstr ""
+"We provide comprehensive inspection services at every level, locally and "
+"globally, ensuring compliance with quality-management and inspection-body "
+"standards."
 
 #: pages/templates/pages/home.html:104
 #, python-format
@@ -292,7 +593,9 @@ msgstr "We follow the shipment from factory to delivery"
 msgid ""
 "أربع مراحل متصلة، كل واحدة منها موثّقة بتقرير، فلا تصل بضاعتك دون أن تعرف "
 "بالضبط ما جرى لها."
-msgstr "Four connected stages, each documented in a report — so your goods never arrive without you knowing exactly what happened to them."
+msgstr ""
+"Four connected stages, each documented in a report — so your goods never "
+"arrive without you knowing exactly what happened to them."
 
 #: pages/templates/pages/home.html:150
 msgid "الشغف بإنجاز العمل على أكمل وجه"
@@ -324,7 +627,9 @@ msgstr "Have a shipment that needs inspecting?"
 
 #: pages/templates/pages/home.html:225
 msgid "أرسل لنا تفاصيل الشحنة أو المنتج، وسنعود إليك بخطة تفتيش وعرض سعر واضح."
-msgstr "Send us the shipment or product details and we'll come back with an inspection plan and a clear quote."
+msgstr ""
+"Send us the shipment or product details and we'll come back with an "
+"inspection plan and a clear quote."
 
 #: pages/templates/pages/services.html:4
 msgid "خدماتنا — شركة الديوان للتفتيش والمطابقة"
@@ -334,7 +639,9 @@ msgstr "Services — Al-Diwan Inspection & Conformity"
 msgid ""
 "خدمات التفتيش الطبي والصناعي والغذائي وفحص الزيوت وأخذ العينات، وتفتيش "
 "الشحنات من ما قبل التصنيع حتى الوصول."
-msgstr "Medical, industrial and food inspection, oil testing and sampling, plus shipment inspection from pre-manufacturing through arrival."
+msgstr ""
+"Medical, industrial and food inspection, oil testing and sampling, plus "
+"shipment inspection from pre-manufacturing through arrival."
 
 #: pages/templates/pages/services.html:15
 msgid "ما نقدمه"
@@ -346,7 +653,9 @@ msgstr "Inspection and conformity services"
 
 #: pages/templates/pages/services.html:19
 msgid "نقدم خدمات تفتيش شاملة على جميع المستويات، محليًا وعالميًا."
-msgstr "We provide comprehensive inspection services at every level, locally and globally."
+msgstr ""
+"We provide comprehensive inspection services at every level, locally and "
+"globally."
 
 #: pages/templates/pages/services.html:27
 msgid "حسب القطاع"
@@ -370,7 +679,9 @@ msgstr "Didn't find the service you're looking for?"
 
 #: pages/templates/pages/services.html:74
 msgid "قائمتنا تغطي أكثر ما يُشحن ويُفحص، لكنها ليست حصرية. أخبرنا بما لديك."
-msgstr "Our list covers most of what gets shipped and inspected, but it isn't exhaustive. Tell us what you have."
+msgstr ""
+"Our list covers most of what gets shipped and inspected, but it isn't "
+"exhaustive. Tell us what you have."
 
 #: pages/templates/pages/services.html:77
 msgid "اسألنا مباشرة"
@@ -379,11 +690,6 @@ msgstr "Ask us directly"
 #: pages/views.py:86
 msgid "تم استلام رسالتك. سنتواصل معك قريبًا."
 msgstr "Your message has been received. We'll be in touch shortly."
-
-#: posts/templates/posts/post_detail.html:4 templates/base.html:17
-#: templates/partials/footer.html:13 templates/partials/header.html:11
-msgid "شركة الديوان"
-msgstr "Al-Diwan"
 
 #: posts/templates/posts/post_detail.html:67
 msgid "اقرأ أيضًا"
@@ -401,7 +707,9 @@ msgstr "Blog — Al-Diwan Inspection & Conformity"
 msgid ""
 "أخبار ومقالات شركة الديوان للتفتيش والمطابقة حول معايير التفتيش ومراقبة "
 "الجودة."
-msgstr "News and articles from Al-Diwan Inspection & Conformity on inspection and quality-control standards."
+msgstr ""
+"News and articles from Al-Diwan Inspection & Conformity on inspection and "
+"quality-control standards."
 
 #: posts/templates/posts/post_list.html:16
 msgid "أخبار ومقالات"
@@ -409,15 +717,12 @@ msgstr "News and articles"
 
 #: posts/templates/posts/post_list.html:17
 msgid "تحديثات من الشركة، ومواد حول معايير التفتيش ومراقبة الجودة."
-msgstr "Company updates and material on inspection and quality-control standards."
+msgstr ""
+"Company updates and material on inspection and quality-control standards."
 
 #: posts/templates/posts/post_list.html:24
 msgid "تصفية حسب التصنيف"
 msgstr "Filter by category"
-
-#: posts/templates/posts/post_list.html:25
-msgid "الكل"
-msgstr "All"
 
 #: posts/templates/posts/post_list.html:41
 msgid "تنقل بين الصفحات"
@@ -448,15 +753,16 @@ msgstr "Al-Diwan Inspection & Conformity"
 msgid ""
 "شركة الديوان للتفتيش والمطابقة — شركة مستقلة مقرها مصراتة، ليبيا، تقدم خدمات "
 "التفتيش ومراقبة الجودة وفق المعايير الدولية ISO 9001 و ISO/IEC 17020."
-msgstr "Al-Diwan Inspection & Conformity — an independent company based in Misrata, Libya, providing inspection and quality-control services under the ISO 9001 and ISO/IEC 17020 international standards."
+msgstr ""
+"Al-Diwan Inspection & Conformity — an independent company based in Misrata, "
+"Libya, providing inspection and quality-control services under the ISO 9001 "
+"and ISO/IEC 17020 international standards."
 
 #: templates/base.html:20
 msgid "خدمات التفتيش والمطابقة وفق المعايير الدولية المعتمدة."
-msgstr "Inspection and conformity services in line with recognised international standards."
-
-#: templates/base.html:67
-msgid "تخطى إلى المحتوى"
-msgstr "Skip to content"
+msgstr ""
+"Inspection and conformity services in line with recognised international "
+"standards."
 
 #: templates/partials/footer.html:7 templates/partials/header.html:5
 msgid "شعار شركة الديوان"
@@ -470,7 +776,10 @@ msgstr "Inspection & Conformity"
 msgid ""
 "شركة مستقلة مقرها مصراتة، ليبيا. نعمل كطرف ثالث محايد في خدمات التفتيش "
 "ومراقبة الجودة وفق المعايير الدولية."
-msgstr "An independent company based in Misrata, Libya. We act as a neutral third party in inspection and quality-control services under international standards."
+msgstr ""
+"An independent company based in Misrata, Libya. We act as a neutral third "
+"party in inspection and quality-control services under international "
+"standards."
 
 #: templates/partials/footer.html:20
 msgid "فيسبوك"

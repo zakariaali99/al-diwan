@@ -1,8 +1,10 @@
 from django.contrib import admin
+from django.db import models
 from parler.admin import TranslatableAdmin
 from unfold.admin import ModelAdmin
 
 from .models import Category, Post
+from .widgets import RichTextWidget
 
 
 @admin.register(Category)
@@ -12,6 +14,7 @@ class CategoryAdmin(TranslatableAdmin, ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(TranslatableAdmin, ModelAdmin):
+    formfield_overrides = {models.TextField: {"widget": RichTextWidget}}
     list_display = ("title", "category", "author", "status", "published_at")
     list_filter = ("status", "category")
     search_fields = ("translations__title",)

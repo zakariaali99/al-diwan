@@ -1,20 +1,28 @@
+"""Sitemaps for the React frontend's routes.
+
+Routing lives in React now, so these are literal paths rather than reverse()
+lookups — Django has no URL patterns for the public pages any more.
+"""
+
 from django.contrib.sitemaps import Sitemap
-from django.urls import reverse
 
 from posts.models import Post
+
+LANGUAGES = ["ar", "en"]
+STATIC_PATHS = ["", "services/", "about-us/", "contact-us/", "posts/"]
 
 
 class StaticViewSitemap(Sitemap):
     changefreq = "monthly"
 
     def items(self):
-        return ["pages:home", "pages:services", "pages:about", "pages:contact", "posts:list"]
+        return [f"/{lang}/{path}" for lang in LANGUAGES for path in STATIC_PATHS]
 
     def location(self, item):
-        return reverse(item)
+        return item
 
     def priority(self, item):
-        return 1.0 if item == "pages:home" else 0.8
+        return 1.0 if item in ("/ar/", "/en/") else 0.8
 
 
 class PostSitemap(Sitemap):
@@ -22,10 +30,13 @@ class PostSitemap(Sitemap):
     changefreq = "weekly"
 
     def items(self):
-        return Post.objects.filter(status=Post.Status.PUBLISHED)
+        posts = Post.objects.filter(status=Post.Status.PUBLISHED)
+        return [(lang, post) for lang in LANGUAGES for post in posts]
 
-    def lastmod(self, obj):
-        return obj.updated_at
+    def location(self, item):
+        lang, post = item
+        slug = post.safe_translation_getter("slug", any_language=True)
+        return f"/{lang}/posts/{slug}/"
 
-    def location(self, obj):
-        return reverse("posts:detail", args=[obj.safe_translation_getter("slug", any_language=True)])
+    def lastmod(self, item):
+        return item[1].updated_at

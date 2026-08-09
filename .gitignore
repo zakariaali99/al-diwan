@@ -19,3 +19,9 @@ db.sqlite3
 .DS_Store
 .vscode/
 .idea/
+
+# Frontend
+frontend/node_modules/
+
+# The Vite build output IS committed: the cPanel host has no Node, so the
+# built assets must ship with the repo (see DEPLOYMENT.md).

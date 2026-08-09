@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     # third-party
     "rest_framework",
     "parler",
-    "ckeditor",
+    "django_vite",
     # local apps
     "accounts",
     "siteconfig",
@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "posts",
     "messaging",
     "api",
-    "dashboard",
 ]
 
 MIDDLEWARE = [
@@ -44,6 +43,9 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    # After LocaleMiddleware: lets an explicit Accept-Language header win
+    # over a stale django_language cookie on /api/ requests.
+    "api.middleware.ApiLanguageMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -133,7 +135,7 @@ PARLER_LANGUAGES = {
 # --- Static & media -----------------------------------------------------
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "static", BASE_DIR / "frontend" / "dist"]
 # Plain storage by default: the hashed-manifest backend requires collectstatic
 # to have run and every referenced file to be present, which breaks dev and
 # tests. production.py swaps in the compressed, hashed variant.
@@ -142,15 +144,27 @@ STORAGES = {
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 
+# --- Vite / React frontend ------------------------------------------------
+# dev_mode=True proxies assets to the Vite dev server (npm run dev).
+# In production the built manifest in frontend/dist is used instead, so the
+# host never needs Node at runtime -- only at build time.
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": config("VITE_DEV_MODE", default=False, cast=bool),
+        "dev_server_port": 5173,
+        "manifest_path": BASE_DIR / "frontend" / "dist" / ".vite" / "manifest.json",
+        "static_url_prefix": "",
+    }
+}
+
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# --- Auth / dashboard ---------------------------------------------------
-LOGIN_URL = "dashboard:login"
-LOGIN_REDIRECT_URL = "dashboard:home"
-LOGOUT_REDIRECT_URL = "dashboard:login"
+# --- Auth ---------------------------------------------------------------
+# The dashboard is a React route; Django Admin keeps its own login.
+LOGIN_URL = "admin:login"
 
 # --- Outbound email (unified inbox: SMTP relay via transactional provider) --
 EMAIL_BACKEND = config(
@@ -180,19 +194,6 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
-}
-
-CKEDITOR_CONFIGS = {
-    "default": {
-        "toolbar": [
-            ["Format", "Bold", "Italic", "Underline"],
-            ["NumberedList", "BulletedList", "Blockquote"],
-            ["Link", "Unlink"],
-            ["Undo", "Redo", "Source"],
-        ],
-        "height": 300,
-        "width": "100%",
-    },
 }
 
 UNFOLD = {

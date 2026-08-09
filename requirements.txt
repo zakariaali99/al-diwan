@@ -1,7 +1,6 @@
 Django==5.1.15
 djangorestframework==3.17.2
 django-parler==2.4
-django-ckeditor==6.7.3
 django-js-asset==4.0.1
 django-unfold==0.96.0
 PyMySQL==1.2.0

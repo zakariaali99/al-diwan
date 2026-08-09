@@ -1,4 +1,3 @@
-from ckeditor.fields import RichTextField
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -29,7 +28,7 @@ class Post(TranslatableModel):
         title=models.CharField(max_length=255),
         slug=models.SlugField(max_length=255, blank=True, allow_unicode=True),
         excerpt=models.CharField(max_length=500, blank=True),
-        body=RichTextField(blank=True),
+        body=models.TextField(blank=True),
         seo_title=models.CharField(max_length=255, blank=True),
         seo_description=models.CharField(max_length=300, blank=True),
     )

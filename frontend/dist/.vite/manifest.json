@@ -1,0 +1,38 @@
+{
+  "src/assets/inspection-container.jpeg": {
+    "file": "assets/inspection-container-CmJ16QO9.jpeg",
+    "src": "src/assets/inspection-container.jpeg"
+  },
+  "src/assets/inspection-documents.jpeg": {
+    "file": "assets/inspection-documents-tNyS3Sub.jpeg",
+    "src": "src/assets/inspection-documents.jpeg"
+  },
+  "src/assets/logo.png": {
+    "file": "assets/logo-CNlgBylU.png",
+    "src": "src/assets/logo.png"
+  },
+  "src/assets/ship-sm.webp": {
+    "file": "assets/ship-sm-DzJh9UKD.webp",
+    "src": "src/assets/ship-sm.webp"
+  },
+  "src/assets/ship.webp": {
+    "file": "assets/ship-fLkTOfqy.webp",
+    "src": "src/assets/ship.webp"
+  },
+  "src/main.tsx": {
+    "file": "assets/main-BU0VTj9G.js",
+    "name": "main",
+    "src": "src/main.tsx",
+    "isEntry": true,
+    "css": [
+      "assets/main-B_KjKY5y.css"
+    ],
+    "assets": [
+      "assets/logo-CNlgBylU.png",
+      "assets/ship-fLkTOfqy.webp",
+      "assets/ship-sm-DzJh9UKD.webp",
+      "assets/inspection-container-CmJ16QO9.jpeg",
+      "assets/inspection-documents-tNyS3Sub.jpeg"
+    ]
+  }
+}
