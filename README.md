@@ -109,7 +109,8 @@ per-language post editing, Arabic-slug URLs, and the SPA catch-all route.
 ## Deployment
 
 See **[DEPLOYMENT.md](DEPLOYMENT.md)** for the full cPanel runbook, DNS/SPF/DKIM
-setup, cron configuration, and the go-live checklist.
+setup, cron configuration, and the go-live checklist, and
+**[COMMANDS.md](COMMANDS.md)** for the day-to-day terminal commands.
 
 Three operational notes worth knowing up front:
 
