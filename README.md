@@ -28,22 +28,22 @@ runs Node.
 ```bash
 # Backend
 python3.12 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-cp .env.example .env          # defaults to SQLite + console email
-.venv/bin/python manage.py migrate
-.venv/bin/python manage.py setup_roles
-.venv/bin/python manage.py seed_content     # Arabic copy from the live site
-.venv/bin/python manage.py seed_english     # draft English translations
-.venv/bin/python manage.py createsuperuser
+.venv/bin/pip install -r backend/requirements.txt
+cp backend/.env.example backend/.env          # defaults to SQLite + console email
+.venv/bin/python backend/manage.py migrate
+.venv/bin/python backend/manage.py setup_roles
+.venv/bin/python backend/manage.py seed_content     # Arabic copy from the live site
+.venv/bin/python backend/manage.py seed_english     # draft English translations
+.venv/bin/python backend/manage.py createsuperuser
 
 # Frontend (build once, then Django serves it at http://127.0.0.1:8000/)
 cd frontend && npm install && npm run build && cd ..
 
-.venv/bin/python manage.py runserver
+.venv/bin/python backend/manage.py runserver
 ```
 
 For frontend work with hot reload, run Vite alongside Django and set
-`VITE_DEV_MODE=True` in `.env`:
+`VITE_DEV_MODE=True` in `backend/.env`:
 
 ```bash
 cd frontend && npm run dev     # :5173, proxies /api and /admin to :8000
@@ -59,13 +59,13 @@ docker compose up
 
 | Path | Purpose |
 |---|---|
-| `config/` | settings (`base`/`dev`/`production`), URLs, sitemaps |
-| `pages/` | home, about, services, contact + editable content blocks |
-| `services/` | translated service catalogue powering the bento grid |
-| `posts/` | blog with draft/scheduled/published workflow |
-| `messaging/` | the unified inbox — threads, messages, IMAP intake |
-| `siteconfig/` | global site settings singleton |
-| `api/` | the whole REST API + auth + language middleware |
+| `backend/config/` | settings (`base`/`dev`/`production`), URLs, sitemaps |
+| `backend/pages/` | home, about, services, contact + editable content blocks |
+| `backend/services/` | translated service catalogue powering the bento grid |
+| `backend/posts/` | blog with draft/scheduled/published workflow |
+| `backend/messaging/` | the unified inbox — threads, messages, IMAP intake |
+| `backend/siteconfig/` | global site settings singleton |
+| `backend/api/` | the whole REST API + auth + language middleware |
 | `frontend/` | React app (`src/pages`, `src/dashboard`, `src/components`, `src/lib`) |
 | `brand-assets/` | original logo/photos pulled from the live site |
 

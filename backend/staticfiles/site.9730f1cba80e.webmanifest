@@ -1,0 +1,15 @@
+{
+  "name": "شركة الديوان للتفتيش والمطابقة",
+  "short_name": "الديوان",
+  "description": "خدمات التفتيش والمطابقة ومراقبة الجودة وفق المعايير الدولية.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/ar/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#051F35",
+  "icons": [
+    { "src": "/static/img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/static/img/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

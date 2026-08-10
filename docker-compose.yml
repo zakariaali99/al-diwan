@@ -18,11 +18,12 @@ services:
       retries: 10
 
   web:
-    build: .
+    build: ./backend
     restart: unless-stopped
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/app
+      - ./backend:/app
+      - ./frontend:/frontend
     ports:
       - "8000:8000"
     environment:

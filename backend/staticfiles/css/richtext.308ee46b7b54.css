@@ -1,0 +1,59 @@
+/* Chrome for the Quill-backed editor. Kept small and theme-aware so it sits
+   comfortably in both the staff dashboard and Django Admin. */
+
+.richtext-host {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border, #d7dae5);
+  background: var(--surface, #fff);
+}
+
+.richtext-host .ql-toolbar.ql-snow,
+.richtext-host .ql-container.ql-snow {
+  border: 0;
+  font-family: inherit;
+}
+
+.richtext-host .ql-toolbar.ql-snow {
+  border-block-end: 1px solid var(--border, #d7dae5);
+  background: var(--bg-subtle, #f6f8fa);
+}
+
+.richtext-host .ql-editor {
+  min-block-size: 320px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text, #16202a);
+}
+
+.richtext-host .ql-editor.ql-blank::before {
+  color: var(--text-muted, #5c6b77);
+  font-style: normal;
+}
+
+/* Quill positions its placeholder from the left by default, which lands in the
+   wrong corner for Arabic. */
+[dir="rtl"] .richtext-host .ql-editor.ql-blank::before {
+  inset-inline-start: 15px;
+  inset-inline-end: auto;
+}
+
+/* Dark theme: Quill's Snow icons are strokes/fills on currentColor-less SVGs,
+   so they need explicit inversion to stay visible. */
+:root[data-theme="dark"] .richtext-host .ql-snow .ql-stroke,
+html.dark .richtext-host .ql-snow .ql-stroke {
+  stroke: #cfe0ec;
+}
+:root[data-theme="dark"] .richtext-host .ql-snow .ql-fill,
+html.dark .richtext-host .ql-snow .ql-fill {
+  fill: #cfe0ec;
+}
+:root[data-theme="dark"] .richtext-host .ql-snow .ql-picker,
+html.dark .richtext-host .ql-snow .ql-picker {
+  color: #cfe0ec;
+}
+:root[data-theme="dark"] .richtext-host .ql-snow .ql-picker-options,
+html.dark .richtext-host .ql-snow .ql-picker-options {
+  background: var(--surface, #0a2135);
+  border-color: var(--border, #173950);
+}
