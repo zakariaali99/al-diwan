@@ -177,7 +177,27 @@ export const CloseIcon = ({ className }: IconProps) => (
   </svg>
 );
 
-/** Picks an icon for a service category from its (translated) name. */
+/**
+ * Icons by category key — the language-independent `icon` field the admin sets
+ * (see CATEGORY_KEYS in pages/management/commands/seed_content.py).
+ */
+const ICONS_BY_KEY: Record<string, (props: IconProps) => JSX.Element> = {
+  medical: MedicalIcon,
+  industrial: IndustrialIcon,
+  food: FoodIcon,
+  oil: OilIcon,
+  sampling: FlaskIcon,
+  "pre-manufacturing": ClipboardIcon,
+  "pre-shipment": WarehouseIcon,
+  "during-shipment": ShipIcon,
+  "on-arrival": ArrivalIcon,
+};
+
+/**
+ * Name hints for categories added in the admin without an icon key. These only
+ * fire in Arabic and English — the name arrives translated — so they are a
+ * best-effort fallback, not the primary path.
+ */
 const ICON_HINTS: [string[], (props: IconProps) => JSX.Element][] = [
   [["الطبي", "Medical"], MedicalIcon],
   [["الصناعي", "Industrial"], IndustrialIcon],
@@ -190,9 +210,12 @@ const ICON_HINTS: [string[], (props: IconProps) => JSX.Element][] = [
   [["الوصول", "arrival"], ArrivalIcon],
 ];
 
-export function iconForCategory(name: string) {
+export function iconForCategory(category: { name: string; icon: string }) {
+  const byKey = ICONS_BY_KEY[category.icon];
+  if (byKey) return byKey;
+
   for (const [hints, Icon] of ICON_HINTS) {
-    if (hints.some((hint) => name.includes(hint))) return Icon;
+    if (hints.some((hint) => category.name.includes(hint))) return Icon;
   }
   return ClipboardIcon;
 }

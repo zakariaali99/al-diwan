@@ -157,6 +157,23 @@ SERVICE_CATEGORIES = [
     ]),
 ]
 
+# A stable, language-independent key per category, stored in ServiceCategory.icon.
+# The frontend uses it to pick an icon and to tell commodity sectors apart from
+# shipment-lifecycle stages. It has to be language-independent: the category
+# *name* arrives translated, so matching on it only ever worked in Arabic and
+# English. Keyed here by the Arabic name, which is the canonical source record.
+CATEGORY_KEYS = {
+    "خدمات الفحص الطبي": "medical",
+    "خدمات التفتيش الصناعي": "industrial",
+    "خدمات فحص الأغذية": "food",
+    "فحص ما قبل التصنيع": "pre-manufacturing",
+    "فحص ما قبل الشحن": "pre-shipment",
+    "خدمات فحص الزيوت": "oil",
+    "خدمات أخذ العينات والاختبار": "sampling",
+    "أثناء فحص الشحنة": "during-shipment",
+    "التفتيش عند الوصول": "on-arrival",
+}
+
 
 class Command(BaseCommand):
     help = "Seed the database with the current al-diwan.ly site content (Arabic)."
@@ -195,7 +212,7 @@ class Command(BaseCommand):
         ServiceItem.objects.all().delete()
         ServiceCategory.objects.all().delete()
         for cat_order, (cat_name, items) in enumerate(SERVICE_CATEGORIES):
-            category = ServiceCategory(order=cat_order)
+            category = ServiceCategory(order=cat_order, icon=CATEGORY_KEYS.get(cat_name, ""))
             category.set_current_language("ar")
             category.name = cat_name
             category.save()

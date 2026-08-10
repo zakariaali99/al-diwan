@@ -69,7 +69,7 @@ export function ServiceGrid({ categories, showAll = false }: { categories: Servi
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {categories.map((category, index) => {
-        const Icon = iconForCategory(category.name);
+        const Icon = iconForCategory(category);
         const items = showAll ? category.items : category.items.slice(0, 4);
         const remaining = category.items.length - items.length;
 

@@ -94,8 +94,20 @@ export function useCurrentUser() {
 /**
  * The site's service catalogue mixes two different things: commodity sectors
  * (medical, food, oil…) and shipment-lifecycle stages. They need different
- * treatments — cards vs. a timeline — so split them by name.
+ * treatments — cards vs. a timeline — so split them.
+ *
+ * The split keys off the language-independent `icon` field, not the name: the
+ * name arrives already translated, so matching on it only worked for the two
+ * languages whose names were hard-coded here.
  */
+const PROCESS_STAGE_KEYS = new Set([
+  "pre-manufacturing",
+  "pre-shipment",
+  "during-shipment",
+  "on-arrival",
+]);
+
+/** Fallback for categories with no icon key set. Arabic and English only. */
 const PROCESS_STAGE_NAMES = [
   "فحص ما قبل التصنيع",
   "فحص ما قبل الشحن",
@@ -107,12 +119,17 @@ const PROCESS_STAGE_NAMES = [
   "Inspection on arrival",
 ];
 
-export function splitServiceCategories<T extends { name: string; order: number }>(categories: T[]) {
+export function splitServiceCategories<T extends { name: string; icon: string; order: number }>(
+  categories: T[],
+) {
   const process: T[] = [];
   const commodity: T[] = [];
 
   for (const category of categories) {
-    if (PROCESS_STAGE_NAMES.includes(category.name)) process.push(category);
+    const isProcess = category.icon
+      ? PROCESS_STAGE_KEYS.has(category.icon)
+      : PROCESS_STAGE_NAMES.includes(category.name);
+    if (isProcess) process.push(category);
     else commodity.push(category);
   }
 

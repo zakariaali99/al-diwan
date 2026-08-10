@@ -248,15 +248,33 @@ to schedule before the mailbox is configured.
 | Back up the database | cPanel → phpMyAdmin → Export, or `mysqldump` |
 | Check inbound mail | `tail ~/logs/inbound-mail.log` |
 
-### Adding a third language
+### Adding a language
 
-The content models use django-parler, so a new language is configuration, not a
-migration:
+Translations live in two places, and a new language needs both. The content
+models use django-parler, so nothing here is a migration:
 
-1. Add it to `LANGUAGES` and `PARLER_LANGUAGES` in `config/settings/base.py`.
-2. `python manage.py makemessages -l <code>` → translate the `.po` →
-   `compilemessages` (run locally; commit the `.mo`, since the host has no gettext).
-3. Translate the database content per record in `/admin/`.
+1. **Settings.** Add the code to `LANGUAGES` and `PARLER_LANGUAGES` in
+   `config/settings/base.py`.
+2. **UI strings.** Add the short URL code to `LANGS` and a `LANG_META` entry in
+   `frontend/src/lib/i18n.ts`, then fill in the new key on every string in that
+   file. `Entry` is `Record<Lang, string>`, so `tsc` fails until all of them are
+   translated — that is the completeness check. Add the `hreflang` link to
+   `templates/index.html` too.
+3. **Database content.** Either translate each record in `/admin/`, or add the
+   language to `pages/management/commands/seed_translations.py` and run it:
+
+   ```
+   python manage.py seed_translations --lang <code>
+   ```
+
+   Check coverage afterwards — parler falls back to Arabic silently, so missing
+   translations look like a working page in the wrong language rather than an
+   error.
+
+There is no gettext step. The Django templates that `makemessages` used to scan
+were removed in the React rebuild, and no `gettext()` calls remain in the Python
+code, so `locale/` is vestigial — `locale/en/LC_MESSAGES/django.po` still points
+at `templates/base.html` and other deleted files. It can be deleted.
 
 ---
 
