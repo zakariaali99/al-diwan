@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
-import inspectionContainer from "@/assets/inspection-container.jpeg";
-import inspectionDocuments from "@/assets/inspection-documents.jpeg";
+import { images } from "@/assets/generated/manifest";
 import type { PostListItem, ServiceCategory } from "@/lib/api";
 import { useLinkTo, useT } from "@/lib/hooks";
 import { ArrowIcon, CheckIcon, iconForCategory } from "./Icons";
 import Reveal from "./Reveal";
+import SmartImage from "./SmartImage";
 
 export function SectionHead({
   eyebrow,
@@ -134,29 +134,45 @@ export function ProcessTimeline({ categories }: { categories: ServiceCategory[] 
   );
 }
 
-/** Real photographs of the team at work — the strongest trust signal available. */
+/**
+ * Real photographs of the team at work — the strongest trust signal available.
+ *
+ * These originals are small (225-300px wide), so the gallery deliberately keeps
+ * each frame modest rather than blowing one up across the full width: a wall of
+ * sharp, smaller photos reads as far more credible than two soft large ones.
+ * Sizes are declared so the browser never fetches more than it needs.
+ */
 export function FieldWork() {
   const t = useT();
   const photos = [
-    { src: inspectionContainer, alt: t("inspectionContainerAlt") },
-    { src: inspectionDocuments, alt: t("inspectionDocumentsAlt") },
+    { asset: images.inspectionCargo, alt: t("inspectionCargoAlt"), span: "sm:col-span-2" },
+    { asset: images.inspectionContainer, alt: t("inspectionContainerAlt"), span: "" },
+    { asset: images.inspectionDocuments, alt: t("inspectionDocumentsAlt"), span: "" },
+    { asset: images.inspectionTeam, alt: t("inspectionTeamAlt"), span: "sm:col-span-2" },
   ];
 
   return (
     <section className="bg-white py-20 lg:py-24">
       <div className="container-page">
         <SectionHead eyebrow={t("fieldWork")} title={t("fieldWorkHeading")} lede={t("fieldWorkLede")} />
-        <div className="grid gap-6 sm:grid-cols-2 lg:gap-8">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:gap-6">
           {photos.map((photo, index) => (
-            <Reveal key={photo.src} delay={index * 0.08}>
-              <figure className="group relative overflow-hidden rounded-2xl bg-slate-100 shadow-lg shadow-slate-200/60">
-                <img
-                  src={photo.src}
+            <Reveal key={photo.alt} delay={index * 0.07} className={photo.span}>
+              {/* The figure carries the same width cap as the image inside it,
+                  otherwise the absolutely-positioned caption stretches to the
+                  full grid cell and detaches from the photo. */}
+              <figure
+                className="group relative mx-auto w-full"
+                style={{ maxWidth: photo.asset.width }}
+              >
+                <SmartImage
+                  asset={photo.asset}
                   alt={photo.alt}
-                  loading="lazy"
-                  className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes={`(max-width: 640px) 45vw, ${photo.asset.width}px`}
+                  className="shadow-lg shadow-slate-200/60"
+                  imgClassName="transition-transform duration-700 group-hover:scale-105"
                 />
-                <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-950/85 to-transparent p-5 text-sm text-white">
+                <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 rounded-b-2xl bg-gradient-to-t from-brand-950/90 via-brand-950/45 to-transparent p-4 text-xs leading-snug text-white sm:text-sm">
                   {photo.alt}
                 </figcaption>
               </figure>

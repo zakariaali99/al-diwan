@@ -88,6 +88,19 @@ const strings = {
     ar: "مفتش يراجع وثائق الشحنة ويوثّقها",
     en: "An inspector reviewing and documenting shipment paperwork",
   },
+  inspectionTeamAlt: {
+    ar: "فريق التفتيش عند باب الحاوية أثناء المعاينة",
+    en: "The inspection team at the container door during examination",
+  },
+  inspectionCargoAlt: {
+    ar: "أخذ عينات من شحنة حبوب على متن سفينة سائبة",
+    en: "Sampling a grain consignment aboard a bulk carrier",
+  },
+  officeAlt: {
+    ar: "مقر شركة الديوان في مصراتة",
+    en: "Al-Diwan's head office in Misrata",
+  },
+  ourOffice: { ar: "مقرنا", en: "Our office" },
   qualityPolicy: { ar: "سياسة الجودة", en: "Quality policy" },
   qualityHeading: {
     ar: "الالتزام ليس شعارًا، بل نظام إداري موثّق",

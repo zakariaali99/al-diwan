@@ -2,8 +2,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 
-import ship from "@/assets/ship.webp";
-import shipSmall from "@/assets/ship-sm.webp";
+import { images } from "@/assets/generated/manifest";
 import { useLinkTo, useT } from "@/lib/hooks";
 import { ArrowIcon, ShieldCheckIcon } from "./Icons";
 
@@ -114,14 +113,24 @@ export default function ShipHero({ lede }: { lede?: string }) {
             className="relative overflow-hidden shadow-2xl shadow-black/40 ring-1 ring-white/10"
             style={{ borderRadius: "48% 52% 44% 56% / 42% 40% 60% 58%" }}
           >
+            {/* LQIP behind the photo so the frame is never empty on first paint */}
+            <span
+              aria-hidden
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url("${images.ship.lqip}")`,
+                filter: "blur(14px)",
+                transform: "scale(1.1)",
+              }}
+            />
             <motion.img
-              src={ship}
-              srcSet={`${shipSmall} 800w, ${ship} 1400w`}
-              sizes="(max-width: 1024px) 100vw, 45vw"
+              src={images.ship.src}
+              srcSet={images.ship.srcSet}
+              sizes="(max-width: 1024px) 92vw, 45vw"
               alt={t("shipAlt")}
-              width={1400}
-              height={933}
-              className={`h-full w-full object-cover ${reduceMotion ? "" : "animate-ken-burns"}`}
+              width={images.ship.width}
+              height={images.ship.height}
+              className={`relative h-full w-full object-cover ${reduceMotion ? "" : "animate-ken-burns"}`}
               style={reduceMotion ? undefined : { y: imageY }}
               loading="eager"
               fetchPriority="high"

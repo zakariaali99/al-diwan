@@ -1,38 +1,78 @@
 {
-  "src/assets/inspection-container.jpeg": {
-    "file": "assets/inspection-container-CmJ16QO9.jpeg",
-    "src": "src/assets/inspection-container.jpeg"
+  "src/assets/generated/inspectionCargo-300.webp": {
+    "file": "assets/inspectionCargo-300-BZOMfeOY.webp",
+    "src": "src/assets/generated/inspectionCargo-300.webp"
   },
-  "src/assets/inspection-documents.jpeg": {
-    "file": "assets/inspection-documents-tNyS3Sub.jpeg",
-    "src": "src/assets/inspection-documents.jpeg"
+  "src/assets/generated/inspectionCargo-405.webp": {
+    "file": "assets/inspectionCargo-405-CXJPlZBU.webp",
+    "src": "src/assets/generated/inspectionCargo-405.webp"
+  },
+  "src/assets/generated/inspectionContainer-225.webp": {
+    "file": "assets/inspectionContainer-225-Bln10kvb.webp",
+    "src": "src/assets/generated/inspectionContainer-225.webp"
+  },
+  "src/assets/generated/inspectionContainer-303.webp": {
+    "file": "assets/inspectionContainer-303-Bz2ywvA-.webp",
+    "src": "src/assets/generated/inspectionContainer-303.webp"
+  },
+  "src/assets/generated/inspectionDocuments-225.webp": {
+    "file": "assets/inspectionDocuments-225-BXKCg0sg.webp",
+    "src": "src/assets/generated/inspectionDocuments-225.webp"
+  },
+  "src/assets/generated/inspectionDocuments-303.webp": {
+    "file": "assets/inspectionDocuments-303-D4Ufr1y8.webp",
+    "src": "src/assets/generated/inspectionDocuments-303.webp"
+  },
+  "src/assets/generated/inspectionTeam-300.webp": {
+    "file": "assets/inspectionTeam-300-D3e3MZqh.webp",
+    "src": "src/assets/generated/inspectionTeam-300.webp"
+  },
+  "src/assets/generated/inspectionTeam-405.webp": {
+    "file": "assets/inspectionTeam-405-DiMVeQbC.webp",
+    "src": "src/assets/generated/inspectionTeam-405.webp"
+  },
+  "src/assets/generated/office-300.webp": {
+    "file": "assets/office-300-hpd7adp_.webp",
+    "src": "src/assets/generated/office-300.webp"
+  },
+  "src/assets/generated/office-405.webp": {
+    "file": "assets/office-405-qPqTx6Vs.webp",
+    "src": "src/assets/generated/office-405.webp"
+  },
+  "src/assets/generated/ship-1400.webp": {
+    "file": "assets/ship-1400-DEFKfn9y.webp",
+    "src": "src/assets/generated/ship-1400.webp"
+  },
+  "src/assets/generated/ship-800.webp": {
+    "file": "assets/ship-800-CCxkjbDk.webp",
+    "src": "src/assets/generated/ship-800.webp"
   },
   "src/assets/logo.png": {
-    "file": "assets/logo-CNlgBylU.png",
+    "file": "assets/logo-hiDDvVV4.png",
     "src": "src/assets/logo.png"
   },
-  "src/assets/ship-sm.webp": {
-    "file": "assets/ship-sm-DzJh9UKD.webp",
-    "src": "src/assets/ship-sm.webp"
-  },
-  "src/assets/ship.webp": {
-    "file": "assets/ship-fLkTOfqy.webp",
-    "src": "src/assets/ship.webp"
-  },
   "src/main.tsx": {
-    "file": "assets/main-BU0VTj9G.js",
+    "file": "assets/main-DYemf5Dn.js",
     "name": "main",
     "src": "src/main.tsx",
     "isEntry": true,
     "css": [
-      "assets/main-B_KjKY5y.css"
+      "assets/main-BLiYjG3U.css"
     ],
     "assets": [
-      "assets/logo-CNlgBylU.png",
-      "assets/ship-fLkTOfqy.webp",
-      "assets/ship-sm-DzJh9UKD.webp",
-      "assets/inspection-container-CmJ16QO9.jpeg",
-      "assets/inspection-documents-tNyS3Sub.jpeg"
+      "assets/logo-hiDDvVV4.png",
+      "assets/ship-800-CCxkjbDk.webp",
+      "assets/ship-1400-DEFKfn9y.webp",
+      "assets/inspectionContainer-225-Bln10kvb.webp",
+      "assets/inspectionContainer-303-Bz2ywvA-.webp",
+      "assets/inspectionDocuments-225-BXKCg0sg.webp",
+      "assets/inspectionDocuments-303-D4Ufr1y8.webp",
+      "assets/inspectionTeam-300-D3e3MZqh.webp",
+      "assets/inspectionTeam-405-DiMVeQbC.webp",
+      "assets/inspectionCargo-300-BZOMfeOY.webp",
+      "assets/inspectionCargo-405-CXJPlZBU.webp",
+      "assets/office-300-hpd7adp_.webp",
+      "assets/office-405-qPqTx6Vs.webp"
     ]
   }
 }

@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+import { images } from "@/assets/generated/manifest";
 import { FacebookIcon, MailIcon, PinIcon, WhatsAppIcon } from "@/components/Icons";
 import { PageHeader } from "@/components/Sections";
+import SmartImage from "@/components/SmartImage";
 import { api } from "@/lib/api";
 import { useLang, useSiteSettings, useT } from "@/lib/hooks";
 import { usePageMeta } from "@/lib/meta";
@@ -100,6 +102,12 @@ export default function ContactPage() {
       <section className="py-20 lg:py-24">
         <div className="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
+            <SmartImage
+              asset={images.office}
+              alt={t("officeAlt")}
+              sizes="(max-width: 1024px) 92vw, 400px"
+              className="mb-6 shadow-lg shadow-slate-200/60"
+            />
             <h2 className="mb-6 text-2xl font-bold text-ink">{t("contactDetails")}</h2>
             <div className="flex flex-col gap-4">
               {cards.map((card) => (
