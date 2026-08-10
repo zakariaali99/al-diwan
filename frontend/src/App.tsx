@@ -1,8 +1,7 @@
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 
 import SiteLayout from "./components/SiteLayout";
-import DashboardLayout from "./dashboard/DashboardLayout";
 import HomePage from "./pages/HomePage";
 import ServicesPage from "./pages/ServicesPage";
 import AboutPage from "./pages/AboutPage";
@@ -10,13 +9,23 @@ import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import ContactPage from "./pages/ContactPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import LoginPage from "./dashboard/LoginPage";
-import PostsPage from "./dashboard/PostsPage";
-import PostEditPage from "./dashboard/PostEditPage";
-import InboxPage from "./dashboard/InboxPage";
-import ThreadPage from "./dashboard/ThreadPage";
-import ComposePage from "./dashboard/ComposePage";
 import { DEFAULT_LANG, dirFor, isLang } from "./lib/i18n";
+
+// The dashboard is staff-only, so it is split into its own chunk rather than
+// shipped to every visitor of the public site. The rich-text editor in
+// particular has no business loading on the home page.
+const DashboardLayout = lazy(() => import("./dashboard/DashboardLayout"));
+const LoginPage = lazy(() => import("./dashboard/LoginPage"));
+const PostsPage = lazy(() => import("./dashboard/PostsPage"));
+const PostEditPage = lazy(() => import("./dashboard/PostEditPage"));
+const InboxPage = lazy(() => import("./dashboard/InboxPage"));
+const ThreadPage = lazy(() => import("./dashboard/ThreadPage"));
+const ComposePage = lazy(() => import("./dashboard/ComposePage"));
+
+/** Shown for the moment it takes to fetch the dashboard chunk. */
+function DashboardFallback() {
+  return <div className="grid min-h-screen place-items-center text-ink-muted">…</div>;
+}
 
 /** Keeps <html lang>/<dir> in sync so RTL and screen readers work per route. */
 function LangShell() {
@@ -46,8 +55,22 @@ function LangShell() {
         <Route path="contact-us/" element={<ContactPage />} />
       </Route>
 
-      <Route path="dashboard/login/" element={<LoginPage />} />
-      <Route path="dashboard/" element={<DashboardLayout />}>
+      <Route
+        path="dashboard/login/"
+        element={
+          <Suspense fallback={<DashboardFallback />}>
+            <LoginPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="dashboard/"
+        element={
+          <Suspense fallback={<DashboardFallback />}>
+            <DashboardLayout />
+          </Suspense>
+        }
+      >
         <Route index element={<Navigate to="posts/" replace />} />
         <Route path="posts/" element={<PostsPage />} />
         <Route path="posts/new/" element={<PostEditPage />} />

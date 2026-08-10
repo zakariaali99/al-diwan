@@ -134,11 +134,11 @@ PARLER_LANGUAGES = {
         {"code": "zh-hans"},
         {"code": "tr"},
     ),
-    # Fall back to English before Arabic: a Spanish or Turkish visitor reading
-    # an untranslated service description is far better served by English than
-    # by Arabic script they may not be able to read at all.
+    # Arabic is the company's main language and the canonical source of every
+    # content record, so an untranslated field falls back to Arabic first and
+    # English second.
     "default": {
-        "fallbacks": ["en", "ar"],
+        "fallbacks": ["ar", "en"],
         "hide_untranslated": False,
     },
 }

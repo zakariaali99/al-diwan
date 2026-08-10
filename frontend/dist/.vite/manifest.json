@@ -1,4 +1,11 @@
 {
+  "_useMutation-CcJmQF94.js": {
+    "file": "assets/useMutation-CcJmQF94.js",
+    "name": "useMutation",
+    "imports": [
+      "src/main.tsx"
+    ]
+  },
   "src/assets/generated/heroBackdrop-1280.webp": {
     "file": "assets/heroBackdrop-1280-D3WbIkXO.webp",
     "src": "src/assets/generated/heroBackdrop-1280.webp"
@@ -63,11 +70,87 @@
     "file": "assets/logo-hiDDvVV4.png",
     "src": "src/assets/logo.png"
   },
+  "src/dashboard/ComposePage.tsx": {
+    "file": "assets/ComposePage-DByILAR3.js",
+    "name": "ComposePage",
+    "src": "src/dashboard/ComposePage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx",
+      "_useMutation-CcJmQF94.js"
+    ]
+  },
+  "src/dashboard/DashboardLayout.tsx": {
+    "file": "assets/DashboardLayout-BE01uzax.js",
+    "name": "DashboardLayout",
+    "src": "src/dashboard/DashboardLayout.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx"
+    ]
+  },
+  "src/dashboard/InboxPage.tsx": {
+    "file": "assets/InboxPage-DhUNAFrg.js",
+    "name": "InboxPage",
+    "src": "src/dashboard/InboxPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx"
+    ]
+  },
+  "src/dashboard/LoginPage.tsx": {
+    "file": "assets/LoginPage-DU38RbWJ.js",
+    "name": "LoginPage",
+    "src": "src/dashboard/LoginPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx"
+    ]
+  },
+  "src/dashboard/PostEditPage.tsx": {
+    "file": "assets/PostEditPage-C6Z2oals.js",
+    "name": "PostEditPage",
+    "src": "src/dashboard/PostEditPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx",
+      "_useMutation-CcJmQF94.js"
+    ]
+  },
+  "src/dashboard/PostsPage.tsx": {
+    "file": "assets/PostsPage-Dt-ARuH9.js",
+    "name": "PostsPage",
+    "src": "src/dashboard/PostsPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx",
+      "_useMutation-CcJmQF94.js"
+    ]
+  },
+  "src/dashboard/ThreadPage.tsx": {
+    "file": "assets/ThreadPage-DWAY-D4B.js",
+    "name": "ThreadPage",
+    "src": "src/dashboard/ThreadPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx",
+      "_useMutation-CcJmQF94.js"
+    ]
+  },
   "src/main.tsx": {
-    "file": "assets/main-Dd5M70O5.js",
+    "file": "assets/main-BMURkPTQ.js",
     "name": "main",
     "src": "src/main.tsx",
     "isEntry": true,
+    "dynamicImports": [
+      "src/dashboard/DashboardLayout.tsx",
+      "src/dashboard/LoginPage.tsx",
+      "src/dashboard/PostsPage.tsx",
+      "src/dashboard/PostEditPage.tsx",
+      "src/dashboard/InboxPage.tsx",
+      "src/dashboard/ThreadPage.tsx",
+      "src/dashboard/ComposePage.tsx"
+    ],
     "css": [
       "assets/main-BuONYCJ1.css"
     ],
