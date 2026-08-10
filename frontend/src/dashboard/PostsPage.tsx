@@ -5,9 +5,9 @@ import { api } from "@/lib/api";
 import { useCurrentUser, useLinkTo, useT } from "@/lib/hooks";
 
 const STATUS_STYLES: Record<string, string> = {
-  published: "bg-green-100 text-green-800",
-  scheduled: "bg-amber-100 text-amber-800",
-  draft: "bg-slate-100 text-slate-700",
+  published: "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300",
+  scheduled: "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+  draft: "bg-subtle text-muted",
 };
 
 export default function PostsPage() {
@@ -29,7 +29,7 @@ export default function PostsPage() {
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-ink">{t("posts")}</h1>
+        <h1 className="text-2xl font-bold text-body">{t("posts")}</h1>
         {user?.permissions?.canAddPosts && (
           <Link to={linkTo("dashboard/posts/new/")} className="btn-primary">
             {t("newPost")}
@@ -38,18 +38,18 @@ export default function PostsPage() {
       </div>
 
       {posts.isLoading ? (
-        <p className="text-ink-muted">{t("loading")}</p>
+        <p className="text-muted">{t("loading")}</p>
       ) : posts.isError ? (
-        <p className="text-ink-muted">{t("errorLoading")}</p>
+        <p className="text-muted">{t("errorLoading")}</p>
       ) : (posts.data?.length ?? 0) === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-10 text-center text-ink-muted">
+        <div className="rounded-xl border border-line bg-surface p-10 text-center text-muted">
           {t("noPostsYet")}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <div className="overflow-x-auto rounded-xl border border-line bg-surface">
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="bg-slate-50 text-start">
+              <tr className="bg-subtle text-start">
                 <th className="p-3 text-start font-semibold">{t("title")}</th>
                 <th className="p-3 text-start font-semibold">{t("author")}</th>
                 <th className="p-3 text-start font-semibold">{t("status")}</th>
@@ -63,18 +63,18 @@ export default function PostsPage() {
                   <td className="p-3">
                     <Link
                       to={linkTo(`dashboard/posts/${post.id}/`)}
-                      className="font-medium text-ink hover:text-brand-600"
+                      className="font-medium text-body hover:text-brand-600"
                     >
                       {post.title || "—"}
                     </Link>
                   </td>
-                  <td className="p-3 text-ink-muted">{post.author_name || "—"}</td>
+                  <td className="p-3 text-muted">{post.author_name || "—"}</td>
                   <td className="p-3">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_STYLES[post.status]}`}>
                       {statusLabel(post.status)}
                     </span>
                   </td>
-                  <td className="whitespace-nowrap p-3 text-ink-muted">
+                  <td className="whitespace-nowrap p-3 text-muted">
                     {post.published_at ? new Date(post.published_at).toLocaleDateString() : "—"}
                   </td>
                   <td className="p-3 text-end">
@@ -84,7 +84,7 @@ export default function PostsPage() {
                         onClick={() => {
                           if (window.confirm(t("confirmDelete"))) remove.mutate(post.id);
                         }}
-                        className="text-sm text-red-600 hover:underline"
+                        className="text-sm text-red-600 dark:text-red-400 hover:underline"
                       >
                         {t("delete")}
                       </button>

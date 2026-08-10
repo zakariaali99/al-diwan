@@ -71,7 +71,7 @@ export default function HomePage() {
       </section>
 
       {process.length > 0 && (
-        <section className="bg-slate-50 py-20 lg:py-24">
+        <section className="bg-subtle py-20 lg:py-24">
           <div className="container-page">
             <SectionHead eyebrow={t("methodology")} title={t("processHeading")} lede={t("processLede")} />
             <ProcessTimeline categories={process} />
@@ -82,7 +82,7 @@ export default function HomePage() {
       <FieldWork />
 
       {(intro || vision || mission || goal) && (
-        <section className="bg-slate-50 py-20 lg:py-24">
+        <section className="bg-subtle py-20 lg:py-24">
           <div className="container-page grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
             <Reveal>
               <div>
@@ -90,11 +90,11 @@ export default function HomePage() {
                   <span aria-hidden className="h-0.5 w-7 rounded bg-rust-500" />
                   {t("about")}
                 </span>
-                <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                <h2 className="mt-4 text-3xl font-bold tracking-tight text-body sm:text-4xl">
                   {intro?.title || t("heroEyebrow")}
                 </h2>
                 {intro?.body && (
-                  <p className="mt-5 whitespace-pre-line leading-relaxed text-ink-muted">{intro.body}</p>
+                  <p className="mt-5 whitespace-pre-line leading-relaxed text-muted">{intro.body}</p>
                 )}
                 <Link to={linkTo("about-us/")} className="btn-primary group mt-8">
                   {t("about")}
@@ -106,13 +106,13 @@ export default function HomePage() {
             <ul className="grid gap-6">
               {[vision, mission, goal].filter(Boolean).map((block, index) => (
                 <Reveal key={block!.slug} delay={index * 0.06}>
-                  <li className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-6">
-                    <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
+                  <li className="flex gap-4 rounded-2xl border border-line bg-surface p-6">
+                    <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-tint text-brand-600 dark:text-brand-300">
                       <CheckIcon className="h-4 w-4" />
                     </span>
                     <div>
-                      <h3 className="mb-2 text-lg font-bold text-ink">{block!.title}</h3>
-                      <p className="leading-relaxed text-ink-muted">{block!.body}</p>
+                      <h3 className="mb-2 text-lg font-bold text-body">{block!.title}</h3>
+                      <p className="leading-relaxed text-muted">{block!.body}</p>
                     </div>
                   </li>
                 </Reveal>
@@ -131,10 +131,10 @@ export default function HomePage() {
                   <span aria-hidden className="h-0.5 w-7 rounded bg-rust-500" />
                   {t("qualityPolicy")}
                 </span>
-                <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                <h2 className="mt-4 text-3xl font-bold tracking-tight text-body sm:text-4xl">
                   {t("qualityHeading")}
                 </h2>
-                <p className="mt-5 whitespace-pre-line leading-relaxed text-ink-muted">{quality.body}</p>
+                <p className="mt-5 whitespace-pre-line leading-relaxed text-muted">{quality.body}</p>
               </div>
             </Reveal>
             <PrincipleList principles={principles.data ?? []} />
@@ -143,7 +143,7 @@ export default function HomePage() {
       )}
 
       {latestPosts.length > 0 && (
-        <section className="bg-slate-50 py-20 lg:py-24">
+        <section className="bg-subtle py-20 lg:py-24">
           <div className="container-page">
             <SectionHead eyebrow={t("blog")} title={t("latestNews")} />
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

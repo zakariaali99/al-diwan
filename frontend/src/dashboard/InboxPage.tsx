@@ -5,9 +5,9 @@ import { api } from "@/lib/api";
 import { useCurrentUser, useLinkTo, useT } from "@/lib/hooks";
 
 const STATUS_STYLES: Record<string, string> = {
-  open: "bg-green-100 text-green-800",
-  pending: "bg-amber-100 text-amber-800",
-  closed: "bg-slate-100 text-slate-700",
+  open: "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300",
+  pending: "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+  closed: "bg-subtle text-muted",
 };
 
 export default function InboxPage() {
@@ -38,7 +38,7 @@ export default function InboxPage() {
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-ink">{t("messages")}</h1>
+        <h1 className="text-2xl font-bold text-body">{t("messages")}</h1>
         {user?.permissions?.canAddThreads && (
           <Link to={linkTo("dashboard/inbox/compose/")} className="btn-primary">
             {t("newMessage")}
@@ -56,7 +56,7 @@ export default function InboxPage() {
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               filter.active
                 ? "bg-brand-600 text-white"
-                : "border border-slate-200 bg-white text-ink-muted hover:border-brand-600 hover:text-brand-600"
+                : "border border-line bg-surface text-muted hover:border-brand-600 hover:text-brand-600"
             }`}
           >
             {filter.label}
@@ -65,18 +65,18 @@ export default function InboxPage() {
       </nav>
 
       {threads.isLoading ? (
-        <p className="text-ink-muted">{t("loading")}</p>
+        <p className="text-muted">{t("loading")}</p>
       ) : threads.isError ? (
-        <p className="text-ink-muted">{t("errorLoading")}</p>
+        <p className="text-muted">{t("errorLoading")}</p>
       ) : (threads.data?.length ?? 0) === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-10 text-center text-ink-muted">
+        <div className="rounded-xl border border-line bg-surface p-10 text-center text-muted">
           {t("noMessages")}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <div className="overflow-x-auto rounded-xl border border-line bg-surface">
           <table className="w-full border-collapse text-sm">
             <thead>
-              <tr className="bg-slate-50">
+              <tr className="bg-subtle">
                 <th className="p-3" />
                 <th className="p-3 text-start font-semibold">{t("subject")}</th>
                 <th className="p-3 text-start font-semibold">{t("from")}</th>
@@ -98,19 +98,19 @@ export default function InboxPage() {
                   <td className="p-3">
                     <Link
                       to={linkTo(`dashboard/inbox/${thread.id}/`)}
-                      className="font-medium text-ink hover:text-brand-600"
+                      className="font-medium text-body hover:text-brand-600"
                     >
                       {thread.subject}
                     </Link>
                   </td>
-                  <td className="p-3 text-ink-muted">{thread.correspondent.name || thread.correspondent.email}</td>
-                  <td className="p-3 text-ink-muted">{thread.assigned_to_name || "—"}</td>
+                  <td className="p-3 text-muted">{thread.correspondent.name || thread.correspondent.email}</td>
+                  <td className="p-3 text-muted">{thread.assigned_to_name || "—"}</td>
                   <td className="p-3">
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_STYLES[thread.status]}`}>
                       {statusLabel(thread.status)}
                     </span>
                   </td>
-                  <td className="whitespace-nowrap p-3 text-ink-muted">
+                  <td className="whitespace-nowrap p-3 text-muted">
                     {new Date(thread.updated_at).toLocaleDateString()}
                   </td>
                 </tr>

@@ -50,7 +50,7 @@ export default function BlogPostPage() {
           )}
 
           {post.data.excerpt && (
-            <p className="mb-8 text-lg leading-relaxed text-ink-muted">{post.data.excerpt}</p>
+            <p className="mb-8 text-lg leading-relaxed text-muted">{post.data.excerpt}</p>
           )}
 
           <div
@@ -67,9 +67,9 @@ export default function BlogPostPage() {
       </article>
 
       {related.length > 0 && (
-        <section className="bg-slate-50 py-20">
+        <section className="bg-subtle py-20">
           <div className="container-page">
-            <h2 className="mb-10 text-2xl font-bold text-ink">{t("readNext")}</h2>
+            <h2 className="mb-10 text-2xl font-bold text-body">{t("readNext")}</h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((item, index) => (
                 <Reveal key={item.id} delay={index * 0.05}>

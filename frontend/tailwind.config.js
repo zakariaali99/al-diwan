@@ -1,5 +1,13 @@
 /** @type {import('tailwindcss').Config} */
+
+// Semantic colours resolve through CSS variables so light and dark are defined
+// in one place (index.css) instead of scattering dark: variants through every
+// component. Variables hold raw "r g b" triplets so Tailwind's opacity
+// modifiers (bg-surface/60) keep working.
+const themed = (variable) => `rgb(var(${variable}) / <alpha-value>)`;
+
 export default {
+  darkMode: "class",
   content: ["./src/**/*.{ts,tsx}", "../templates/index.html"],
   theme: {
     extend: {
@@ -26,6 +34,20 @@ export default {
           600: "#8B4226",
           700: "#6E341E",
         },
+
+        // --- Semantic, theme-aware ---
+        canvas: themed("--c-canvas"),        // page background
+        surface: themed("--c-surface"),      // cards, panels, header
+        raised: themed("--c-raised"),        // menus, popovers
+        subtle: themed("--c-subtle"),        // alternating section bands
+        line: themed("--c-line"),            // default borders
+        "line-strong": themed("--c-line-strong"),
+        body: themed("--c-body"),            // primary text
+        muted: themed("--c-muted"),          // secondary text
+        faint: themed("--c-faint"),          // tertiary text
+        "brand-tint": themed("--c-brand-tint"), // brand-tinted fill
+
+        // Kept for the dark hero/footer, which stay dark in both themes.
         ink: {
           DEFAULT: "#12212E",
           muted: "#54677A",
@@ -44,7 +66,7 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
         },
-        "sheen": {
+        sheen: {
           "0%": { transform: "translateX(-120%)" },
           "100%": { transform: "translateX(220%)" },
         },

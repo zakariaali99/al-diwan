@@ -42,7 +42,7 @@ export default function ServicesPage() {
       </section>
 
       {process.length > 0 && (
-        <section className="bg-slate-50 py-20 lg:py-24">
+        <section className="bg-subtle py-20 lg:py-24">
           <div className="container-page">
             <SectionHead eyebrow={t("shipmentCycle")} title={t("processHeading")} lede={t("processLede")} />
             <ProcessTimeline categories={process} />

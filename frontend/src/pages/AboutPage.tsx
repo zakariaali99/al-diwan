@@ -40,11 +40,11 @@ export default function AboutPage() {
                 <span aria-hidden className="h-0.5 w-7 rounded bg-rust-500" />
                 {t("ourTeam")}
               </span>
-              <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+              <h2 className="mt-4 text-3xl font-bold tracking-tight text-body sm:text-4xl">
                 {team?.title || t("ourTeam")}
               </h2>
               {team?.body && (
-                <p className="mt-5 whitespace-pre-line leading-relaxed text-ink-muted">{team.body}</p>
+                <p className="mt-5 whitespace-pre-line leading-relaxed text-muted">{team.body}</p>
               )}
             </div>
           </Reveal>
@@ -52,13 +52,13 @@ export default function AboutPage() {
           <ul className="grid gap-6">
             {values.map((block, index) => (
               <Reveal key={block!.slug} delay={index * 0.06}>
-                <li className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-6">
-                  <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
+                <li className="flex gap-4 rounded-2xl border border-line bg-surface p-6">
+                  <span className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-tint text-brand-600 dark:text-brand-300">
                     <CheckIcon className="h-4 w-4" />
                   </span>
                   <div>
-                    <h3 className="mb-2 text-lg font-bold text-ink">{block!.title}</h3>
-                    <p className="leading-relaxed text-ink-muted">{block!.body}</p>
+                    <h3 className="mb-2 text-lg font-bold text-body">{block!.title}</h3>
+                    <p className="leading-relaxed text-muted">{block!.body}</p>
                   </div>
                 </li>
               </Reveal>
@@ -70,7 +70,7 @@ export default function AboutPage() {
       <FieldWork />
 
       {quality && (
-        <section className="bg-slate-50 py-20 lg:py-24">
+        <section className="bg-subtle py-20 lg:py-24">
           <div className="container-page grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
             <Reveal>
               <div>
@@ -78,10 +78,10 @@ export default function AboutPage() {
                   <span aria-hidden className="h-0.5 w-7 rounded bg-rust-500" />
                   {t("qualityPolicy")}
                 </span>
-                <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                <h2 className="mt-4 text-3xl font-bold tracking-tight text-body sm:text-4xl">
                   {quality.title || t("qualityHeading")}
                 </h2>
-                <p className="mt-5 whitespace-pre-line leading-relaxed text-ink-muted">{quality.body}</p>
+                <p className="mt-5 whitespace-pre-line leading-relaxed text-muted">{quality.body}</p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
                   {[
@@ -90,12 +90,12 @@ export default function AboutPage() {
                   ].map((badge) => (
                     <span
                       key={badge.code}
-                      className="inline-flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3"
+                      className="inline-flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3"
                     >
                       <ShieldCheckIcon className="h-5 w-5 shrink-0 text-rust-500" />
                       <span>
-                        <strong className="block text-sm font-semibold text-ink">{badge.code}</strong>
-                        <span className="text-xs text-ink-muted">{badge.label}</span>
+                        <strong className="block text-sm font-semibold text-body">{badge.code}</strong>
+                        <span className="text-xs text-muted">{badge.label}</span>
                       </span>
                     </span>
                   ))}
@@ -114,7 +114,7 @@ export default function AboutPage() {
               <span aria-hidden className="h-0.5 w-7 rounded bg-rust-500" />
               {t("ourNetwork")}
             </span>
-            <p className="mt-6 whitespace-pre-line text-lg leading-relaxed text-ink-muted">
+            <p className="mt-6 whitespace-pre-line text-lg leading-relaxed text-muted">
               {closing.body}
             </p>
           </Reveal>

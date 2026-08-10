@@ -108,7 +108,7 @@ export default function RichTextEditor({
 
   return (
     <div>
-      <div ref={hostRef} className="overflow-hidden rounded-lg border border-slate-300 bg-white [&_.ql-container]:min-h-[280px] [&_.ql-container]:border-0 [&_.ql-editor]:text-base [&_.ql-toolbar]:border-0 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-slate-200" />
+      <div ref={hostRef} className="overflow-hidden rounded-lg border border-line-strong bg-surface [&_.ql-container]:min-h-[280px] [&_.ql-container]:border-0 [&_.ql-editor]:text-base [&_.ql-toolbar]:border-0 [&_.ql-toolbar]:border-b [&_.ql-toolbar]:border-line" />
       <noscript>
         <textarea
           className="field-input mt-2"

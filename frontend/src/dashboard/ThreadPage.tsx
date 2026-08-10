@@ -6,9 +6,9 @@ import { api } from "@/lib/api";
 import { useCurrentUser, useLinkTo, useT } from "@/lib/hooks";
 
 const STATUS_STYLES: Record<string, string> = {
-  open: "bg-green-100 text-green-800",
-  pending: "bg-amber-100 text-amber-800",
-  closed: "bg-slate-100 text-slate-700",
+  open: "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300",
+  pending: "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+  closed: "bg-subtle text-muted",
 };
 
 export default function ThreadPage() {
@@ -49,8 +49,8 @@ export default function ThreadPage() {
     onSuccess: invalidate,
   });
 
-  if (thread.isLoading) return <p className="text-ink-muted">{t("loading")}</p>;
-  if (thread.isError || !thread.data) return <p className="text-ink-muted">{t("errorLoading")}</p>;
+  if (thread.isLoading) return <p className="text-muted">{t("loading")}</p>;
+  if (thread.isError || !thread.data) return <p className="text-muted">{t("errorLoading")}</p>;
 
   const data = thread.data;
   const statusLabel =
@@ -60,8 +60,8 @@ export default function ThreadPage() {
     <>
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-ink">{data.subject}</h1>
-          <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink-muted">
+          <h1 className="text-2xl font-bold text-body">{data.subject}</h1>
+          <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
             <span dir="ltr">{data.correspondent.name || data.correspondent.email}</span>
             <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_STYLES[data.status]}`}>
               {statusLabel}
@@ -87,17 +87,17 @@ export default function ThreadPage() {
         </div>
       </div>
 
-      <div className="mb-6 flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-6">
+      <div className="mb-6 flex flex-col gap-4 rounded-xl border border-line bg-surface p-6">
         {data.messages.map((message) => (
           <div
             key={message.id}
             className={`max-w-[85%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-[0.94rem] leading-relaxed ${
               message.direction === "out"
-                ? "ms-auto bg-brand-50 text-ink"
-                : "border border-slate-200 bg-white text-ink"
+                ? "ms-auto bg-brand-tint text-body"
+                : "border border-line bg-surface text-body"
             }`}
           >
-            <div className="mb-1.5 text-xs text-ink-soft">
+            <div className="mb-1.5 text-xs text-faint">
               {message.direction === "out"
                 ? `${message.sent_by_name || "—"} → ${message.to_email}`
                 : message.from_email}
@@ -123,7 +123,7 @@ export default function ThreadPage() {
           event.preventDefault();
           if (reply.trim()) sendReply.mutate(reply);
         }}
-        className="rounded-xl border border-slate-200 bg-white p-6"
+        className="rounded-xl border border-line bg-surface p-6"
       >
         <label htmlFor="reply" className="mb-2 block text-sm font-semibold">{t("reply")}</label>
         <textarea
@@ -138,7 +138,7 @@ export default function ThreadPage() {
           {sendReply.isPending ? t("sending") : t("replySend")}
         </button>
         {sendReply.isError && (
-          <p role="alert" className="mt-3 text-sm text-red-600">{t("contactError")}</p>
+          <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{t("contactError")}</p>
         )}
       </form>
     </>

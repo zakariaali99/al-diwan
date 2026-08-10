@@ -152,6 +152,19 @@ export const GlobeIcon = ({ className }: IconProps) => (
   </svg>
 );
 
+export const SunIcon = ({ className }: IconProps) => (
+  <svg {...base} strokeWidth={1.7} className={className}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4" />
+  </svg>
+);
+
+export const MoonIcon = ({ className }: IconProps) => (
+  <svg {...base} strokeWidth={1.7} className={className}>
+    <path d="M20 14.4A8.5 8.5 0 0 1 9.6 4 8.5 8.5 0 1 0 20 14.4Z" />
+  </svg>
+);
+
 export const MenuIcon = ({ className }: IconProps) => (
   <svg {...base} strokeWidth={1.8} className={className}>
     <path d="M4 7h16M4 12h16M4 17h16" />

@@ -24,7 +24,7 @@ const ComposePage = lazy(() => import("./dashboard/ComposePage"));
 
 /** Shown for the moment it takes to fetch the dashboard chunk. */
 function DashboardFallback() {
-  return <div className="grid min-h-screen place-items-center text-ink-muted">…</div>;
+  return <div className="grid min-h-screen place-items-center text-muted">…</div>;
 }
 
 /** Keeps <html lang>/<dir> in sync so RTL and screen readers work per route. */

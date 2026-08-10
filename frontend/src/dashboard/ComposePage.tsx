@@ -31,13 +31,13 @@ export default function ComposePage() {
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-ink">{t("newMessage")}</h1>
+        <h1 className="text-2xl font-bold text-body">{t("newMessage")}</h1>
         <Link to={linkTo("dashboard/inbox/")} className="btn-ghost">{t("back")}</Link>
       </div>
 
       <form
         onSubmit={handleSubmit((values) => send.mutate(values))}
-        className="flex flex-col gap-5 rounded-xl border border-slate-200 bg-white p-6"
+        className="flex flex-col gap-5 rounded-xl border border-line bg-surface p-6"
       >
         <div>
           <label htmlFor="to_name" className="mb-2 block text-sm font-semibold">{t("recipientName")}</label>
@@ -46,7 +46,7 @@ export default function ComposePage() {
 
         <div>
           <label htmlFor="to_email" className="mb-2 block text-sm font-semibold">
-            {t("recipientEmail")} <span className="text-red-600" aria-hidden>*</span>
+            {t("recipientEmail")} <span className="text-red-600 dark:text-red-400" aria-hidden>*</span>
           </label>
           <input
             id="to_email"
@@ -56,12 +56,12 @@ export default function ComposePage() {
             className="field-input"
             aria-invalid={Boolean(errors.to_email)}
           />
-          {errors.to_email && <p className="mt-1.5 text-sm text-red-600">{t("required")}</p>}
+          {errors.to_email && <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{t("required")}</p>}
         </div>
 
         <div>
           <label htmlFor="subject" className="mb-2 block text-sm font-semibold">
-            {t("subject")} <span className="text-red-600" aria-hidden>*</span>
+            {t("subject")} <span className="text-red-600 dark:text-red-400" aria-hidden>*</span>
           </label>
           <input
             id="subject"
@@ -69,12 +69,12 @@ export default function ComposePage() {
             className="field-input"
             aria-invalid={Boolean(errors.subject)}
           />
-          {errors.subject && <p className="mt-1.5 text-sm text-red-600">{t("required")}</p>}
+          {errors.subject && <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{t("required")}</p>}
         </div>
 
         <div>
           <label htmlFor="body" className="mb-2 block text-sm font-semibold">
-            {t("messageLabel")} <span className="text-red-600" aria-hidden>*</span>
+            {t("messageLabel")} <span className="text-red-600 dark:text-red-400" aria-hidden>*</span>
           </label>
           <textarea
             id="body"
@@ -83,14 +83,14 @@ export default function ComposePage() {
             className="field-input resize-y"
             aria-invalid={Boolean(errors.body)}
           />
-          {errors.body && <p className="mt-1.5 text-sm text-red-600">{t("required")}</p>}
+          {errors.body && <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{t("required")}</p>}
         </div>
 
         <button type="submit" disabled={send.isPending} className="btn-primary self-start disabled:opacity-60">
           {send.isPending ? t("sending") : t("replySend")}
         </button>
 
-        {send.isError && <p role="alert" className="text-sm text-red-600">{t("contactError")}</p>}
+        {send.isError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{t("contactError")}</p>}
       </form>
     </>
   );

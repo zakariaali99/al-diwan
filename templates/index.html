@@ -8,8 +8,10 @@
   <title>شركة الديوان للتفتيش والمطابقة</title>
   <meta name="description" content="شركة الديوان للتفتيش والمطابقة — شركة مستقلة مقرها مصراتة، ليبيا، تقدم خدمات التفتيش ومراقبة الجودة وفق المعايير الدولية ISO 9001 و ISO/IEC 17020.">
 
-  {# Arabic is the main language: it is x-default, and the other locales are
-     declared as translations of it. React rewrites these per route. #}
+  {% comment %}
+    Arabic is the main language: it is x-default, and the other locales are
+    declared as translations of it. React rewrites these per route.
+  {% endcomment %}
   <link rel="alternate" hreflang="x-default" href="https://al-diwan.ly/ar/">
   <link rel="alternate" hreflang="ar" href="https://al-diwan.ly/ar/">
   <link rel="alternate" hreflang="en" href="https://al-diwan.ly/en/">
@@ -35,6 +37,21 @@
   {# Fonts are on the critical path for first paint. #}
   <link rel="preload" href="{% static 'fonts/plex-arabic-arabic-400.woff2' %}" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{% static 'fonts/plex-arabic-arabic-700.woff2' %}" as="font" type="font/woff2" crossorigin>
+
+  {% comment %}
+    Set the theme class before first paint so a dark-mode visitor never sees a
+    white flash. Mirrors the logic in src/lib/theme.ts.
+  {% endcomment %}
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("al-diwan-theme");
+        var dark = stored === "dark" ||
+          (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (dark) document.documentElement.classList.add("dark");
+      } catch (e) {}
+    })();
+  </script>
 
   {% vite_hmr_client %}
   {% vite_asset 'src/main.tsx' %}

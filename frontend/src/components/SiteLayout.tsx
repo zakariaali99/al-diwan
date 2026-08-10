@@ -13,6 +13,7 @@ import {
   XIcon,
 } from "./Icons";
 import LanguageSwitcher from "./LanguageSwitcher";
+import ThemeToggle from "./ThemeToggle";
 
 function Header() {
   const t = useT();
@@ -50,16 +51,16 @@ function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 border-b bg-white/85 backdrop-blur-lg transition-shadow ${
-          scrolled ? "border-slate-200 shadow-sm" : "border-transparent"
+        className={`sticky top-0 z-40 border-b bg-surface/85 backdrop-blur-lg transition-shadow ${
+          scrolled ? "border-line shadow-sm" : "border-transparent"
         }`}
       >
         <div className="container-page flex min-h-[76px] items-center gap-4">
           <Link to={linkTo("")} className="flex shrink-0 items-center gap-3">
             <img src={logo} alt={t("logoAlt")} className="h-12 w-12" width={48} height={48} />
             <span className="flex flex-col leading-tight">
-              <strong className="text-base font-bold text-ink">{t("companyName")}</strong>
-              <span className="text-[0.7rem] font-medium text-ink-muted">{t("companyTagline")}</span>
+              <strong className="text-base font-bold text-body">{t("companyName")}</strong>
+              <span className="text-[0.7rem] font-medium text-muted">{t("companyTagline")}</span>
             </span>
           </Link>
 
@@ -71,7 +72,7 @@ function Header() {
                 end={item.end}
                 className={({ isActive }) =>
                   `rounded-full px-4 py-2 text-[0.95rem] font-medium transition-colors ${
-                    isActive ? "bg-brand-50 text-brand-700" : "text-ink hover:bg-slate-50 hover:text-brand-600"
+                    isActive ? "bg-brand-tint text-brand-700 dark:text-brand-200" : "text-body hover:bg-subtle hover:text-brand-600"
                   }`
                 }
               >
@@ -81,14 +82,15 @@ function Header() {
           </nav>
 
           <div className="ms-auto flex items-center gap-2 lg:ms-0">
-            <div className="hidden sm:block">
+            <div className="hidden items-center gap-2 sm:flex">
+              <ThemeToggle />
               <LanguageSwitcher />
             </div>
 
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              className="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 text-ink lg:hidden"
+              className="grid h-11 w-11 place-items-center rounded-lg border border-line text-body lg:hidden"
               aria-expanded={menuOpen}
               aria-controls="mobile-drawer"
               aria-label={t("openMenu")}
@@ -116,19 +118,19 @@ function Header() {
         <nav
           id="mobile-drawer"
           aria-label={t("mainNav")}
-          className={`absolute inset-y-0 end-0 flex w-[min(20rem,85vw)] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out ${
+          className={`absolute inset-y-0 end-0 flex w-[min(20rem,85vw)] flex-col bg-surface shadow-2xl transition-transform duration-300 ease-out ${
             menuOpen ? "translate-x-0" : "ltr:translate-x-full rtl:-translate-x-full"
           }`}
         >
-          <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+          <div className="flex items-center justify-between border-b border-line px-5 py-4">
             <span className="flex items-center gap-2.5">
               <img src={logo} alt="" className="h-9 w-9" width={36} height={36} />
-              <span className="text-sm font-bold text-ink">{t("companyName")}</span>
+              <span className="text-sm font-bold text-body">{t("companyName")}</span>
             </span>
             <button
               type="button"
               onClick={() => setMenuOpen(false)}
-              className="grid h-10 w-10 place-items-center rounded-lg border border-slate-200 text-ink"
+              className="grid h-10 w-10 place-items-center rounded-lg border border-line text-body"
               aria-label={t("closeMenu")}
             >
               <CloseIcon className="h-5 w-5" />
@@ -143,7 +145,7 @@ function Header() {
                 end={item.end}
                 className={({ isActive }) =>
                   `rounded-xl px-4 py-3.5 text-lg font-medium transition-colors ${
-                    isActive ? "bg-brand-50 text-brand-700" : "text-ink hover:bg-slate-50"
+                    isActive ? "bg-brand-tint text-brand-700 dark:text-brand-200" : "text-body hover:bg-subtle"
                   }`
                 }
               >
@@ -152,8 +154,14 @@ function Header() {
             ))}
           </div>
 
-          <div className="border-t border-slate-200 p-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-soft">
+          <div className="border-t border-line p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-xs font-semibold uppercase tracking-wide text-faint">
+                {t("appearance")}
+              </p>
+              <ThemeToggle />
+            </div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-faint">
               {t("chooseLanguage")}
             </p>
             <div className="grid grid-cols-2 gap-2">
@@ -170,8 +178,8 @@ function Header() {
                   aria-current={code === lang ? "true" : undefined}
                   className={`rounded-lg border px-3 py-2.5 text-sm transition-colors ${
                     code === lang
-                      ? "border-brand-600 bg-brand-50 font-semibold text-brand-700"
-                      : "border-slate-200 text-ink hover:border-brand-600"
+                      ? "border-brand-600 bg-brand-tint font-semibold text-brand-700 dark:text-brand-200"
+                      : "border-line text-body hover:border-brand-600"
                   }`}
                 >
                   {LANG_META[code].name}

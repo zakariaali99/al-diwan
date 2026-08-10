@@ -4,6 +4,7 @@ import { Link, NavLink, Navigate, Outlet, useLocation } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { api } from "@/lib/api";
 import { useCurrentUser, useLang, useLinkTo, useT } from "@/lib/hooks";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function DashboardLayout() {
   const t = useT();
@@ -14,7 +15,7 @@ export default function DashboardLayout() {
   const { data: user, isLoading } = useCurrentUser();
 
   if (isLoading) {
-    return <div className="grid min-h-screen place-items-center text-ink-muted">{t("loading")}</div>;
+    return <div className="grid min-h-screen place-items-center text-muted">{t("loading")}</div>;
   }
 
   if (!user?.isAuthenticated) {
@@ -35,7 +36,7 @@ export default function DashboardLayout() {
     }`;
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 lg:flex-row">
+    <div className="flex min-h-screen flex-col bg-subtle lg:flex-row">
       <nav
         className="flex shrink-0 flex-col gap-6 bg-brand-950 p-5 lg:w-60"
         aria-label={t("dashboard")}
@@ -73,6 +74,7 @@ export default function DashboardLayout() {
         </div>
 
         <div className="flex items-center gap-3 lg:flex-col lg:items-stretch">
+          <ThemeToggle onDark className="lg:self-start" />
           <span className="px-3 text-xs text-slate-400">{user.username}</span>
           <button
             type="button"
@@ -87,7 +89,7 @@ export default function DashboardLayout() {
       <main className="min-w-0 flex-1 p-5 lg:p-8" lang={lang}>
         <div className="mx-auto max-w-5xl">
           {!perms?.canViewPosts && !perms?.canViewThreads ? (
-            <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-ink-muted">
+            <div className="rounded-xl border border-line bg-surface p-8 text-center text-muted">
               {t("noAccess")}
             </div>
           ) : (

@@ -42,7 +42,7 @@ export default function SmartImage({
   // gallery look soft — enforcing it here means no layout can reintroduce that.
   return (
     <div
-      className={`relative mx-auto w-full overflow-hidden bg-slate-100 ${rounded} ${className}`}
+      className={`relative mx-auto w-full overflow-hidden bg-subtle ${rounded} ${className}`}
       style={{ aspectRatio: asset.aspect, maxWidth: asset.width }}
     >
       <span

@@ -26,13 +26,13 @@ export function SectionHead({
       </span>
       <h2
         className={`mt-4 text-3xl font-bold tracking-tight sm:text-4xl ${
-          onDark ? "text-white" : "text-ink"
+          onDark ? "text-white" : "text-body"
         }`}
       >
         {title}
       </h2>
       {lede && (
-        <p className={`mt-4 text-lg leading-relaxed ${onDark ? "text-slate-300" : "text-ink-muted"}`}>
+        <p className={`mt-4 text-lg leading-relaxed ${onDark ? "text-slate-300" : "text-muted"}`}>
           {lede}
         </p>
       )}
@@ -50,12 +50,12 @@ export function TrustBar() {
   ];
 
   return (
-    <section className="border-b border-slate-200 bg-slate-50">
-      <div className="container-page grid grid-cols-2 divide-x divide-slate-200 rtl:divide-x-reverse lg:grid-cols-4">
+    <section className="border-b border-line bg-subtle">
+      <div className="container-page grid grid-cols-2 divide-x divide-line rtl:divide-x-reverse lg:grid-cols-4">
         {items.map((item) => (
           <div key={item.value} className="px-4 py-8 text-center">
             <strong className="block text-xl font-bold text-brand-600 sm:text-2xl">{item.value}</strong>
-            <span className="mt-1 block text-sm text-ink-muted">{item.label}</span>
+            <span className="mt-1 block text-sm text-muted">{item.label}</span>
           </div>
         ))}
       </div>
@@ -75,16 +75,16 @@ export function ServiceGrid({ categories, showAll = false }: { categories: Servi
 
         return (
           <Reveal key={category.id} delay={index * 0.05}>
-            <article className="group relative flex h-full flex-col gap-4 overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-200/60">
+            <article className="group relative flex h-full flex-col gap-4 overflow-hidden rounded-2xl border border-line bg-surface p-6 transition-all duration-200 hover:-translate-y-1 hover:border-line-strong hover:shadow-xl hover:shadow-slate-200/60">
               <span
                 aria-hidden
                 className="absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 bg-gradient-to-r from-brand-500 to-rust-400 transition-transform duration-300 group-hover:scale-x-100 rtl:origin-right"
               />
-              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-brand-tint text-brand-600 dark:text-brand-300">
                 <Icon className="h-6 w-6" />
               </span>
-              <h3 className="text-lg font-bold text-ink">{category.name}</h3>
-              <ul className="flex flex-col gap-2 text-[0.94rem] leading-relaxed text-ink-muted">
+              <h3 className="text-lg font-bold text-body">{category.name}</h3>
+              <ul className="flex flex-col gap-2 text-[0.94rem] leading-relaxed text-muted">
                 {items.map((item) => (
                   <li key={item.id} className="flex items-start gap-2">
                     <span aria-hidden className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-rust-500" />
@@ -93,7 +93,7 @@ export function ServiceGrid({ categories, showAll = false }: { categories: Servi
                 ))}
               </ul>
               {remaining > 0 && (
-                <p className="mt-auto pt-2 text-sm font-semibold text-ink-soft">
+                <p className="mt-auto pt-2 text-sm font-semibold text-faint">
                   + {remaining} {t("moreItems")}
                 </p>
               )}
@@ -115,11 +115,11 @@ export function ProcessTimeline({ categories }: { categories: ServiceCategory[] 
       {categories.map((category, index) => (
         <Reveal key={category.id} delay={index * 0.08}>
           <li className="relative">
-            <span className="relative z-10 grid h-14 w-14 place-items-center rounded-full border-2 border-brand-400 bg-white text-lg font-bold text-brand-600">
+            <span className="relative z-10 grid h-14 w-14 place-items-center rounded-full border-2 border-brand-400 bg-surface text-lg font-bold text-brand-600">
               {index + 1}
             </span>
-            <h3 className="mt-4 text-base font-bold text-ink">{category.name}</h3>
-            <ul className="mt-2 flex flex-col gap-1.5 text-sm text-ink-muted">
+            <h3 className="mt-4 text-base font-bold text-body">{category.name}</h3>
+            <ul className="mt-2 flex flex-col gap-1.5 text-sm text-muted">
               {category.items.slice(0, 3).map((item) => (
                 <li key={item.id} className="flex gap-2">
                   <span aria-hidden className="text-rust-500">—</span>
@@ -152,7 +152,7 @@ export function FieldWork() {
   ];
 
   return (
-    <section className="bg-white py-20 lg:py-24">
+    <section className="bg-surface py-20 lg:py-24">
       <div className="container-page">
         <SectionHead eyebrow={t("fieldWork")} title={t("fieldWorkHeading")} lede={t("fieldWorkLede")} />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:gap-6">
@@ -190,10 +190,10 @@ export function PrincipleList({ principles }: { principles: { id: number; text: 
       {principles.map((principle, index) => (
         <Reveal key={principle.id} delay={index * 0.05}>
           <li className="flex items-start gap-4">
-            <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
+            <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-brand-tint text-brand-600 dark:text-brand-300">
               <CheckIcon className="h-3.5 w-3.5" />
             </span>
-            <p className="text-ink-muted">{principle.text}</p>
+            <p className="text-muted">{principle.text}</p>
           </li>
         </Reveal>
       ))}
@@ -206,7 +206,7 @@ export function PostCard({ post }: { post: PostListItem }) {
   const href = linkTo(`posts/${encodeURIComponent(post.slug)}/`);
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/60">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/60">
       <div className="aspect-video overflow-hidden bg-gradient-to-br from-brand-800 to-brand-500">
         {post.featured_image && (
           <img
@@ -218,9 +218,9 @@ export function PostCard({ post }: { post: PostListItem }) {
         )}
       </div>
       <div className="flex flex-1 flex-col gap-3 p-5">
-        <div className="flex flex-wrap items-center gap-3 text-xs text-ink-soft">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-faint">
           {post.category && (
-            <span className="rounded-full bg-brand-50 px-2.5 py-0.5 font-semibold text-brand-700">
+            <span className="rounded-full bg-brand-tint px-2.5 py-0.5 font-semibold text-brand-700 dark:text-brand-200">
               {post.category.name}
             </span>
           )}
@@ -235,11 +235,11 @@ export function PostCard({ post }: { post: PostListItem }) {
           )}
         </div>
         <h3 className="text-lg font-bold leading-snug">
-          <Link to={href} className="text-ink transition-colors hover:text-brand-600">
+          <Link to={href} className="text-body transition-colors hover:text-brand-600">
             {post.title}
           </Link>
         </h3>
-        {post.excerpt && <p className="text-sm leading-relaxed text-ink-muted">{post.excerpt}</p>}
+        {post.excerpt && <p className="text-sm leading-relaxed text-muted">{post.excerpt}</p>}
       </div>
     </article>
   );
@@ -317,10 +317,10 @@ export function PageHeader({
 
 export function LoadingBlock() {
   const t = useT();
-  return <div className="container-page py-24 text-center text-ink-muted">{t("loading")}</div>;
+  return <div className="container-page py-24 text-center text-muted">{t("loading")}</div>;
 }
 
 export function ErrorBlock() {
   const t = useT();
-  return <div className="container-page py-24 text-center text-ink-muted">{t("errorLoading")}</div>;
+  return <div className="container-page py-24 text-center text-muted">{t("errorLoading")}</div>;
 }

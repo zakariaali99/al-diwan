@@ -89,7 +89,7 @@ export default function PostEditPage() {
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-ink">{isNew ? t("newPost") : t("editPost")}</h1>
+        <h1 className="text-2xl font-bold text-body">{isNew ? t("newPost") : t("editPost")}</h1>
         <Link to={linkTo("dashboard/posts/")} className="btn-ghost">{t("back")}</Link>
       </div>
 
@@ -107,7 +107,7 @@ export default function PostEditPage() {
                   className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                     editLang === code
                       ? "bg-brand-600 text-white"
-                      : "border border-slate-200 bg-white text-ink-muted hover:border-brand-600"
+                      : "border border-line bg-surface text-muted hover:border-brand-600"
                   }`}
                 >
                   {LANG_META[code].name}
@@ -117,7 +117,7 @@ export default function PostEditPage() {
                     aria-hidden
                     className={`h-1.5 w-1.5 rounded-full ${
                       translated
-                        ? editLang === code ? "bg-white" : "bg-green-500"
+                        ? editLang === code ? "bg-surface" : "bg-green-500"
                         : editLang === code ? "bg-white/40" : "bg-slate-300"
                     }`}
                   />
@@ -125,12 +125,12 @@ export default function PostEditPage() {
               );
             })}
           </div>
-          <p className="mt-2 text-sm text-ink-muted">{t("editingLanguageNote")}</p>
+          <p className="mt-2 text-sm text-muted">{t("editingLanguageNote")}</p>
         </div>
       )}
 
       {saved && (
-        <p role="status" className="mb-5 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800">
+        <p role="status" className="mb-5 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800 dark:border-green-500/40 dark:bg-green-500/10 dark:text-green-300">
           {t("saved")}
         </p>
       )}
@@ -140,7 +140,7 @@ export default function PostEditPage() {
           event.preventDefault();
           save.mutate(form);
         }}
-        className="flex flex-col gap-5 rounded-xl border border-slate-200 bg-white p-6"
+        className="flex flex-col gap-5 rounded-xl border border-line bg-surface p-6"
       >
         <div>
           <label htmlFor="title" className="mb-2 block text-sm font-semibold">{t("title")}</label>
@@ -228,7 +228,7 @@ export default function PostEditPage() {
         </button>
 
         {save.isError && (
-          <p role="alert" className="text-sm text-red-600">{t("errorLoading")}</p>
+          <p role="alert" className="text-sm text-red-600 dark:text-red-400">{t("errorLoading")}</p>
         )}
       </form>
     </>

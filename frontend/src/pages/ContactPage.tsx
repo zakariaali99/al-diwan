@@ -130,22 +130,22 @@ export default function ContactPage() {
               </figcaption>
             </figure>
 
-            <h2 className="mb-6 text-2xl font-bold text-ink">{t("contactDetails")}</h2>
+            <h2 className="mb-6 text-2xl font-bold text-body">{t("contactDetails")}</h2>
             <div className="flex flex-col gap-4">
               {cards.map((card) => (
                 <a
                   key={card.label}
                   href={card.href}
                   {...(card.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-brand-600 hover:shadow-md"
+                  className="flex items-start gap-4 rounded-xl border border-line bg-surface p-5 transition-all hover:-translate-y-0.5 hover:border-brand-600 hover:shadow-md"
                 >
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-tint text-brand-600 dark:text-brand-300">
                     <card.Icon className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
-                    <strong className="block text-ink">{card.label}</strong>
+                    <strong className="block text-body">{card.label}</strong>
                     <span
-                      className="block break-words text-sm text-ink-muted"
+                      className="block break-words text-sm text-muted"
                       dir={card.ltr ? "ltr" : undefined}
                     >
                       {card.value}
@@ -156,24 +156,24 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h2 className="mb-6 text-2xl font-bold text-ink">{t("sendMessage")}</h2>
+          <div className="rounded-2xl border border-line bg-surface p-6 shadow-sm sm:p-8">
+            <h2 className="mb-6 text-2xl font-bold text-body">{t("sendMessage")}</h2>
 
             {status === "success" && (
-              <div role="status" className="mb-6 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-green-800">
+              <div role="status" className="mb-6 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-green-800 dark:border-green-500/40 dark:bg-green-500/10 dark:text-green-300">
                 {t("contactSuccess")}
               </div>
             )}
             {status === "error" && (
-              <div role="alert" className="mb-6 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-red-800">
+              <div role="alert" className="mb-6 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-red-800 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300">
                 {t("contactError")}
               </div>
             )}
 
             <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
               <div>
-                <label htmlFor="name" className="mb-2 block text-sm font-semibold text-ink">
-                  {t("nameLabel")} <span className="text-red-600" aria-hidden>*</span>
+                <label htmlFor="name" className="mb-2 block text-sm font-semibold text-body">
+                  {t("nameLabel")} <span className="text-red-600 dark:text-red-400" aria-hidden>*</span>
                 </label>
                 <input
                   id="name"
@@ -183,12 +183,12 @@ export default function ContactPage() {
                   autoComplete="name"
                   aria-invalid={Boolean(errors.name)}
                 />
-                {errors.name && <p className="mt-1.5 text-sm text-red-600">{errors.name.message}</p>}
+                {errors.name && <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
               </div>
 
               <div>
-                <label htmlFor="email" className="mb-2 block text-sm font-semibold text-ink">
-                  {t("email")} <span className="text-red-600" aria-hidden>*</span>
+                <label htmlFor="email" className="mb-2 block text-sm font-semibold text-body">
+                  {t("email")} <span className="text-red-600 dark:text-red-400" aria-hidden>*</span>
                 </label>
                 <input
                   id="email"
@@ -200,11 +200,11 @@ export default function ContactPage() {
                   autoComplete="email"
                   aria-invalid={Boolean(errors.email)}
                 />
-                {errors.email && <p className="mt-1.5 text-sm text-red-600">{errors.email.message}</p>}
+                {errors.email && <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>}
               </div>
 
               <div>
-                <label htmlFor="subject" className="mb-2 block text-sm font-semibold text-ink">
+                <label htmlFor="subject" className="mb-2 block text-sm font-semibold text-body">
                   {t("subjectLabel")}
                 </label>
                 <input
@@ -216,8 +216,8 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="message" className="mb-2 block text-sm font-semibold text-ink">
-                  {t("messageLabel")} <span className="text-red-600" aria-hidden>*</span>
+                <label htmlFor="message" className="mb-2 block text-sm font-semibold text-body">
+                  {t("messageLabel")} <span className="text-red-600 dark:text-red-400" aria-hidden>*</span>
                 </label>
                 <textarea
                   id="message"
@@ -227,7 +227,7 @@ export default function ContactPage() {
                   placeholder={t("messagePlaceholder")}
                   aria-invalid={Boolean(errors.message)}
                 />
-                {errors.message && <p className="mt-1.5 text-sm text-red-600">{errors.message.message}</p>}
+                {errors.message && <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{errors.message.message}</p>}
               </div>
 
               {/* Honeypot — hidden from people, tempting to bots */}

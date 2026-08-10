@@ -30,7 +30,7 @@ export default function BlogPage() {
                 className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                   !activeCategory
                     ? "bg-brand-600 text-white"
-                    : "border border-slate-200 text-ink-muted hover:border-brand-600 hover:text-brand-600"
+                    : "border border-line text-muted hover:border-brand-600 hover:text-brand-600"
                 }`}
               >
                 {t("allCategories")}
@@ -44,7 +44,7 @@ export default function BlogPage() {
                   className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                     activeCategory === category.slug
                       ? "bg-brand-600 text-white"
-                      : "border border-slate-200 text-ink-muted hover:border-brand-600 hover:text-brand-600"
+                      : "border border-line text-muted hover:border-brand-600 hover:text-brand-600"
                   }`}
                 >
                   {category.name}
@@ -58,7 +58,7 @@ export default function BlogPage() {
           ) : posts.isError ? (
             <ErrorBlock />
           ) : (posts.data?.length ?? 0) === 0 ? (
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 py-16 text-center text-ink-muted">
+            <div className="rounded-2xl border border-line bg-subtle py-16 text-center text-muted">
               {t("noPosts")}
             </div>
           ) : (
