@@ -146,7 +146,7 @@ PARLER_LANGUAGES = {
 # --- Static & media -----------------------------------------------------
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static", BASE_DIR.parent / "frontend" / "dist"]
+STATICFILES_DIRS = [BASE_DIR / "static", BASE_DIR / "dist"]
 # Plain storage by default: the hashed-manifest backend requires collectstatic
 # to have run and every referenced file to be present, which breaks dev and
 # tests. production.py swaps in the compressed, hashed variant.
@@ -157,13 +157,13 @@ STORAGES = {
 
 # --- Vite / React frontend ------------------------------------------------
 # dev_mode=True proxies assets to the Vite dev server (npm run dev).
-# In production the built manifest in frontend/dist is used instead, so the
+# In production the built manifest in backend/dist is used instead, so the
 # host never needs Node at runtime -- only at build time.
 DJANGO_VITE = {
     "default": {
         "dev_mode": config("VITE_DEV_MODE", default=False, cast=bool),
         "dev_server_port": 5173,
-        "manifest_path": BASE_DIR.parent / "frontend" / "dist" / ".vite" / "manifest.json",
+        "manifest_path": BASE_DIR / "dist" / ".vite" / "manifest.json",
         "static_url_prefix": "",
     }
 }

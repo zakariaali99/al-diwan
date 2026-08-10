@@ -12,12 +12,8 @@ deployment:
     - export DEPLOYPATH=/home/USERNAME/al-diwan.ly
     - export VENV=/home/USERNAME/virtualenv/al-diwan.ly/3.12/bin/activate
 
-    # Sync the working tree, excluding local-only artefacts.
-    # frontend/dist is the built React app (committed; the host has no Node).
-    # frontend/node_modules and src are deliberately NOT copied.
-    - /bin/cp -R backend/config backend/accounts backend/api backend/messaging backend/pages backend/posts backend/services backend/siteconfig backend/templates backend/static backend/locale backend/manage.py backend/requirements.txt $DEPLOYPATH/
-    - /bin/mkdir -p $DEPLOYPATH/frontend
-    - /bin/cp -R frontend/dist $DEPLOYPATH/frontend/
+    # Copy backend folder contents (including the pre-built backend/dist React bundle).
+    - /bin/cp -R backend/config backend/accounts backend/api backend/messaging backend/pages backend/posts backend/services backend/siteconfig backend/templates backend/static backend/dist backend/locale backend/manage.py backend/requirements.txt $DEPLOYPATH/
 
     - source $VENV && cd $DEPLOYPATH && pip install --quiet -r requirements.txt
     - source $VENV && cd $DEPLOYPATH && python manage.py migrate --noinput

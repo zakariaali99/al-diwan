@@ -1,0 +1,174 @@
+{
+  "_useMutation-DyUgLeLK.js": {
+    "file": "assets/useMutation-DyUgLeLK.js",
+    "name": "useMutation",
+    "imports": [
+      "src/main.tsx"
+    ]
+  },
+  "src/assets/generated/heroBackdrop-1280.webp": {
+    "file": "assets/heroBackdrop-1280-D3WbIkXO.webp",
+    "src": "src/assets/generated/heroBackdrop-1280.webp"
+  },
+  "src/assets/generated/heroBackdrop-1920.webp": {
+    "file": "assets/heroBackdrop-1920-CE6MqeTx.webp",
+    "src": "src/assets/generated/heroBackdrop-1920.webp"
+  },
+  "src/assets/generated/heroBackdrop-2560.webp": {
+    "file": "assets/heroBackdrop-2560-DF04jzv9.webp",
+    "src": "src/assets/generated/heroBackdrop-2560.webp"
+  },
+  "src/assets/generated/inspectionCargo-300.webp": {
+    "file": "assets/inspectionCargo-300-BZOMfeOY.webp",
+    "src": "src/assets/generated/inspectionCargo-300.webp"
+  },
+  "src/assets/generated/inspectionCargo-405.webp": {
+    "file": "assets/inspectionCargo-405-CXJPlZBU.webp",
+    "src": "src/assets/generated/inspectionCargo-405.webp"
+  },
+  "src/assets/generated/inspectionContainer-225.webp": {
+    "file": "assets/inspectionContainer-225-Bln10kvb.webp",
+    "src": "src/assets/generated/inspectionContainer-225.webp"
+  },
+  "src/assets/generated/inspectionContainer-303.webp": {
+    "file": "assets/inspectionContainer-303-Bz2ywvA-.webp",
+    "src": "src/assets/generated/inspectionContainer-303.webp"
+  },
+  "src/assets/generated/inspectionDocuments-225.webp": {
+    "file": "assets/inspectionDocuments-225-BXKCg0sg.webp",
+    "src": "src/assets/generated/inspectionDocuments-225.webp"
+  },
+  "src/assets/generated/inspectionDocuments-303.webp": {
+    "file": "assets/inspectionDocuments-303-D4Ufr1y8.webp",
+    "src": "src/assets/generated/inspectionDocuments-303.webp"
+  },
+  "src/assets/generated/inspectionTeam-300.webp": {
+    "file": "assets/inspectionTeam-300-D3e3MZqh.webp",
+    "src": "src/assets/generated/inspectionTeam-300.webp"
+  },
+  "src/assets/generated/inspectionTeam-405.webp": {
+    "file": "assets/inspectionTeam-405-DiMVeQbC.webp",
+    "src": "src/assets/generated/inspectionTeam-405.webp"
+  },
+  "src/assets/generated/office-300.webp": {
+    "file": "assets/office-300-hpd7adp_.webp",
+    "src": "src/assets/generated/office-300.webp"
+  },
+  "src/assets/generated/office-405.webp": {
+    "file": "assets/office-405-qPqTx6Vs.webp",
+    "src": "src/assets/generated/office-405.webp"
+  },
+  "src/assets/generated/ship-1400.webp": {
+    "file": "assets/ship-1400-DEFKfn9y.webp",
+    "src": "src/assets/generated/ship-1400.webp"
+  },
+  "src/assets/generated/ship-800.webp": {
+    "file": "assets/ship-800-CCxkjbDk.webp",
+    "src": "src/assets/generated/ship-800.webp"
+  },
+  "src/assets/logo.png": {
+    "file": "assets/logo-hiDDvVV4.png",
+    "src": "src/assets/logo.png"
+  },
+  "src/dashboard/ComposePage.tsx": {
+    "file": "assets/ComposePage-BYyvV3gc.js",
+    "name": "ComposePage",
+    "src": "src/dashboard/ComposePage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx",
+      "_useMutation-DyUgLeLK.js"
+    ]
+  },
+  "src/dashboard/DashboardLayout.tsx": {
+    "file": "assets/DashboardLayout-DbqyX4iz.js",
+    "name": "DashboardLayout",
+    "src": "src/dashboard/DashboardLayout.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx"
+    ]
+  },
+  "src/dashboard/InboxPage.tsx": {
+    "file": "assets/InboxPage-8_Hi_6d5.js",
+    "name": "InboxPage",
+    "src": "src/dashboard/InboxPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx"
+    ]
+  },
+  "src/dashboard/LoginPage.tsx": {
+    "file": "assets/LoginPage-D4ky69p4.js",
+    "name": "LoginPage",
+    "src": "src/dashboard/LoginPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx"
+    ]
+  },
+  "src/dashboard/PostEditPage.tsx": {
+    "file": "assets/PostEditPage-CMJ2gBUv.js",
+    "name": "PostEditPage",
+    "src": "src/dashboard/PostEditPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx",
+      "_useMutation-DyUgLeLK.js"
+    ]
+  },
+  "src/dashboard/PostsPage.tsx": {
+    "file": "assets/PostsPage-DqQrY2T0.js",
+    "name": "PostsPage",
+    "src": "src/dashboard/PostsPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx",
+      "_useMutation-DyUgLeLK.js"
+    ]
+  },
+  "src/dashboard/ThreadPage.tsx": {
+    "file": "assets/ThreadPage-Bvst0RdQ.js",
+    "name": "ThreadPage",
+    "src": "src/dashboard/ThreadPage.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "src/main.tsx",
+      "_useMutation-DyUgLeLK.js"
+    ]
+  },
+  "src/main.tsx": {
+    "file": "assets/main-C4M59Z6x.js",
+    "name": "main",
+    "src": "src/main.tsx",
+    "isEntry": true,
+    "dynamicImports": [
+      "src/dashboard/DashboardLayout.tsx",
+      "src/dashboard/LoginPage.tsx",
+      "src/dashboard/PostsPage.tsx",
+      "src/dashboard/PostEditPage.tsx",
+      "src/dashboard/InboxPage.tsx",
+      "src/dashboard/ThreadPage.tsx",
+      "src/dashboard/ComposePage.tsx"
+    ],
+    "css": [
+      "assets/main-krjEacuE.css"
+    ],
+    "assets": [
+      "assets/logo-hiDDvVV4.png",
+      "assets/heroBackdrop-1280-D3WbIkXO.webp",
+      "assets/heroBackdrop-1920-CE6MqeTx.webp",
+      "assets/heroBackdrop-2560-DF04jzv9.webp",
+      "assets/inspectionContainer-225-Bln10kvb.webp",
+      "assets/inspectionContainer-303-Bz2ywvA-.webp",
+      "assets/inspectionDocuments-225-BXKCg0sg.webp",
+      "assets/inspectionDocuments-303-D4Ufr1y8.webp",
+      "assets/inspectionTeam-300-D3e3MZqh.webp",
+      "assets/inspectionTeam-405-DiMVeQbC.webp",
+      "assets/inspectionCargo-300-BZOMfeOY.webp",
+      "assets/inspectionCargo-405-CXJPlZBU.webp",
+      "assets/office-300-hpd7adp_.webp",
+      "assets/office-405-qPqTx6Vs.webp"
+    ]
+  }
+}

@@ -12,7 +12,7 @@ export default defineConfig({
   },
   build: {
     manifest: true,
-    outDir: "dist",
+    outDir: "../backend/dist",
     emptyOutDir: true,
     rollupOptions: {
       input: "src/main.tsx",

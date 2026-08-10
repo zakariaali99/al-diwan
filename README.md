@@ -49,12 +49,6 @@ For frontend work with hot reload, run Vite alongside Django and set
 cd frontend && npm run dev     # :5173, proxies /api and /admin to :8000
 ```
 
-Docker Compose (Django + MySQL) is provided for parity testing:
-
-```bash
-docker compose up
-```
-
 ## Layout
 
 | Path | Purpose |
