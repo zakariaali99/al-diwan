@@ -3,7 +3,9 @@
  * CSRF token — no tokens to store, no CORS.
  */
 
-export type Lang = "ar" | "en";
+import { apiLangFor, type Lang } from "./i18n";
+
+export type { Lang };
 
 function getCookie(name: string): string | null {
   const match = document.cookie.match(new RegExp(`(^|;\\s*)${name}=([^;]*)`));
@@ -42,7 +44,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   const headers: Record<string, string> = {};
   // parler resolves translations from the active language; /api/ is outside
   // i18n_patterns so Django reads it from this header.
-  if (lang) headers["Accept-Language"] = lang;
+  if (lang) headers["Accept-Language"] = apiLangFor(lang);
   if (body !== undefined) headers["Content-Type"] = "application/json";
   if (isWrite) {
     const token = getCookie("csrftoken");

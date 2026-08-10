@@ -39,17 +39,23 @@ LQIP_WIDTH = 24
 
 
 class Asset:
-    def __init__(self, key: str, source: str, alt_role: str, widths: list[int], sharpen: bool = True):
+    def __init__(self, key: str, source: str, alt_role: str, widths: list[int],
+                 sharpen: bool = True, max_upscale: float | None = None):
         self.key = key
         self.source = source
         self.alt_role = alt_role
         self.widths = widths
         self.sharpen = sharpen
+        self.max_upscale = max_upscale or MAX_UPSCALE
 
 
 ASSETS = [
     # The only genuinely high-resolution photograph: the hero ship.
     Asset("ship", "ship.png", "hero", [800, 1400], sharpen=False),
+    # Full-bleed hero backdrop. It sits behind a heavy dark scrim and a grain
+    # overlay, which hides the softness of enlarging past native — so this one
+    # is allowed a wider ceiling than the rest.
+    Asset("heroBackdrop", "ship.png", "hero", [1280, 1920, 2560], sharpen=True, max_upscale=2.4),
     # Operational photos — all small originals, so kept modest on purpose.
     Asset("inspectionContainer", "team1.jpeg", "field", [225, 450]),
     Asset("inspectionDocuments", "team2.jpeg", "field", [225, 450]),
@@ -59,9 +65,9 @@ ASSETS = [
 ]
 
 
-def target_widths(image: Image.Image, requested: list[int]) -> list[int]:
-    """Clamp requested widths so we never enlarge past MAX_UPSCALE."""
-    ceiling = int(image.width * MAX_UPSCALE)
+def target_widths(image: Image.Image, requested: list[int], max_upscale: float) -> list[int]:
+    """Clamp requested widths so we never enlarge past the asset's ceiling."""
+    ceiling = int(image.width * max_upscale)
     widths = sorted({min(w, ceiling) for w in requested})
     return [w for w in widths if w > 0]
 
@@ -97,7 +103,7 @@ def main() -> None:
             continue
 
         image = Image.open(source_path).convert("RGB")
-        widths = target_widths(image, asset.widths)
+        widths = target_widths(image, asset.widths, asset.max_upscale)
         variants = []
 
         for width in widths:

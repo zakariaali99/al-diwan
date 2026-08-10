@@ -144,6 +144,14 @@ export const XIcon = ({ className }: IconProps) => (
   </svg>
 );
 
+export const GlobeIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M3 12h18" />
+    <path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18Z" />
+  </svg>
+);
+
 export const MenuIcon = ({ className }: IconProps) => (
   <svg {...base} strokeWidth={1.8} className={className}>
     <path d="M4 7h16M4 12h16M4 17h16" />

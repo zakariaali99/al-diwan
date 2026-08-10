@@ -114,6 +114,10 @@ LANGUAGE_CODE = "ar"
 LANGUAGES = [
     ("ar", "العربية"),
     ("en", "English"),
+    ("es", "Español"),
+    ("it", "Italiano"),
+    ("zh-hans", "中文"),
+    ("tr", "Türkçe"),
 ]
 TIME_ZONE = "Africa/Tripoli"
 USE_I18N = True
@@ -125,9 +129,16 @@ PARLER_LANGUAGES = {
     None: (
         {"code": "ar"},
         {"code": "en"},
+        {"code": "es"},
+        {"code": "it"},
+        {"code": "zh-hans"},
+        {"code": "tr"},
     ),
+    # Fall back to English before Arabic: a Spanish or Turkish visitor reading
+    # an untranslated service description is far better served by English than
+    # by Arabic script they may not be able to read at all.
     "default": {
-        "fallbacks": ["ar"],
+        "fallbacks": ["en", "ar"],
         "hide_untranslated": False,
     },
 }

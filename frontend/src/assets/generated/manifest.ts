@@ -3,6 +3,9 @@
 
 import ship800 from './ship-800.webp';
 import ship1400 from './ship-1400.webp';
+import heroBackdrop1280 from './heroBackdrop-1280.webp';
+import heroBackdrop1920 from './heroBackdrop-1920.webp';
+import heroBackdrop2560 from './heroBackdrop-2560.webp';
 import inspectionContainer225 from './inspectionContainer-225.webp';
 import inspectionContainer303 from './inspectionContainer-303.webp';
 import inspectionDocuments225 from './inspectionDocuments-225.webp';
@@ -29,6 +32,14 @@ export const images = {
     srcSet: `${ship800} 800w, ${ship1400} 1400w`,
     width: 1400,
     height: 933,
+    aspect: 1.5,
+    lqip: "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADQAwCdASoYABAAPslgpUynpiOiMAgA8BkJagCw7A8v7AbxlwO4uwAA6TfNzy52+aSFxtlIbzQo1LJ3iNyhhNC6Ve+KieqqamB6OUqnRhOCxpnkdzo2xnZw/y+35mCqvJNio4HwAAA=",
+  },
+  heroBackdrop: {
+    src: heroBackdrop2560,
+    srcSet: `${heroBackdrop1280} 1280w, ${heroBackdrop1920} 1920w, ${heroBackdrop2560} 2560w`,
+    width: 2560,
+    height: 1707,
     aspect: 1.5,
     lqip: "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADQAwCdASoYABAAPslgpUynpiOiMAgA8BkJagCw7A8v7AbxlwO4uwAA6TfNzy52+aSFxtlIbzQo1LJ3iNyhhNC6Ve+KieqqamB6OUqnRhOCxpnkdzo2xnZw/y+35mCqvJNio4HwAAA=",
   },

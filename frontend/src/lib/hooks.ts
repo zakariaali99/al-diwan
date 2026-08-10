@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
-import { api, type Lang } from "./api";
-import { DEFAULT_LANG, isLang, makeT } from "./i18n";
+import { api } from "./api";
+import { DEFAULT_LANG, isLang, makeT, type Lang } from "./i18n";
 
 /** Reads the active language from the /:lang/ route segment. */
 export function useLang(): Lang {

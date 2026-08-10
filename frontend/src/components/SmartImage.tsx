@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { ImageAsset } from "@/assets/generated/manifest";
 
@@ -27,6 +27,15 @@ export default function SmartImage({
   rounded?: string;
 }) {
   const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // A cached image can finish loading before React attaches onLoad, in which
+  // case that event never fires and the photo would stay invisible behind its
+  // placeholder forever. Check .complete once mounted to cover that race.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth > 0) setLoaded(true);
+  }, []);
 
   // Hard cap at the largest generated variant. The company's photos are small
   // originals, and stretching one past its processed width is what made the
@@ -44,6 +53,7 @@ export default function SmartImage({
         style={{ backgroundImage: `url("${asset.lqip}")`, filter: "blur(12px)", transform: "scale(1.1)" }}
       />
       <img
+        ref={imgRef}
         src={asset.src}
         srcSet={asset.srcSet}
         sizes={sizes}

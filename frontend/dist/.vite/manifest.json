@@ -1,4 +1,16 @@
 {
+  "src/assets/generated/heroBackdrop-1280.webp": {
+    "file": "assets/heroBackdrop-1280-D3WbIkXO.webp",
+    "src": "src/assets/generated/heroBackdrop-1280.webp"
+  },
+  "src/assets/generated/heroBackdrop-1920.webp": {
+    "file": "assets/heroBackdrop-1920-CE6MqeTx.webp",
+    "src": "src/assets/generated/heroBackdrop-1920.webp"
+  },
+  "src/assets/generated/heroBackdrop-2560.webp": {
+    "file": "assets/heroBackdrop-2560-DF04jzv9.webp",
+    "src": "src/assets/generated/heroBackdrop-2560.webp"
+  },
   "src/assets/generated/inspectionCargo-300.webp": {
     "file": "assets/inspectionCargo-300-BZOMfeOY.webp",
     "src": "src/assets/generated/inspectionCargo-300.webp"
@@ -52,17 +64,18 @@
     "src": "src/assets/logo.png"
   },
   "src/main.tsx": {
-    "file": "assets/main-DYemf5Dn.js",
+    "file": "assets/main-Dd5M70O5.js",
     "name": "main",
     "src": "src/main.tsx",
     "isEntry": true,
     "css": [
-      "assets/main-BLiYjG3U.css"
+      "assets/main-BuONYCJ1.css"
     ],
     "assets": [
       "assets/logo-hiDDvVV4.png",
-      "assets/ship-800-CCxkjbDk.webp",
-      "assets/ship-1400-DEFKfn9y.webp",
+      "assets/heroBackdrop-1280-D3WbIkXO.webp",
+      "assets/heroBackdrop-1920-CE6MqeTx.webp",
+      "assets/heroBackdrop-2560-DF04jzv9.webp",
       "assets/inspectionContainer-225-Bln10kvb.webp",
       "assets/inspectionContainer-303-Bz2ywvA-.webp",
       "assets/inspectionDocuments-225-BXKCg0sg.webp",

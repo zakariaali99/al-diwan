@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 
 import { api, type Lang } from "@/lib/api";
 import { useLinkTo, useT } from "@/lib/hooks";
-import { isLang } from "@/lib/i18n";
+import { LANGS, LANG_META, isLang } from "@/lib/i18n";
 import RichTextEditor from "./RichTextEditor";
 
 interface FormState {
@@ -95,22 +95,35 @@ export default function PostEditPage() {
 
       {!isNew && (
         <div className="mb-5">
-          <div className="flex gap-2" role="group" aria-label={t("editingLanguage")}>
-            {(["ar", "en"] as Lang[]).map((lang) => (
-              <button
-                key={lang}
-                type="button"
-                onClick={() => switchLang(lang)}
-                aria-current={editLang === lang ? "true" : undefined}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                  editLang === lang
-                    ? "bg-brand-600 text-white"
-                    : "border border-slate-200 bg-white text-ink-muted hover:border-brand-600"
-                }`}
-              >
-                {lang === "ar" ? t("arabic") : t("english")}
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-2" role="group" aria-label={t("editingLanguage")}>
+            {LANGS.map((code) => {
+              const translated = post.data?.available_languages.includes(LANG_META[code].apiLang);
+              return (
+                <button
+                  key={code}
+                  type="button"
+                  onClick={() => switchLang(code)}
+                  aria-current={editLang === code ? "true" : undefined}
+                  className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                    editLang === code
+                      ? "bg-brand-600 text-white"
+                      : "border border-slate-200 bg-white text-ink-muted hover:border-brand-600"
+                  }`}
+                >
+                  {LANG_META[code].name}
+                  {/* Dot marks which languages already have a translation, so
+                      staff can see at a glance what's still missing. */}
+                  <span
+                    aria-hidden
+                    className={`h-1.5 w-1.5 rounded-full ${
+                      translated
+                        ? editLang === code ? "bg-white" : "bg-green-500"
+                        : editLang === code ? "bg-white/40" : "bg-slate-300"
+                    }`}
+                  />
+                </button>
+              );
+            })}
           </div>
           <p className="mt-2 text-sm text-ink-muted">{t("editingLanguageNote")}</p>
         </div>

@@ -102,12 +102,34 @@ export default function ContactPage() {
       <section className="py-20 lg:py-24">
         <div className="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
-            <SmartImage
-              asset={images.office}
-              alt={t("officeAlt")}
-              sizes="(max-width: 1024px) 92vw, 400px"
-              className="mb-6 shadow-lg shadow-slate-200/60"
-            />
+            {/* The office photo is a small original, so rather than stretching
+                it flat it becomes a framed feature: the photo sits on a deep
+                brand panel with its own colours bled behind it, which reads as
+                deliberate art direction instead of a low-res image. */}
+            <figure className="relative mb-8 overflow-hidden rounded-3xl bg-brand-950 p-3 shadow-xl shadow-brand-950/15">
+              <span
+                aria-hidden
+                className="absolute inset-0 scale-125 bg-cover bg-center opacity-45 blur-2xl"
+                style={{ backgroundImage: `url("${images.office.lqip}")` }}
+              />
+              <div className="relative overflow-hidden rounded-2xl">
+                <SmartImage
+                  asset={images.office}
+                  alt={t("officeAlt")}
+                  sizes="(max-width: 1024px) 90vw, 420px"
+                  rounded="rounded-2xl"
+                />
+              </div>
+              <figcaption className="relative flex items-center gap-2 px-3 py-3 text-sm text-slate-300">
+                <PinIcon className="h-4 w-4 shrink-0 text-rust-400" />
+                <span>
+                  <strong className="font-semibold text-white">{t("ourOffice")}</strong>
+                  {" — "}
+                  {t("misrataLibya")}
+                </span>
+              </figcaption>
+            </figure>
+
             <h2 className="mb-6 text-2xl font-bold text-ink">{t("contactDetails")}</h2>
             <div className="flex flex-col gap-4">
               {cards.map((card) => (

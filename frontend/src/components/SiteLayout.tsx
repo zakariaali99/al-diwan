@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import logo from "@/assets/logo.png";
 import { useLang, useLinkTo, useSiteSettings, useT } from "@/lib/hooks";
-import { LANGS } from "@/lib/i18n";
+import { LANGS, LANG_META } from "@/lib/i18n";
 import {
   CloseIcon,
   FacebookIcon,
@@ -12,12 +12,14 @@ import {
   WhatsAppIcon,
   XIcon,
 } from "./Icons";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 function Header() {
   const t = useT();
   const lang = useLang();
   const linkTo = useLinkTo();
   const location = useLocation();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -45,77 +47,103 @@ function Header() {
     { to: linkTo("contact-us/"), label: t("contact") },
   ];
 
-  // Swap language while staying on the same page.
-  const otherLang = LANGS.find((l) => l !== lang)!;
-  const swapPath = location.pathname.replace(/^\/(ar|en)/, `/${otherLang}`);
-
   return (
-    <header
-      className={`sticky top-0 z-50 border-b bg-white/85 backdrop-blur-lg transition-shadow ${
-        scrolled ? "border-slate-200 shadow-sm" : "border-transparent"
-      }`}
-    >
-      <div className="container-page flex min-h-[76px] items-center gap-4">
-        <Link to={linkTo("")} className="flex shrink-0 items-center gap-3">
-          <img src={logo} alt={t("logoAlt")} className="h-12 w-12" width={48} height={48} />
-          <span className="flex flex-col leading-tight">
-            <strong className="text-base font-bold text-ink">{t("companyName")}</strong>
-            <span className="text-[0.7rem] font-medium text-ink-muted">{t("companyTagline")}</span>
-          </span>
-        </Link>
-
-        <nav className="ms-auto hidden items-center gap-1 lg:flex" aria-label={t("mainNav")}>
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) =>
-                `rounded-full px-4 py-2 text-[0.95rem] font-medium transition-colors ${
-                  isActive ? "bg-brand-50 text-brand-700" : "text-ink hover:bg-slate-50 hover:text-brand-600"
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="ms-auto flex items-center gap-2 lg:ms-0">
-          <Link
-            to={swapPath}
-            className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-ink-muted transition-colors hover:border-brand-600 hover:text-brand-600"
-            lang={otherLang}
-          >
-            {otherLang.toUpperCase()}
+    <>
+      <header
+        className={`sticky top-0 z-40 border-b bg-white/85 backdrop-blur-lg transition-shadow ${
+          scrolled ? "border-slate-200 shadow-sm" : "border-transparent"
+        }`}
+      >
+        <div className="container-page flex min-h-[76px] items-center gap-4">
+          <Link to={linkTo("")} className="flex shrink-0 items-center gap-3">
+            <img src={logo} alt={t("logoAlt")} className="h-12 w-12" width={48} height={48} />
+            <span className="flex flex-col leading-tight">
+              <strong className="text-base font-bold text-ink">{t("companyName")}</strong>
+              <span className="text-[0.7rem] font-medium text-ink-muted">{t("companyTagline")}</span>
+            </span>
           </Link>
 
-          <button
-            type="button"
-            onClick={() => setMenuOpen((open) => !open)}
-            className="grid h-10 w-10 place-items-center rounded-lg border border-slate-200 text-ink lg:hidden"
-            aria-expanded={menuOpen}
-            aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
-          >
-            {menuOpen ? <CloseIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
-          </button>
-        </div>
-      </div>
-
-      {menuOpen && (
-        <nav
-          className="fixed inset-x-0 bottom-0 top-[76px] overflow-y-auto border-t border-slate-200 bg-white p-6 lg:hidden"
-          aria-label={t("mainNav")}
-        >
-          <div className="flex flex-col gap-1">
+          <nav className="ms-auto hidden items-center gap-1 lg:flex" aria-label={t("mainNav")}>
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `rounded-xl px-4 py-3.5 text-lg font-medium ${
-                    isActive ? "bg-brand-50 text-brand-700" : "text-ink"
+                  `rounded-full px-4 py-2 text-[0.95rem] font-medium transition-colors ${
+                    isActive ? "bg-brand-50 text-brand-700" : "text-ink hover:bg-slate-50 hover:text-brand-600"
+                  }`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="ms-auto flex items-center gap-2 lg:ms-0">
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 text-ink lg:hidden"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-drawer"
+              aria-label={t("openMenu")}
+            >
+              <MenuIcon className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Off-canvas drawer. Rendered outside the sticky header so it can't be
+          trapped by the header's stacking context — that was why the old
+          panel slid underneath the page content. */}
+      <div
+        className={`fixed inset-0 z-[60] lg:hidden ${menuOpen ? "" : "pointer-events-none"}`}
+        aria-hidden={!menuOpen}
+      >
+        <div
+          onClick={() => setMenuOpen(false)}
+          className={`absolute inset-0 bg-brand-950/60 backdrop-blur-sm transition-opacity duration-300 ${
+            menuOpen ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        <nav
+          id="mobile-drawer"
+          aria-label={t("mainNav")}
+          className={`absolute inset-y-0 end-0 flex w-[min(20rem,85vw)] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out ${
+            menuOpen ? "translate-x-0" : "ltr:translate-x-full rtl:-translate-x-full"
+          }`}
+        >
+          <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+            <span className="flex items-center gap-2.5">
+              <img src={logo} alt="" className="h-9 w-9" width={36} height={36} />
+              <span className="text-sm font-bold text-ink">{t("companyName")}</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              className="grid h-10 w-10 place-items-center rounded-lg border border-slate-200 text-ink"
+              aria-label={t("closeMenu")}
+            >
+              <CloseIcon className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  `rounded-xl px-4 py-3.5 text-lg font-medium transition-colors ${
+                    isActive ? "bg-brand-50 text-brand-700" : "text-ink hover:bg-slate-50"
                   }`
                 }
               >
@@ -123,9 +151,37 @@ function Header() {
               </NavLink>
             ))}
           </div>
+
+          <div className="border-t border-slate-200 p-4">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-soft">
+              {t("chooseLanguage")}
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              {LANGS.map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    navigate(location.pathname.replace(/^\/[a-z-]+/, `/${code}`));
+                  }}
+                  lang={LANG_META[code].apiLang}
+                  dir={code === "ar" ? "rtl" : "ltr"}
+                  aria-current={code === lang ? "true" : undefined}
+                  className={`rounded-lg border px-3 py-2.5 text-sm transition-colors ${
+                    code === lang
+                      ? "border-brand-600 bg-brand-50 font-semibold text-brand-700"
+                      : "border-slate-200 text-ink hover:border-brand-600"
+                  }`}
+                >
+                  {LANG_META[code].name}
+                </button>
+              ))}
+            </div>
+          </div>
         </nav>
-      )}
-    </header>
+      </div>
+    </>
   );
 }
 
