@@ -6,18 +6,27 @@ that replaces Gmail for customer correspondence.
 
 ## Stack
 
-Single Django monolith, shaped by the production host (shared cPanel — no
-Docker, no root, no Redis/Celery, no WebSockets):
+Decoupled frontend and backend, deployed together on one origin.
 
-- **Django 5.1**, MySQL via PyMySQL (no C-extension build needed)
+**Backend — Django, API only**
+- **Django 5.1** + **DRF**, MySQL via PyMySQL (no C-extension build needed)
 - **django-parler** for translated content — adding a language is config, not a migration
 - **django-unfold** theming Django Admin
-- Server-rendered templates + hand-written CSS design tokens (no build step)
-- **WhiteNoise** for static files, **gunicorn**/Passenger for serving
+- Session + CSRF auth (same-origin, so no tokens and no CORS)
+
+**Frontend — React SPA**
+- **Vite + React 18 + TypeScript + Tailwind CSS**
+- React Router (`/:lang/…` routes), TanStack Query, React Hook Form + zod
+- **Framer Motion** for the animated hero and scroll reveals
+
+Node is a **build-time** tool only. `npm run build` emits static files that
+Django serves via **django-vite** + **WhiteNoise**, so the cPanel host never
+runs Node.
 
 ## Local development
 
 ```bash
+# Backend
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 cp .env.example .env          # defaults to SQLite + console email
@@ -26,7 +35,18 @@ cp .env.example .env          # defaults to SQLite + console email
 .venv/bin/python manage.py seed_content     # Arabic copy from the live site
 .venv/bin/python manage.py seed_english     # draft English translations
 .venv/bin/python manage.py createsuperuser
+
+# Frontend (build once, then Django serves it at http://127.0.0.1:8000/)
+cd frontend && npm install && npm run build && cd ..
+
 .venv/bin/python manage.py runserver
+```
+
+For frontend work with hot reload, run Vite alongside Django and set
+`VITE_DEV_MODE=True` in `.env`:
+
+```bash
+cd frontend && npm run dev     # :5173, proxies /api and /admin to :8000
 ```
 
 Docker Compose (Django + MySQL) is provided for parity testing:
@@ -44,9 +64,10 @@ docker compose up
 | `services/` | translated service catalogue powering the bento grid |
 | `posts/` | blog with draft/scheduled/published workflow |
 | `messaging/` | the unified inbox — threads, messages, IMAP intake |
-| `dashboard/` | staff UI for posts and the inbox |
 | `siteconfig/` | global site settings singleton |
-| `api/` | DRF contact endpoint |
+| `api/` | the whole REST API + auth + language middleware |
+| `frontend/` | React app (`src/pages`, `src/dashboard`, `src/components`, `src/lib`) |
+| `brand-assets/` | original logo/photos pulled from the live site |
 
 ## Key URLs
 
@@ -54,7 +75,7 @@ docker compose up
 |---|---|
 | `/ar/`, `/en/` | public site |
 | `/ar/dashboard/` | staff dashboard (posts + inbox) |
-| `/ar/admin/` | Django Admin |
+| `/admin/` | Django Admin |
 | `/sitemap.xml`, `/robots.txt` | SEO |
 | `/healthz/` | uptime check |
 
@@ -82,16 +103,18 @@ existing mail flow on the domain.
 .venv/bin/python manage.py test
 ```
 
-31 tests covering message threading, role-based access, the contact form,
-bilingual routing, and Arabic-slug URLs.
+33 tests covering message threading, role-based API access, the contact form,
+per-language post editing, Arabic-slug URLs, and the SPA catch-all route.
 
 ## Deployment
 
 See **[DEPLOYMENT.md](DEPLOYMENT.md)** for the full cPanel runbook, DNS/SPF/DKIM
 setup, cron configuration, and the go-live checklist.
 
-Two operational notes worth knowing up front:
+Three operational notes worth knowing up front:
 
+- **Rebuild the frontend before every deploy** (`cd frontend && npm run build`).
+  `frontend/dist/` is committed on purpose — the host has no Node.
 - After any seed/management command, **restart the app** — parler caches
   translations per process, so a command run elsewhere won't invalidate the web
   process's cache.

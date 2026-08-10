@@ -13,7 +13,11 @@ deployment:
     - export VENV=/home/USERNAME/virtualenv/al-diwan.ly/3.12/bin/activate
 
     # Sync the working tree, excluding local-only artefacts.
-    - /bin/cp -R config accounts api dashboard messaging pages posts services siteconfig templates static locale manage.py requirements.txt $DEPLOYPATH/
+    # frontend/dist is the built React app (committed; the host has no Node).
+    # frontend/node_modules and src are deliberately NOT copied.
+    - /bin/cp -R config accounts api messaging pages posts services siteconfig templates static locale manage.py requirements.txt $DEPLOYPATH/
+    - /bin/mkdir -p $DEPLOYPATH/frontend
+    - /bin/cp -R frontend/dist $DEPLOYPATH/frontend/
 
     - source $VENV && cd $DEPLOYPATH && pip install --quiet -r requirements.txt
     - source $VENV && cd $DEPLOYPATH && python manage.py migrate --noinput

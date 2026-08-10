@@ -92,6 +92,30 @@ python -c "import secrets; print(secrets.token_urlsafe(64))"
 
 ---
 
+## 3b. Build the frontend (on your machine, before every deploy)
+
+The React app is compiled to static files. **Node is a build-time tool only** —
+the cPanel host never runs it.
+
+```bash
+cd frontend && npm install && npm run build
+```
+
+That writes `frontend/dist/` (including `.vite/manifest.json`, which Django
+reads to find the hashed asset filenames). **`dist/` is committed to git on
+purpose** so the built assets ship with the repo.
+
+So the full release loop is:
+
+```bash
+cd frontend && npm run build && cd .. && git add -A && git commit -m "..." && git push
+```
+
+Then deploy in cPanel (next step). Forgetting the rebuild is the most likely
+mistake: the site would keep serving the previous build.
+
+---
+
 ## 4. Deploy the code **[you]**
 
 cPanel → **Git™ Version Control** → *Create*:
@@ -240,16 +264,13 @@ migration:
 
 These are deliberate, documented gaps rather than oversights:
 
-1. **CKEditor 4 is end-of-life.** `django-ckeditor` bundles a version with known
-   security issues. The editor is only reachable by authenticated staff, so the
-   exposure is limited, but it should be swapped for a maintained editor.
-2. **ISO certificates are text only.** The strategy doc recommends verifiable,
+1. **ISO certificates are text only.** The strategy doc recommends verifiable,
    downloadable certificates; add the PDFs and link them from the About page.
-3. **Trust figures are structural, not operational.** They count service areas
+2. **Trust figures are structural, not operational.** They count service areas
    and process stages. Real operational numbers (inspections completed, countries
    covered, years of experience) would be stronger — they need to come from the company.
-4. **English content is machine-drafted.** Reviewed wording should replace it
+3. **English content is machine-drafted.** Reviewed wording should replace it
    before the English site is promoted.
-5. **Social links** in the footer come from Site settings; Instagram and X are
+4. **Social links** in the footer come from Site settings; Instagram and X are
    blank until real accounts exist (the old site linked to the bare platform
    homepages, which is worse than omitting them).
