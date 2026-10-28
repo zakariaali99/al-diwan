@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect, type ReactNode } from "react";
 import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 
 import SiteLayout from "./components/SiteLayout";
@@ -16,15 +16,30 @@ import { DEFAULT_LANG, dirFor, isLang } from "./lib/i18n";
 // particular has no business loading on the home page.
 const DashboardLayout = lazy(() => import("./dashboard/DashboardLayout"));
 const LoginPage = lazy(() => import("./dashboard/LoginPage"));
+const OverviewPage = lazy(() => import("./dashboard/OverviewPage"));
 const PostsPage = lazy(() => import("./dashboard/PostsPage"));
 const PostEditPage = lazy(() => import("./dashboard/PostEditPage"));
+const CommentsPage = lazy(() => import("./dashboard/CommentsPage"));
+const CategoriesPage = lazy(() => import("./dashboard/CategoriesPage"));
 const InboxPage = lazy(() => import("./dashboard/InboxPage"));
 const ThreadPage = lazy(() => import("./dashboard/ThreadPage"));
 const ComposePage = lazy(() => import("./dashboard/ComposePage"));
+const ContactsPage = lazy(() => import("./dashboard/ContactsPage"));
+const ServicesAdminPage = lazy(() => import("./dashboard/ServicesAdminPage"));
+const ContentBlocksPage = lazy(() => import("./dashboard/ContentBlocksPage"));
+const PrinciplesPage = lazy(() => import("./dashboard/PrinciplesPage"));
+const SiteSettingsPage = lazy(() => import("./dashboard/SiteSettingsPage"));
+const StaffPage = lazy(() => import("./dashboard/StaffPage"));
+const StaffEditPage = lazy(() => import("./dashboard/StaffEditPage"));
 
 /** Shown for the moment it takes to fetch the dashboard chunk. */
 function DashboardFallback() {
   return <div className="grid min-h-screen place-items-center text-muted">…</div>;
+}
+
+/** Each dashboard screen is its own chunk; keep the sidebar up while one loads. */
+function Page({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<div className="py-10 text-center text-muted">…</div>}>{children}</Suspense>;
 }
 
 /** Keeps <html lang>/<dir> in sync so RTL and screen readers work per route. */
@@ -51,7 +66,7 @@ function LangShell() {
         <Route path="services/" element={<ServicesPage />} />
         <Route path="about-us/" element={<AboutPage />} />
         <Route path="posts/" element={<BlogPage />} />
-        <Route path="posts/:slug/" element={<BlogPostPage />} />
+        <Route path="posts/:id/" element={<BlogPostPage />} />
         <Route path="contact-us/" element={<ContactPage />} />
       </Route>
 
@@ -71,13 +86,23 @@ function LangShell() {
           </Suspense>
         }
       >
-        <Route index element={<Navigate to="posts/" replace />} />
-        <Route path="posts/" element={<PostsPage />} />
-        <Route path="posts/new/" element={<PostEditPage />} />
-        <Route path="posts/:id/" element={<PostEditPage />} />
-        <Route path="inbox/" element={<InboxPage />} />
-        <Route path="inbox/compose/" element={<ComposePage />} />
-        <Route path="inbox/:id/" element={<ThreadPage />} />
+        <Route index element={<Page><OverviewPage /></Page>} />
+        <Route path="posts/" element={<Page><PostsPage /></Page>} />
+        <Route path="posts/new/" element={<Page><PostEditPage /></Page>} />
+        <Route path="posts/:id/" element={<Page><PostEditPage /></Page>} />
+        <Route path="comments/" element={<Page><CommentsPage /></Page>} />
+        <Route path="categories/" element={<Page><CategoriesPage /></Page>} />
+        <Route path="inbox/" element={<Page><InboxPage /></Page>} />
+        <Route path="inbox/compose/" element={<Page><ComposePage /></Page>} />
+        <Route path="contacts/" element={<Page><ContactsPage /></Page>} />
+        <Route path="services/" element={<Page><ServicesAdminPage /></Page>} />
+        <Route path="content/" element={<Page><ContentBlocksPage /></Page>} />
+        <Route path="principles/" element={<Page><PrinciplesPage /></Page>} />
+        <Route path="settings/" element={<Page><SiteSettingsPage /></Page>} />
+        <Route path="staff/" element={<Page><StaffPage /></Page>} />
+        <Route path="staff/new/" element={<Page><StaffEditPage /></Page>} />
+        <Route path="staff/:id/" element={<Page><StaffEditPage /></Page>} />
+        <Route path="inbox/:id/" element={<Page><ThreadPage /></Page>} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

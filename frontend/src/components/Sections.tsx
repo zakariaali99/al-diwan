@@ -203,7 +203,7 @@ export function PrincipleList({ principles }: { principles: { id: number; text: 
 
 export function PostCard({ post }: { post: PostListItem }) {
   const linkTo = useLinkTo();
-  const href = linkTo(`posts/${encodeURIComponent(post.slug)}/`);
+  const href = linkTo(`posts/${post.id}/`);
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/60">

@@ -1,35 +1,27 @@
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group, User
 from django.core.management.base import BaseCommand
 
-from messaging.models import Correspondent, Message, Thread
-from pages.models import ContentBlock, QualityPrinciple
-from posts.models import Category, Post
-from services.models import ServiceCategory, ServiceItem
-from siteconfig.models import SiteSettings
-
-# Role -> models the group gets add/change/delete/view on.
-ROLE_MODELS = {
-    "Admins": [
-        SiteSettings, ContentBlock, QualityPrinciple,
-        ServiceCategory, ServiceItem,
-        Category, Post,
-        Correspondent, Thread, Message,
-    ],
-    "Editors": [Category, Post],
-    "Support": [Correspondent, Thread, Message],
-}
+from accounts.capabilities import LEGACY_GROUP_ROLES, capabilities_of, set_capabilities
+from accounts.models import ROLES
 
 
 class Command(BaseCommand):
-    help = "Create the Admins/Editors/Support staff groups with their dashboard permissions."
+    help = (
+        "Dashboard roles are built in (see accounts.models.ROLES). This moves members "
+        "of the old Admins/Editors/Support groups onto them and makes them staff."
+    )
 
     def handle(self, *args, **options):
-        for role, models in ROLE_MODELS.items():
-            group, created = Group.objects.get_or_create(name=role)
-            perms = Permission.objects.filter(
-                content_type__app_label__in={m._meta.app_label for m in models},
-                content_type__model__in={m._meta.model_name for m in models},
-            )
-            group.permissions.set(perms)
-            verb = "Created" if created else "Updated"
-            self.stdout.write(self.style.SUCCESS(f"{verb} group '{role}' with {perms.count()} permissions"))
+        moved = 0
+        for group_name, role in LEGACY_GROUP_ROLES.items():
+            group = Group.objects.filter(name=group_name).first()
+            if not group:
+                continue
+            for user in User.objects.filter(groups=group):
+                codes = sorted(set(capabilities_of(user)) | set(ROLES[role]))
+                set_capabilities(user, codes, role)
+                if not user.is_staff:
+                    user.is_staff = True
+                    user.save(update_fields=["is_staff"])
+                moved += 1
+        self.stdout.write(self.style.SUCCESS(f"Roles ready: {', '.join(ROLES)}. Moved {moved} legacy account(s)."))

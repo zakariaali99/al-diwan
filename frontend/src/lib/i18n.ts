@@ -268,6 +268,19 @@ const strings = {
   readNext: { ar: "اقرأ أيضًا", en: "Read next", es: "Sigue leyendo", it: "Continua a leggere", zh: "继续阅读", tr: "Sonrakini oku" },
   backToBlog: { ar: "العودة إلى المدونة", en: "Back to the blog", es: "Volver al blog", it: "Torna al blog", zh: "返回博客", tr: "Bloga dön" },
 
+  commentsTitle: { ar: "التعليقات", en: "Comments", es: "Comentarios", it: "Commenti", zh: "评论", tr: "Yorumlar" },
+  noCommentsYet: { ar: "لا توجد تعليقات بعد. كن أول من يعلّق.", en: "No comments yet. Be the first to comment.", es: "Aún no hay comentarios. Sea el primero en comentar.", it: "Ancora nessun commento. Scrivi il primo.", zh: "暂无评论，欢迎发表第一条评论。", tr: "Henüz yorum yok. İlk yorumu siz yapın." },
+  leaveComment: { ar: "أضف تعليقًا", en: "Leave a comment", es: "Deje un comentario", it: "Lascia un commento", zh: "发表评论", tr: "Yorum bırakın" },
+  commentName: { ar: "الاسم", en: "Name", es: "Nombre", it: "Nome", zh: "姓名", tr: "Ad" },
+  commentEmail: { ar: "البريد الإلكتروني", en: "Email", es: "Correo electrónico", it: "Email", zh: "电子邮件", tr: "E-posta" },
+  commentEmailNote: { ar: "لن يُنشر بريدك الإلكتروني.", en: "Your email won't be published.", es: "Su correo no se publicará.", it: "La tua email non sarà pubblicata.", zh: "您的电子邮件不会公开。", tr: "E-postanız yayınlanmaz." },
+  commentBody: { ar: "تعليقك", en: "Your comment", es: "Su comentario", it: "Il tuo commento", zh: "您的评论", tr: "Yorumunuz" },
+  postComment: { ar: "نشر التعليق", en: "Post comment", es: "Publicar comentario", it: "Pubblica commento", zh: "发表评论", tr: "Yorumu gönder" },
+  postingComment: { ar: "جارٍ النشر…", en: "Posting…", es: "Publicando…", it: "Pubblicazione…", zh: "发表中…", tr: "Gönderiliyor…" },
+  commentPosted: { ar: "شكرًا! نُشر تعليقك.", en: "Thanks! Your comment is live.", es: "¡Gracias! Su comentario se ha publicado.", it: "Grazie! Il tuo commento è stato pubblicato.", zh: "谢谢！您的评论已发表。", tr: "Teşekkürler! Yorumunuz yayında." },
+  commentError: { ar: "تعذّر نشر التعليق. تحقّق من البيانات أو حاول لاحقًا.", en: "Couldn't post your comment. Check the details or try again later.", es: "No se pudo publicar. Revise los datos o inténtelo más tarde.", it: "Impossibile pubblicare. Controlla i dati o riprova più tardi.", zh: "评论发表失败，请检查信息或稍后再试。", tr: "Yorum gönderilemedi. Bilgileri kontrol edin veya daha sonra deneyin." },
+  commentCount: { ar: "{n} تعليق", en: "{n} comments", es: "{n} comentarios", it: "{n} commenti", zh: "{n} 条评论", tr: "{n} yorum" },
+
   // --- Contact ---
   howToReach: { ar: "كيفية التواصل؟", en: "How to reach us", es: "Cómo contactarnos", it: "Come contattarci", zh: "如何联系我们", tr: "Bize nasıl ulaşırsınız" },
   contactTitle: {

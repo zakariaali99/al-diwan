@@ -3,7 +3,7 @@
  * CSRF token — no tokens to store, no CORS.
  */
 
-import { apiLangFor, type Lang } from "./i18n";
+import { apiLangFor, isLang, type Lang } from "./i18n";
 
 export type { Lang };
 
@@ -44,8 +44,14 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   const headers: Record<string, string> = {};
   // parler resolves translations from the active language; /api/ is outside
   // i18n_patterns so Django reads it from this header.
-  if (lang) headers["Accept-Language"] = apiLangFor(lang);
-  if (body !== undefined) headers["Content-Type"] = "application/json";
+  // Calls that don't name a language (the dashboard's) follow the page's, which
+  // LangShell keeps on <html lang>.
+  const pageLang = document.documentElement.lang;
+  const effective = lang ?? (isLang(pageLang) ? pageLang : undefined);
+  if (effective) headers["Accept-Language"] = apiLangFor(effective);
+  // FormData (file uploads) sets its own multipart boundary.
+  const isForm = body instanceof FormData;
+  if (body !== undefined && !isForm) headers["Content-Type"] = "application/json";
   if (isWrite) {
     const token = getCookie("csrftoken");
     if (token) headers["X-CSRFToken"] = token;
@@ -55,7 +61,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
     method,
     headers,
     credentials: "same-origin",
-    body: body === undefined ? undefined : JSON.stringify(body),
+    body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
   });
 
   if (response.status === 204) return undefined as T;
@@ -121,18 +127,24 @@ export interface ServiceCategory {
 export interface PostCategory {
   id: number;
   name: string;
-  slug: string;
 }
 
 export interface PostListItem {
   id: number;
   title: string;
-  slug: string;
   excerpt: string;
   category: PostCategory | null;
   author_name: string;
   featured_image: string | null;
   published_at: string | null;
+  comment_count: number;
+}
+
+export interface PublicComment {
+  id: number;
+  name: string;
+  body: string;
+  created_at: string;
 }
 
 export interface PostDetail extends PostListItem {
@@ -142,22 +154,37 @@ export interface PostDetail extends PostListItem {
   updated_at: string;
 }
 
-export interface UserPermissions {
-  canViewPosts: boolean;
-  canAddPosts: boolean;
-  canChangePosts: boolean;
-  canDeletePosts: boolean;
-  canViewThreads: boolean;
-  canChangeThreads: boolean;
-  canAddThreads: boolean;
-}
+// --- Dashboard -------------------------------------------------------------
+
+export const CAPABILITIES = [
+  "view_posts",
+  "manage_posts",
+  "publish_posts",
+  "delete_posts",
+  "view_comments",
+  "moderate_comments",
+  "view_messages",
+  "reply_messages",
+  "manage_services",
+  "manage_content",
+  "manage_staff",
+] as const;
+export type Capability = (typeof CAPABILITIES)[number];
 
 export interface CurrentUser {
   isAuthenticated: boolean;
   id?: number;
   username?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
   is_superuser?: boolean;
-  permissions?: UserPermissions;
+  capabilities?: Capability[];
+}
+
+/** Every translated record says which languages it has text in. */
+interface Translated {
+  translated_languages: string[];
 }
 
 export interface Correspondent {
@@ -179,12 +206,15 @@ export interface ThreadMessage {
   attachments: { id: number; filename: string; url: string }[];
 }
 
+export type ThreadStatus = "open" | "pending" | "closed";
+
 export interface ThreadListItem {
   id: number;
   subject: string;
   correspondent: Correspondent;
+  assigned_to: number | null;
   assigned_to_name: string;
-  status: "open" | "pending" | "closed";
+  status: ThreadStatus;
   is_unread: boolean;
   message_count: number;
   created_at: string;
@@ -195,22 +225,153 @@ export interface ThreadDetail extends ThreadListItem {
   messages: ThreadMessage[];
 }
 
-export interface DashboardPost {
+export type PostStatus = "draft" | "scheduled" | "published";
+
+export interface DashboardPostListItem extends Translated {
   id: number;
   title: string;
-  slug: string;
+  status: PostStatus;
+  category: number | null;
+  category_name: string;
+  author_name: string;
+  featured_image: string | null;
+  comment_count: number;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DashboardPost extends Translated {
+  id: number;
+  title: string;
   excerpt: string;
   body: string;
   seo_title: string;
   seo_description: string;
   category: number | null;
   featured_image: string | null;
-  status: "draft" | "scheduled" | "published";
+  status: PostStatus;
   published_at: string | null;
   author_name: string;
-  available_languages: string[];
+  comment_count: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface DashboardCategory extends Translated {
+  id: number;
+  name: string;
+  post_count: number;
+}
+
+export interface DashboardComment {
+  id: number;
+  post: number;
+  post_title: string;
+  name: string;
+  email: string;
+  body: string;
+  is_visible: boolean;
+  created_at: string;
+}
+
+export interface DashboardServiceItem extends Translated {
+  id: number;
+  category: number;
+  text: string;
+  order: number;
+}
+
+export interface DashboardServiceCategory extends Translated {
+  id: number;
+  name: string;
+  icon: string;
+  order: number;
+  items: DashboardServiceItem[];
+}
+
+export interface DashboardSiteSettings extends Translated {
+  tagline: string;
+  phone: string;
+  whatsapp_url: string;
+  email: string;
+  address: string;
+  map_url: string;
+  facebook_url: string;
+  instagram_url: string;
+  x_url: string;
+}
+
+export interface DashboardContentBlock extends Translated {
+  id: number;
+  slug: string;
+  title: string;
+  body: string;
+}
+
+export interface DashboardPrinciple extends Translated {
+  id: number;
+  text: string;
+  order: number;
+}
+
+export interface DashboardContact extends Correspondent {
+  thread_count: number;
+  created_at: string;
+}
+
+export interface StaffMember {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  is_active: boolean;
+  is_superuser: boolean;
+  role: string;
+  capabilities: Capability[];
+  last_login: string | null;
+  date_joined: string;
+}
+
+export interface RolesInfo {
+  roles: Record<string, Capability[]>;
+  capabilities: Capability[];
+  implies: Partial<Record<Capability, Capability[]>>;
+}
+
+export interface Overview {
+  posts?: { published: number; drafts: number; scheduled: number };
+  comments?: { total: number; this_week: number; hidden: number };
+  messages?: { unread: number; open: number; mine: number };
+  services?: { categories: number; items: number };
+  staff?: { active: number };
+}
+
+type Payload = Record<string, unknown>;
+
+function query(params: Record<string, string | number | boolean | undefined | null>): string {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== "" && value !== false) {
+      search.set(key, value === true ? "1" : String(value));
+    }
+  }
+  const qs = search.toString();
+  return qs ? `?${qs}` : "";
+}
+
+/** CRUD helpers for a dashboard resource addressed by numeric id. */
+function resource<T>(base: string) {
+  return {
+    list: (params: Record<string, string | number | boolean | undefined> = {}) =>
+      request<T[]>(`/api/dashboard/${base}/${query(params)}`),
+    get: (id: number, language?: string) => request<T>(`/api/dashboard/${base}/${id}/${query({ language })}`),
+    create: (body: Payload | FormData) => request<T>(`/api/dashboard/${base}/`, { method: "POST", body }),
+    update: (id: number, body: Payload | FormData) =>
+      request<T>(`/api/dashboard/${base}/${id}/`, { method: "PATCH", body }),
+    remove: (id: number) => request<void>(`/api/dashboard/${base}/${id}/`, { method: "DELETE" }),
+  };
 }
 
 // --- Endpoints -------------------------------------------------------------
@@ -222,13 +383,11 @@ export const api = {
   serviceCategories: (lang: Lang) => request<ServiceCategory[]>("/api/service-categories/", { lang }),
   postCategories: (lang: Lang) => request<PostCategory[]>("/api/post-categories/", { lang }),
 
-  posts: (lang: Lang, category?: string) =>
-    request<PostListItem[]>(
-      `/api/posts/${category ? `?category=${encodeURIComponent(category)}` : ""}`,
-      { lang },
-    ),
-  post: (lang: Lang, slug: string) =>
-    request<PostDetail>(`/api/posts/${encodeURIComponent(slug)}/`, { lang }),
+  posts: (lang: Lang, category?: string) => request<PostListItem[]>(`/api/posts/${query({ category })}`, { lang }),
+  post: (lang: Lang, id: number) => request<PostDetail>(`/api/posts/${id}/`, { lang }),
+  comments: (postId: number) => request<PublicComment[]>(`/api/posts/${postId}/comments/`),
+  addComment: (postId: number, payload: { name: string; email: string; body: string; website: string }) =>
+    request<PublicComment>(`/api/posts/${postId}/comments/`, { method: "POST", body: payload }),
 
   contact: (payload: { name: string; email: string; subject: string; message: string; website: string }) =>
     request<{ thread_id: number }>("/api/contact/", { method: "POST", body: payload }),
@@ -239,22 +398,14 @@ export const api = {
   logout: () => request<void>("/api/auth/logout/", { method: "POST" }),
 
   dashboard: {
-    posts: () => request<DashboardPost[]>("/api/dashboard/posts/"),
-    post: (id: number) => request<DashboardPost>(`/api/dashboard/posts/${id}/`),
-    createPost: (payload: Record<string, unknown>) =>
-      request<DashboardPost>("/api/dashboard/posts/", { method: "POST", body: payload }),
-    updatePost: (id: number, payload: Record<string, unknown>) =>
-      request<DashboardPost>(`/api/dashboard/posts/${id}/`, { method: "PATCH", body: payload }),
-    deletePost: (id: number) =>
-      request<void>(`/api/dashboard/posts/${id}/`, { method: "DELETE" }),
+    overview: () => request<Overview>("/api/dashboard/overview/"),
 
-    threads: (params: { status?: string; mine?: boolean } = {}) => {
-      const query = new URLSearchParams();
-      if (params.status) query.set("status", params.status);
-      if (params.mine) query.set("mine", "1");
-      const qs = query.toString();
-      return request<ThreadListItem[]>(`/api/dashboard/threads/${qs ? `?${qs}` : ""}`);
-    },
+    posts: resource<DashboardPostListItem>("posts"),
+    post: resource<DashboardPost>("posts"),
+    categories: resource<DashboardCategory>("post-categories"),
+    comments: resource<DashboardComment>("comments"),
+
+    threads: resource<ThreadListItem>("threads"),
     thread: (id: number) => request<ThreadDetail>(`/api/dashboard/threads/${id}/`),
     reply: (id: number, body: string) =>
       request<ThreadDetail>(`/api/dashboard/threads/${id}/reply/`, { method: "POST", body: { body } }),
@@ -262,7 +413,19 @@ export const api = {
       request<ThreadDetail>("/api/dashboard/threads/compose/", { method: "POST", body: payload }),
     assignToMe: (id: number) =>
       request<ThreadListItem>(`/api/dashboard/threads/${id}/assign-to-me/`, { method: "POST" }),
-    close: (id: number) =>
-      request<ThreadListItem>(`/api/dashboard/threads/${id}/close/`, { method: "POST" }),
+    contacts: resource<DashboardContact>("contacts"),
+
+    serviceCategories: resource<DashboardServiceCategory>("service-categories"),
+    serviceItems: resource<DashboardServiceItem>("service-items"),
+
+    siteSettings: (language: string) =>
+      request<DashboardSiteSettings>(`/api/dashboard/site-settings/${query({ language })}`),
+    updateSiteSettings: (body: Payload) =>
+      request<DashboardSiteSettings>("/api/dashboard/site-settings/", { method: "PATCH", body }),
+    contentBlocks: resource<DashboardContentBlock>("content-blocks"),
+    principles: resource<DashboardPrinciple>("quality-principles"),
+
+    staff: resource<StaffMember>("staff"),
+    roles: () => request<RolesInfo>("/api/dashboard/staff/roles/"),
   },
 };

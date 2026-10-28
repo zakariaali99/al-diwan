@@ -1,124 +1,129 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
 
-import { api } from "@/lib/api";
-import { useCurrentUser, useLinkTo, useT } from "@/lib/hooks";
+import { api, type ThreadStatus } from "@/lib/api";
+import { useLang, useLinkTo } from "@/lib/hooks";
+import { PlusIcon } from "./icons";
+import { useDT } from "./strings";
+import {
+  Empty,
+  LoadError,
+  Loading,
+  PageHeader,
+  Pill,
+  RequireCap,
+  Table,
+  filterChip,
+  formatDate,
+  primaryBtn,
+  td,
+  th,
+  useCan,
+} from "./ui";
 
-const STATUS_STYLES: Record<string, string> = {
-  open: "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300",
-  pending: "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
-  closed: "bg-subtle text-muted",
-};
+export const THREAD_TONE = { open: "green", pending: "amber", closed: "gray" } as const;
 
-export default function InboxPage() {
-  const t = useT();
+export function useThreadStatusLabel() {
+  const dt = useDT();
+  return (status: ThreadStatus) =>
+    status === "open" ? dt("statusOpen") : status === "pending" ? dt("statusPending") : dt("statusClosed");
+}
+
+function Inbox() {
+  const dt = useDT();
+  const lang = useLang();
   const linkTo = useLinkTo();
-  const { data: user } = useCurrentUser();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const status = searchParams.get("status") ?? undefined;
-  const mine = searchParams.get("mine") === "1";
+  const can = useCan();
+  const statusLabel = useThreadStatusLabel();
+  const [params, setParams] = useSearchParams();
+  const status = params.get("status") ?? "";
+  const mine = params.get("mine") === "1";
 
   const threads = useQuery({
-    queryKey: ["dashboard-threads", status ?? null, mine],
-    queryFn: () => api.dashboard.threads({ status, mine }),
+    queryKey: ["dashboard-threads", status, mine],
+    queryFn: () => api.dashboard.threads.list({ status, mine }),
   });
 
-  const statusLabel = (value: string) =>
-    value === "open" ? t("statusOpen") : value === "pending" ? t("statusPending") : t("statusClosed");
-
   const filters = [
-    { key: "all", label: t("allCategories"), active: !status && !mine, apply: () => setSearchParams({}) },
-    { key: "open", label: t("statusOpen"), active: status === "open", apply: () => setSearchParams({ status: "open" }) },
-    { key: "pending", label: t("statusPending"), active: status === "pending", apply: () => setSearchParams({ status: "pending" }) },
-    { key: "closed", label: t("statusClosed"), active: status === "closed", apply: () => setSearchParams({ status: "closed" }) },
-    { key: "mine", label: t("assignedToMe"), active: mine, apply: () => setSearchParams({ mine: "1" }) },
+    { label: dt("all"), active: !status && !mine, apply: () => setParams({}) },
+    ...(["open", "pending", "closed"] as ThreadStatus[]).map((value) => ({
+      label: statusLabel(value),
+      active: status === value,
+      apply: () => setParams({ status: value }),
+    })),
+    { label: dt("mineThreads"), active: mine, apply: () => setParams({ mine: "1" }) },
   ];
 
   return (
     <>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-body">{t("messages")}</h1>
-        {user?.permissions?.canAddThreads && (
-          <Link to={linkTo("dashboard/inbox/compose/")} className="btn-primary">
-            {t("newMessage")}
-          </Link>
-        )}
-      </div>
+      <PageHeader
+        title={dt("inbox")}
+        lede={can("reply_messages") ? undefined : dt("readOnlyInbox")}
+        actions={
+          can("reply_messages") && (
+            <Link to={linkTo("dashboard/inbox/compose/")} className={primaryBtn}>
+              <PlusIcon className="h-4 w-4" />
+              {dt("newMessage")}
+            </Link>
+          )
+        }
+      />
 
       <nav className="mb-5 flex flex-wrap gap-2">
         {filters.map((filter) => (
-          <button
-            key={filter.key}
-            type="button"
-            onClick={filter.apply}
-            aria-current={filter.active ? "true" : undefined}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-              filter.active
-                ? "bg-brand-600 text-white"
-                : "border border-line bg-surface text-muted hover:border-brand-600 hover:text-brand-600"
-            }`}
-          >
+          <button key={filter.label} type="button" onClick={filter.apply} className={filterChip(filter.active)}>
             {filter.label}
           </button>
         ))}
       </nav>
 
       {threads.isLoading ? (
-        <p className="text-muted">{t("loading")}</p>
+        <Loading />
       ) : threads.isError ? (
-        <p className="text-muted">{t("errorLoading")}</p>
+        <LoadError />
       ) : (threads.data?.length ?? 0) === 0 ? (
-        <div className="rounded-xl border border-line bg-surface p-10 text-center text-muted">
-          {t("noMessages")}
-        </div>
+        <Empty>{dt("noMessages")}</Empty>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-line bg-surface">
-          <table className="w-full border-collapse text-sm">
-            <thead>
-              <tr className="bg-subtle">
-                <th className="p-3" />
-                <th className="p-3 text-start font-semibold">{t("subject")}</th>
-                <th className="p-3 text-start font-semibold">{t("from")}</th>
-                <th className="p-3 text-start font-semibold">{t("assignedTo")}</th>
-                <th className="p-3 text-start font-semibold">{t("status")}</th>
-                <th className="p-3 text-start font-semibold">{t("updated")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {threads.data?.map((thread) => (
-                <tr key={thread.id} className="border-t border-slate-100">
-                  <td className="p-3">
-                    {thread.is_unread && (
-                      <span className="rounded-full bg-brand-600 px-2 py-0.5 text-[0.7rem] font-semibold text-white">
-                        {t("unread")}
-                      </span>
-                    )}
-                  </td>
-                  <td className="p-3">
-                    <Link
-                      to={linkTo(`dashboard/inbox/${thread.id}/`)}
-                      className="font-medium text-body hover:text-brand-600"
-                    >
-                      {thread.subject}
-                    </Link>
-                  </td>
-                  <td className="p-3 text-muted">{thread.correspondent.name || thread.correspondent.email}</td>
-                  <td className="p-3 text-muted">{thread.assigned_to_name || "—"}</td>
-                  <td className="p-3">
-                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_STYLES[thread.status]}`}>
-                      {statusLabel(thread.status)}
-                    </span>
-                  </td>
-                  <td className="whitespace-nowrap p-3 text-muted">
-                    {new Date(thread.updated_at).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          head={
+            <>
+              <th className={th}>{dt("subject")}</th>
+              <th className={th}>{dt("from")}</th>
+              <th className={th}>{dt("assignedTo")}</th>
+              <th className={th}>{dt("status")}</th>
+              <th className={th}>{dt("updated")}</th>
+            </>
+          }
+        >
+          {threads.data?.map((thread) => (
+            <tr key={thread.id} className={thread.is_unread ? "bg-brand-tint/40" : "hover:bg-subtle/60"}>
+              <td className={td}>
+                <Link to={linkTo(`dashboard/inbox/${thread.id}/`)} className="flex items-center gap-2">
+                  {thread.is_unread && <span className="h-2 w-2 shrink-0 rounded-full bg-brand-600" aria-label={dt("unread")} />}
+                  <span className={`text-body hover:text-brand-600 ${thread.is_unread ? "font-bold" : "font-medium"}`}>
+                    {thread.subject}
+                  </span>
+                  <span className="text-xs text-faint">({thread.message_count})</span>
+                </Link>
+              </td>
+              <td className={`${td} text-muted`}>{thread.correspondent.name || thread.correspondent.email}</td>
+              <td className={`${td} text-muted`}>{thread.assigned_to_name || "—"}</td>
+              <td className={td}>
+                <Pill tone={THREAD_TONE[thread.status]}>{statusLabel(thread.status)}</Pill>
+              </td>
+              <td className={`${td} whitespace-nowrap text-muted`}>{formatDate(thread.updated_at, lang)}</td>
+            </tr>
+          ))}
+        </Table>
       )}
     </>
+  );
+}
+
+export default function InboxPage() {
+  return (
+    <RequireCap capability="view_messages">
+      <Inbox />
+    </RequireCap>
   );
 }

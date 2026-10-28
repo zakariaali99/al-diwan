@@ -6,6 +6,8 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.png";
 import { ApiError, api } from "@/lib/api";
 import { useCurrentUser, useLinkTo, useT } from "@/lib/hooks";
+import { EyeIcon, EyeOffIcon } from "./icons";
+import { useDT } from "./strings";
 
 interface LoginValues {
   username: string;
@@ -14,12 +16,14 @@ interface LoginValues {
 
 export default function LoginPage() {
   const t = useT();
+  const dt = useDT();
   const linkTo = useLinkTo();
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
   const { data: user, isLoading } = useCurrentUser();
-  const [failed, setFailed] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit, formState: { isSubmitting } } = useForm<LoginValues>();
 
@@ -32,21 +36,20 @@ export default function LoginPage() {
   }
 
   const onSubmit = async (values: LoginValues) => {
-    setFailed(false);
+    setError(null);
     try {
       await api.login(values.username, values.password);
       await queryClient.invalidateQueries({ queryKey: ["me"] });
       const from = (location.state as { from?: string } | null)?.from;
       navigate(from || linkTo("dashboard/"), { replace: true });
-    } catch (error) {
-      if (error instanceof ApiError && error.status === 401) setFailed(true);
-      else setFailed(true);
+    } catch (failure) {
+      setError(failure instanceof ApiError && failure.status === 429 ? dt("tooManyAttempts") : t("loginFailed"));
     }
   };
 
   return (
-    <div className="grid min-h-screen place-items-center bg-brand-950 p-6">
-      <main className="w-full max-w-sm rounded-2xl bg-surface p-8 shadow-2xl">
+    <div className="grid min-h-screen place-items-center bg-brand-950 bg-[radial-gradient(120%_80%_at_50%_0%,#0B4577_0%,#051F35_60%)] p-5">
+      <main className="w-full max-w-sm rounded-3xl bg-surface p-7 shadow-2xl sm:p-8">
         <div className="mb-8 flex items-center gap-3">
           <img src={logo} alt="" className="h-12 w-12" />
           <div>
@@ -55,9 +58,9 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {failed && (
-          <p role="alert" className="mb-5 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300">
-            {t("loginFailed")}
+        {error && (
+          <p role="alert" className="mb-5 rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300">
+            {error}
           </p>
         )}
 
@@ -71,6 +74,8 @@ export default function LoginPage() {
               {...register("username", { required: true })}
               className="field-input"
               autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
               autoFocus
             />
           </div>
@@ -79,13 +84,25 @@ export default function LoginPage() {
             <label htmlFor="password" className="mb-2 block text-sm font-semibold text-body">
               {t("password")}
             </label>
-            <input
-              id="password"
-              type="password"
-              {...register("password", { required: true })}
-              className="field-input"
-              autoComplete="current-password"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                {...register("password", { required: true })}
+                className="field-input pe-12"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                className="absolute inset-y-0 end-0 grid w-12 place-items-center rounded-e-lg text-muted transition-colors hover:text-brand-600"
+                aria-label={showPassword ? dt("hidePassword") : dt("showPassword")}
+                aria-pressed={showPassword}
+                aria-controls="password"
+              >
+                {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
 
           <button type="submit" disabled={isSubmitting} className="btn-primary w-full disabled:opacity-60">

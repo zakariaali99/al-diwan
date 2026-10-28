@@ -7,13 +7,13 @@ same-origin, so cookies work without CORS and there's no token handling.
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import authenticate
+from django.db.models import Count, Q
 from django.middleware.csrf import get_token
-from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
+from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import AnonRateThrottle, ScopedRateThrottle
 from rest_framework.views import APIView
 
 from messaging.models import Thread
@@ -23,27 +23,29 @@ from messaging.services import (
     start_thread,
 )
 from pages.models import ContentBlock, QualityPrinciple
-from posts.models import Category, Post
+from posts.models import Category, Comment, Post
 from services.models import ServiceCategory
 from siteconfig.models import SiteSettings
 
-from .permissions import DjangoModelPermissionsStrict
+from .dashboard_views import me_payload
+from .permissions import capability
 from .serializers import (
     CategorySerializer,
+    CommentCreateSerializer,
     ComposeSerializer,
     ContactMessageSerializer,
     ContentBlockSerializer,
-    CurrentUserSerializer,
-    DashboardPostSerializer,
     LoginSerializer,
     PostDetailSerializer,
     PostListSerializer,
+    PublicCommentSerializer,
     QualityPrincipleSerializer,
     ReplySerializer,
     ServiceCategorySerializer,
     SiteSettingsSerializer,
     ThreadDetailSerializer,
     ThreadListSerializer,
+    ThreadUpdateSerializer,
 )
 
 
@@ -83,26 +85,55 @@ class ServiceCategoryListView(APIView):
         return Response(ServiceCategorySerializer(categories, many=True).data)
 
 
+class CommentThrottle(AnonRateThrottle):
+    scope = "comment"
+    rate = "10/hour"
+
+    def allow_request(self, request, view):
+        # Only posting is limited; reading comments is free.
+        if request.method != "POST":
+            return True
+        return super().allow_request(request, view)
+
+
 class PublicPostViewSet(viewsets.ReadOnlyModelViewSet):
+    """Published posts, addressed by id (posts have no slugs)."""
+
     permission_classes = [AllowAny]
-    lookup_field = "slug"
-    lookup_value_regex = "[^/]+"  # Arabic slugs are not ASCII-safe
+    throttle_classes = [CommentThrottle]
 
     def get_queryset(self):
         queryset = (
-            Post.objects.filter(status=Post.Status.PUBLISHED)
+            Post.visible()
             .select_related("category", "author")
+            .annotate(visible_comments=Count("comments", filter=Q(comments__is_visible=True)))
         )
         category = self.request.query_params.get("category")
-        if category:
-            queryset = queryset.filter(translations__slug=category).distinct()
+        if category and category.isdigit():
+            queryset = queryset.filter(category_id=int(category))
         return queryset
 
     def get_serializer_class(self):
         return PostDetailSerializer if self.action == "retrieve" else PostListSerializer
 
-    def get_object(self):
-        return get_object_or_404(self.get_queryset(), translations__slug=self.kwargs["slug"])
+    @action(detail=True, methods=["get", "post"])
+    def comments(self, request, pk=None):
+        post = self.get_object()
+        if request.method == "GET":
+            visible = post.comments.filter(is_visible=True).order_by("created_at")
+            return Response(PublicCommentSerializer(visible, many=True).data)
+
+        serializer = CommentCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        comment = Comment.objects.create(
+            post=post,
+            name=data["name"],
+            email=data["email"],
+            body=data["body"],
+            ip_address=request.META.get("REMOTE_ADDR") or None,
+        )
+        return Response(PublicCommentSerializer(comment).data, status=status.HTTP_201_CREATED)
 
 
 class PostCategoryListView(APIView):
@@ -113,6 +144,7 @@ class PostCategoryListView(APIView):
 
 
 class ContactThrottle(AnonRateThrottle):
+    scope = "contact"
     rate = "5/hour"
 
 
@@ -148,6 +180,8 @@ class CsrfView(APIView):
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "login"
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -157,13 +191,14 @@ class LoginView(APIView):
             username=serializer.validated_data["username"],
             password=serializer.validated_data["password"],
         )
-        if user is None:
+        # Only staff accounts may use the dashboard.
+        if user is None or not user.is_staff:
             return Response(
                 {"detail": "بيانات الدخول غير صحيحة."},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
         auth_login(request, user)
-        return Response(CurrentUserSerializer(user).data)
+        return Response(me_payload(user))
 
 
 class LogoutView(APIView):
@@ -180,34 +215,37 @@ class CurrentUserView(APIView):
     def get(self, request):
         if not request.user.is_authenticated:
             return Response({"isAuthenticated": False})
-        data = CurrentUserSerializer(request.user).data
-        data["isAuthenticated"] = True
-        return Response(data)
+        return Response(me_payload(request.user))
 
 
 # --- Dashboard (authenticated) ---------------------------------------------
 
-class DashboardPostViewSet(viewsets.ModelViewSet):
-    """Editors manage posts here. Model permissions gate every method, so a
-    Support-only account gets 403 rather than a usable endpoint."""
+class DashboardThreadViewSet(
+    viewsets.ReadOnlyModelViewSet, mixins.UpdateModelMixin, mixins.DestroyModelMixin
+):
+    """Reading needs `view_messages`; replying, composing, assigning, closing
+    and deleting need `reply_messages`."""
 
-    serializer_class = DashboardPostSerializer
-    permission_classes = [IsAuthenticated, DjangoModelPermissionsStrict]
-    queryset = Post.objects.select_related("category", "author").all()
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
-
-class DashboardThreadViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [IsAuthenticated, DjangoModelPermissionsStrict]
+    permission_classes = [capability("view_messages", "reply_messages")]
     queryset = Thread.objects.select_related("correspondent", "assigned_to").all()
+    http_method_names = ["get", "post", "patch", "delete"]
 
     def get_serializer_class(self):
-        return ThreadDetailSerializer if self.action == "retrieve" else ThreadListSerializer
+        if self.action == "retrieve":
+            return ThreadDetailSerializer
+        if self.action == "partial_update":
+            return ThreadUpdateSerializer
+        return ThreadListSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        thread = self.get_object()
+        serializer = ThreadUpdateSerializer(thread, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(ThreadListSerializer(thread).data)
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().prefetch_related("messages")
         status_filter = self.request.query_params.get("status")
         if status_filter:
             queryset = queryset.filter(status=status_filter)

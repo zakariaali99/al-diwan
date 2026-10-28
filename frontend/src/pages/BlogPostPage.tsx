@@ -2,15 +2,16 @@ import { Link, useParams } from "react-router-dom";
 
 import { ArrowIcon } from "@/components/Icons";
 import Reveal from "@/components/Reveal";
+import PostComments from "@/components/PostComments";
 import { ErrorBlock, LoadingBlock, PageHeader, PostCard } from "@/components/Sections";
 import { usePost, usePosts, useLinkTo, useT } from "@/lib/hooks";
 import { usePageMeta } from "@/lib/meta";
 
 export default function BlogPostPage() {
-  const { slug = "" } = useParams<{ slug: string }>();
+  const { id = "" } = useParams<{ id: string }>();
   const t = useT();
   const linkTo = useLinkTo();
-  const post = usePost(decodeURIComponent(slug));
+  const post = usePost(Number(id));
   const allPosts = usePosts();
 
   usePageMeta({
@@ -58,6 +59,8 @@ export default function BlogPostPage() {
             // Body is HTML authored by staff in the dashboard editor.
             dangerouslySetInnerHTML={{ __html: post.data.body }}
           />
+
+          <PostComments postId={post.data.id} />
 
           <Link to={linkTo("posts/")} className="btn-ghost group mt-12">
             <ArrowIcon className="h-4.5 w-4.5 rotate-180 transition-transform group-hover:-translate-x-1 rtl:rotate-0 rtl:group-hover:translate-x-1" />

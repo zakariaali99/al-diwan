@@ -41,13 +41,12 @@ class PostSitemap(Sitemap):
     changefreq = "weekly"
 
     def items(self):
-        posts = Post.objects.filter(status=Post.Status.PUBLISHED)
+        posts = Post.visible()
         return [(lang, post) for lang in LANGUAGES for post in posts]
 
     def location(self, item):
         lang, post = item
-        slug = post.safe_translation_getter("slug", any_language=True)
-        return f"/{lang}/posts/{slug}/"
+        return f"/{lang}/posts/{post.pk}/"
 
     def priority(self, item):
         return 0.7 if item[0] == MAIN_LANGUAGE else 0.5

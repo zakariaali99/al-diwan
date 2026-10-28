@@ -1,236 +1,362 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { api, type Lang } from "@/lib/api";
-import { useLinkTo, useT } from "@/lib/hooks";
-import { LANGS, LANG_META, isLang } from "@/lib/i18n";
+import { api, type DashboardPost, type PostStatus } from "@/lib/api";
+import { useLinkTo } from "@/lib/hooks";
 import RichTextEditor from "./RichTextEditor";
+import { POST_STATUS_TONE, usePostStatusLabel } from "./PostsPage";
+import { useDT } from "./strings";
+import {
+  Field,
+  LangTabs,
+  LoadError,
+  Loading,
+  Notice,
+  PageHeader,
+  Panel,
+  Pill,
+  RequireCap,
+  fieldErrors,
+  primaryBtn,
+  smallBtn,
+  useCan,
+  useEditLang,
+  useFlash,
+} from "./ui";
 
 interface FormState {
   title: string;
-  slug: string;
   excerpt: string;
   body: string;
   seo_title: string;
   seo_description: string;
-  status: "draft" | "scheduled" | "published";
+  category: string;
+  status: PostStatus;
+  published_at: string; // datetime-local value
 }
 
 const EMPTY: FormState = {
-  title: "", slug: "", excerpt: "", body: "",
-  seo_title: "", seo_description: "", status: "draft",
+  title: "",
+  excerpt: "",
+  body: "",
+  seo_title: "",
+  seo_description: "",
+  category: "",
+  status: "draft",
+  published_at: "",
 };
 
-export default function PostEditPage() {
-  const t = useT();
+/** ISO timestamp -> the local "YYYY-MM-DDTHH:mm" a datetime-local input wants. */
+function toLocalInput(iso: string | null) {
+  if (!iso) return "";
+  const date = new Date(iso);
+  const offset = date.getTimezoneOffset() * 60_000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+}
+
+function fromPost(post: DashboardPost): FormState {
+  return {
+    title: post.title,
+    excerpt: post.excerpt,
+    body: post.body,
+    seo_title: post.seo_title,
+    seo_description: post.seo_description,
+    category: post.category ? String(post.category) : "",
+    status: post.status,
+    published_at: toLocalInput(post.published_at),
+  };
+}
+
+function PostEditor() {
+  const dt = useDT();
+  const can = useCan();
   const linkTo = useLinkTo();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const statusLabel = usePostStatusLabel();
   const { id } = useParams<{ id: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const isNew = !id;
+  const { lang, apiLang, dir, setLang } = useEditLang();
   const postId = id ? Number(id) : null;
-
-  // Which translation is being edited. Sent to the API so parler writes the
-  // right one — without it an English edit silently overwrites Arabic.
-  const editLangParam = searchParams.get("lang");
-  const editLang: Lang = isLang(editLangParam ?? undefined) ? (editLangParam as Lang) : "ar";
+  const isNew = postId === null;
+  const canPublish = can("publish_posts");
 
   const [form, setForm] = useState<FormState>(EMPTY);
-  const [saved, setSaved] = useState(false);
   const [editorKey, setEditorKey] = useState(0);
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [removeImage, setRemoveImage] = useState(false);
+  const [flash, setFlash] = useFlash();
+  const fileInput = useRef<HTMLInputElement>(null);
 
   const post = useQuery({
-    queryKey: ["dashboard-post", postId, editLang],
-    queryFn: () => api.dashboard.post(postId!),
-    enabled: postId !== null,
+    queryKey: ["dashboard-post", postId, apiLang],
+    queryFn: () => api.dashboard.post.get(postId!, apiLang),
+    enabled: !isNew,
+  });
+  const categories = useQuery({
+    queryKey: ["dashboard-categories", apiLang],
+    queryFn: () => api.dashboard.categories.list({ language: apiLang }),
   });
 
   useEffect(() => {
     if (!post.data) return;
-    setForm({
-      title: post.data.title ?? "",
-      slug: post.data.slug ?? "",
-      excerpt: post.data.excerpt ?? "",
-      body: post.data.body ?? "",
-      seo_title: post.data.seo_title ?? "",
-      seo_description: post.data.seo_description ?? "",
-      status: post.data.status,
-    });
+    setForm(fromPost(post.data));
     // Remount the editor so it picks up the newly loaded translation.
     setEditorKey((key) => key + 1);
   }, [post.data]);
 
+  useEffect(() => {
+    if (!image) return setPreview(null);
+    const url = URL.createObjectURL(image);
+    setPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [image]);
+
   const save = useMutation({
-    mutationFn: (values: FormState) => {
-      const payload = { ...values, language: editLang };
-      return isNew
-        ? api.dashboard.createPost(payload)
-        : api.dashboard.updatePost(postId!, payload);
+    mutationFn: () => {
+      const values: Record<string, string> = {
+        title: form.title,
+        excerpt: form.excerpt,
+        body: form.body,
+        seo_title: form.seo_title,
+        seo_description: form.seo_description,
+        category: form.category,
+        language: apiLang,
+      };
+      if (canPublish) {
+        values.status = form.status;
+        values.published_at = form.published_at ? new Date(form.published_at).toISOString() : "";
+      }
+      let body: FormData | Record<string, unknown>;
+      if (image || removeImage) {
+        const data = new FormData();
+        Object.entries(values).forEach(([key, value]) => data.append(key, value));
+        if (image) data.append("featured_image", image);
+        else data.append("remove_image", "true");
+        body = data;
+      } else {
+        body = { ...values, category: form.category ? Number(form.category) : null, published_at: values.published_at || null };
+      }
+      return isNew ? api.dashboard.post.create(body) : api.dashboard.post.update(postId!, body);
     },
     onSuccess: (result) => {
-      setSaved(true);
+      setImage(null);
+      setRemoveImage(false);
+      setFlash(dt("saved"));
       queryClient.invalidateQueries({ queryKey: ["dashboard-posts"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-post", result.id] });
-      if (isNew) navigate(linkTo(`dashboard/posts/${result.id}/?lang=${editLang}`), { replace: true });
-      window.setTimeout(() => setSaved(false), 2500);
+      queryClient.invalidateQueries({ queryKey: ["dashboard-overview"] });
+      queryClient.setQueryData(["dashboard-post", result.id, apiLang], result);
+      if (isNew) navigate(linkTo(`dashboard/posts/${result.id}/?lang=${lang}`), { replace: true });
     },
   });
 
+  const errors = fieldErrors(save.error);
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((previous) => ({ ...previous, [key]: value }));
 
-  const switchLang = (lang: Lang) => {
-    setSearchParams({ lang });
-  };
+  if (!isNew && post.isLoading) return <Loading />;
+  if (!isNew && (post.isError || !post.data)) return <LoadError />;
+
+  // Read-only for anyone who may only view posts, and for writers once a post
+  // has left draft.
+  const locked = !can("manage_posts") || (!isNew && !canPublish && post.data?.status !== "draft");
+  const currentImage = removeImage ? null : (preview ?? post.data?.featured_image ?? null);
+  const missing = !isNew && post.data && !post.data.translated_languages.includes(apiLang);
+  const isLive = post.data?.status === "published" || (post.data?.status === "scheduled" && post.data.published_at && new Date(post.data.published_at) <= new Date());
 
   return (
     <>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-body">{isNew ? t("newPost") : t("editPost")}</h1>
-        <Link to={linkTo("dashboard/posts/")} className="btn-ghost">{t("back")}</Link>
+      <PageHeader
+        title={isNew ? dt("newPost") : dt("editPost")}
+        actions={
+          <>
+            {!isNew && post.data && <Pill tone={POST_STATUS_TONE[post.data.status]}>{statusLabel(post.data.status)}</Pill>}
+            {isLive && (
+              <a href={linkTo(`posts/${postId}/`)} target="_blank" rel="noreferrer" className={smallBtn}>
+                {dt("viewOnSite")}
+              </a>
+            )}
+            <Link to={linkTo("dashboard/posts/")} className={smallBtn}>
+              {dt("back")}
+            </Link>
+          </>
+        }
+      />
+
+      <LangTabs value={lang} onChange={setLang} translated={isNew ? undefined : post.data?.translated_languages} />
+
+      <div className="mb-5 flex flex-col gap-3">
+        {locked && <Notice tone="warn">{can("manage_posts") ? dt("lockedPost") : dt("forbidden")}</Notice>}
+        {!canPublish && !locked && <Notice>{dt("writerNote")}</Notice>}
+        {missing && <Notice tone="warn">{dt("missingTranslation")}</Notice>}
+        {flash && <Notice tone="success">{flash}</Notice>}
+        {save.isError && <Notice tone="error">{errors.detail || dt("saveFailed")}</Notice>}
       </div>
-
-      {!isNew && (
-        <div className="mb-5">
-          <div className="flex flex-wrap gap-2" role="group" aria-label={t("editingLanguage")}>
-            {LANGS.map((code) => {
-              const translated = post.data?.available_languages.includes(LANG_META[code].apiLang);
-              return (
-                <button
-                  key={code}
-                  type="button"
-                  onClick={() => switchLang(code)}
-                  aria-current={editLang === code ? "true" : undefined}
-                  className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                    editLang === code
-                      ? "bg-brand-600 text-white"
-                      : "border border-line bg-surface text-muted hover:border-brand-600"
-                  }`}
-                >
-                  {LANG_META[code].name}
-                  {/* Dot marks which languages already have a translation, so
-                      staff can see at a glance what's still missing. */}
-                  <span
-                    aria-hidden
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      translated
-                        ? editLang === code ? "bg-surface" : "bg-green-500"
-                        : editLang === code ? "bg-white/40" : "bg-slate-300"
-                    }`}
-                  />
-                </button>
-              );
-            })}
-          </div>
-          <p className="mt-2 text-sm text-muted">{t("editingLanguageNote")}</p>
-        </div>
-      )}
-
-      {saved && (
-        <p role="status" className="mb-5 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800 dark:border-green-500/40 dark:bg-green-500/10 dark:text-green-300">
-          {t("saved")}
-        </p>
-      )}
 
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          save.mutate(form);
+          save.mutate();
         }}
-        className="flex flex-col gap-5 rounded-xl border border-line bg-surface p-6"
+        className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]"
       >
-        <div>
-          <label htmlFor="title" className="mb-2 block text-sm font-semibold">{t("title")}</label>
-          <input
-            id="title"
-            value={form.title}
-            onChange={(event) => update("title", event.target.value)}
-            className="field-input"
-            required
-            dir={editLang === "ar" ? "rtl" : "ltr"}
-          />
-        </div>
+        <fieldset disabled={locked} className="flex min-w-0 flex-col gap-5">
+          <Panel>
+            <div className="flex flex-col gap-5">
+              <Field label={dt("title")} htmlFor="title" error={errors.title}>
+                <input
+                  id="title"
+                  value={form.title}
+                  onChange={(event) => update("title", event.target.value)}
+                  className="field-input text-lg font-semibold"
+                  required
+                  dir={dir}
+                />
+              </Field>
+              <Field label={dt("excerpt")} htmlFor="excerpt" error={errors.excerpt}>
+                <textarea
+                  id="excerpt"
+                  rows={2}
+                  value={form.excerpt}
+                  onChange={(event) => update("excerpt", event.target.value)}
+                  className="field-input resize-y"
+                  dir={dir}
+                />
+              </Field>
+              <Field label={dt("content")}>
+                <RichTextEditor key={`${editorKey}-${apiLang}`} value={form.body} onChange={(html) => update("body", html)} dir={dir} />
+              </Field>
+            </div>
+          </Panel>
 
-        <div>
-          <label htmlFor="slug" className="mb-2 block text-sm font-semibold">{t("slug")}</label>
-          <input
-            id="slug"
-            value={form.slug}
-            onChange={(event) => update("slug", event.target.value)}
-            className="field-input"
-            dir={editLang === "ar" ? "rtl" : "ltr"}
-          />
-        </div>
+          <Panel title={dt("seoSection")}>
+            <div className="flex flex-col gap-4">
+              <Field label={dt("seoTitle")} htmlFor="seo_title" error={errors.seo_title}>
+                <input
+                  id="seo_title"
+                  value={form.seo_title}
+                  onChange={(event) => update("seo_title", event.target.value)}
+                  className="field-input"
+                  dir={dir}
+                />
+              </Field>
+              <Field label={dt("seoDescription")} htmlFor="seo_description" error={errors.seo_description}>
+                <textarea
+                  id="seo_description"
+                  rows={2}
+                  value={form.seo_description}
+                  onChange={(event) => update("seo_description", event.target.value)}
+                  className="field-input resize-y"
+                  dir={dir}
+                />
+              </Field>
+            </div>
+          </Panel>
+        </fieldset>
 
-        <div>
-          <label htmlFor="excerpt" className="mb-2 block text-sm font-semibold">{t("excerpt")}</label>
-          <textarea
-            id="excerpt"
-            rows={3}
-            value={form.excerpt}
-            onChange={(event) => update("excerpt", event.target.value)}
-            className="field-input resize-y"
-            dir={editLang === "ar" ? "rtl" : "ltr"}
-          />
-        </div>
+        <fieldset disabled={locked} className="flex min-w-0 flex-col gap-5">
+          <Panel title={dt("publishing")}>
+            <div className="flex flex-col gap-4">
+              {canPublish && (
+                <>
+                  <Field label={dt("status")} htmlFor="status">
+                    <select
+                      id="status"
+                      value={form.status}
+                      onChange={(event) => update("status", event.target.value as PostStatus)}
+                      className="field-input"
+                    >
+                      <option value="draft">{dt("draft")}</option>
+                      <option value="scheduled">{dt("scheduled")}</option>
+                      <option value="published">{dt("published")}</option>
+                    </select>
+                  </Field>
+                  {form.status !== "draft" && (
+                    <Field label={dt("publishDate")} htmlFor="published_at" hint={dt("publishDateHint")} error={errors.published_at}>
+                      <input
+                        id="published_at"
+                        type="datetime-local"
+                        value={form.published_at}
+                        onChange={(event) => update("published_at", event.target.value)}
+                        className="field-input"
+                        required={form.status === "scheduled"}
+                        dir="ltr"
+                      />
+                    </Field>
+                  )}
+                </>
+              )}
+              <Field label={dt("category")} htmlFor="category">
+                <select
+                  id="category"
+                  value={form.category}
+                  onChange={(event) => update("category", event.target.value)}
+                  className="field-input"
+                >
+                  <option value="">{dt("noCategory")}</option>
+                  {categories.data?.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name || `#${category.id}`}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <button type="submit" disabled={save.isPending} className={`${primaryBtn} w-full`}>
+                {save.isPending ? dt("saving") : dt("save")}
+              </button>
+            </div>
+          </Panel>
 
-        <div>
-          <label className="mb-2 block text-sm font-semibold">{t("content")}</label>
-          <RichTextEditor
-            key={editorKey}
-            value={form.body}
-            onChange={(html) => update("body", html)}
-            dir={editLang === "ar" ? "rtl" : "ltr"}
-          />
-        </div>
-
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div>
-            <label htmlFor="seo_title" className="mb-2 block text-sm font-semibold">SEO title</label>
-            <input
-              id="seo_title"
-              value={form.seo_title}
-              onChange={(event) => update("seo_title", event.target.value)}
-              className="field-input"
-            />
-          </div>
-          <div>
-            <label htmlFor="status" className="mb-2 block text-sm font-semibold">{t("status")}</label>
-            <select
-              id="status"
-              value={form.status}
-              onChange={(event) => update("status", event.target.value as FormState["status"])}
-              className="field-input"
-            >
-              <option value="draft">{t("draft")}</option>
-              <option value="scheduled">{t("scheduled")}</option>
-              <option value="published">{t("published")}</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label htmlFor="seo_description" className="mb-2 block text-sm font-semibold">SEO description</label>
-          <textarea
-            id="seo_description"
-            rows={2}
-            value={form.seo_description}
-            onChange={(event) => update("seo_description", event.target.value)}
-            className="field-input resize-y"
-          />
-        </div>
-
-        <button type="submit" disabled={save.isPending} className="btn-primary self-start disabled:opacity-60">
-          {save.isPending ? t("saving") : t("save")}
-        </button>
-
-        {save.isError && (
-          <p role="alert" className="text-sm text-red-600 dark:text-red-400">{t("errorLoading")}</p>
-        )}
+          <Panel title={dt("featuredImage")}>
+            <div className="flex flex-col gap-3">
+              <div className="aspect-video overflow-hidden rounded-xl bg-gradient-to-br from-brand-800 to-brand-500">
+                {currentImage && <img src={currentImage} alt="" className="h-full w-full object-cover" />}
+              </div>
+              <input
+                ref={fileInput}
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                id="featured_image"
+                onChange={(event) => {
+                  const file = event.target.files?.[0] ?? null;
+                  setImage(file);
+                  if (file) setRemoveImage(false);
+                }}
+              />
+              <div className="flex flex-wrap gap-2">
+                <button type="button" className={smallBtn} onClick={() => fileInput.current?.click()}>
+                  {currentImage ? dt("replaceImage") : dt("chooseImage")}
+                </button>
+                {currentImage && (
+                  <button
+                    type="button"
+                    className={`${smallBtn} text-red-600 dark:text-red-400`}
+                    onClick={() => {
+                      setImage(null);
+                      if (fileInput.current) fileInput.current.value = "";
+                      setRemoveImage(Boolean(post.data?.featured_image));
+                    }}
+                  >
+                    {dt("removeImage")}
+                  </button>
+                )}
+              </div>
+              {errors.featured_image && <p className="text-xs text-red-600">{errors.featured_image}</p>}
+              <p className="text-xs text-muted">{dt("imageHint")}</p>
+            </div>
+          </Panel>
+        </fieldset>
       </form>
     </>
+  );
+}
+
+export default function PostEditPage() {
+  return (
+    <RequireCap capability="view_posts">
+      <PostEditor />
+    </RequireCap>
   );
 }

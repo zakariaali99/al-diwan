@@ -1,23 +1,37 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { api } from "@/lib/api";
-import { useCurrentUser, useLinkTo, useT } from "@/lib/hooks";
+import { api, type ThreadStatus } from "@/lib/api";
+import { useLang, useLinkTo } from "@/lib/hooks";
+import { THREAD_TONE, useThreadStatusLabel } from "./InboxPage";
+import { PaperclipIcon } from "./icons";
+import { useDT } from "./strings";
+import {
+  DeleteButton,
+  LoadError,
+  Loading,
+  Notice,
+  PageHeader,
+  Panel,
+  Pill,
+  RequireCap,
+  formatDate,
+  primaryBtn,
+  smallBtn,
+  useCan,
+} from "./ui";
 
-const STATUS_STYLES: Record<string, string> = {
-  open: "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300",
-  pending: "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
-  closed: "bg-subtle text-muted",
-};
-
-export default function ThreadPage() {
-  const t = useT();
+function Thread() {
+  const dt = useDT();
+  const lang = useLang();
   const linkTo = useLinkTo();
+  const navigate = useNavigate();
+  const can = useCan();
   const queryClient = useQueryClient();
+  const statusLabel = useThreadStatusLabel();
   const { id } = useParams<{ id: string }>();
   const threadId = Number(id);
-  const { data: user } = useCurrentUser();
   const [reply, setReply] = useState("");
 
   const thread = useQuery({
@@ -29,6 +43,7 @@ export default function ThreadPage() {
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ["dashboard-thread", threadId] });
     queryClient.invalidateQueries({ queryKey: ["dashboard-threads"] });
+    queryClient.invalidateQueries({ queryKey: ["dashboard-overview"] });
   };
 
   const sendReply = useMutation({
@@ -38,109 +53,137 @@ export default function ThreadPage() {
       invalidate();
     },
   });
-
-  const assign = useMutation({
-    mutationFn: () => api.dashboard.assignToMe(threadId),
+  const assign = useMutation({ mutationFn: () => api.dashboard.assignToMe(threadId), onSuccess: invalidate });
+  const setStatus = useMutation({
+    mutationFn: (status: ThreadStatus) => api.dashboard.threads.update(threadId, { status }),
     onSuccess: invalidate,
   });
-
-  const close = useMutation({
-    mutationFn: () => api.dashboard.close(threadId),
-    onSuccess: invalidate,
+  const remove = useMutation({
+    mutationFn: () => api.dashboard.threads.remove(threadId),
+    onSuccess: () => {
+      invalidate();
+      navigate(linkTo("dashboard/inbox/"), { replace: true });
+    },
   });
 
-  if (thread.isLoading) return <p className="text-muted">{t("loading")}</p>;
-  if (thread.isError || !thread.data) return <p className="text-muted">{t("errorLoading")}</p>;
+  if (thread.isLoading) return <Loading />;
+  if (thread.isError || !thread.data) return <LoadError />;
 
   const data = thread.data;
-  const statusLabel =
-    data.status === "open" ? t("statusOpen") : data.status === "pending" ? t("statusPending") : t("statusClosed");
+  const canReply = can("reply_messages");
 
   return (
     <>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-body">{data.subject}</h1>
-          <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
-            <span dir="ltr">{data.correspondent.name || data.correspondent.email}</span>
-            <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_STYLES[data.status]}`}>
-              {statusLabel}
-            </span>
-            {data.assigned_to_name && <span>· {t("assignedTo")} {data.assigned_to_name}</span>}
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          <Link to={linkTo("dashboard/inbox/")} className="btn-ghost">{t("back")}</Link>
-          {user?.permissions?.canChangeThreads && (
-            <>
-              <button type="button" onClick={() => assign.mutate()} className="btn-ghost">
-                {t("assignToMe")}
-              </button>
-              {data.status !== "closed" && (
-                <button type="button" onClick={() => close.mutate()} className="btn-ghost">
-                  {t("close")}
+      <PageHeader
+        title={data.subject}
+        actions={
+          <>
+            <Link to={linkTo("dashboard/inbox/")} className={smallBtn}>
+              {dt("back")}
+            </Link>
+            {canReply && (
+              <>
+                <button type="button" className={smallBtn} disabled={assign.isPending} onClick={() => assign.mutate()}>
+                  {dt("assignToMe")}
                 </button>
-              )}
-            </>
-          )}
-        </div>
-      </div>
+                <button
+                  type="button"
+                  className={smallBtn}
+                  disabled={setStatus.isPending}
+                  onClick={() => setStatus.mutate(data.status === "closed" ? "open" : "closed")}
+                >
+                  {data.status === "closed" ? dt("reopen") : dt("closeThread")}
+                </button>
+                <DeleteButton label={dt("deleteThread")} pending={remove.isPending} onConfirm={() => remove.mutate()} />
+              </>
+            )}
+          </>
+        }
+      />
 
-      <div className="mb-6 flex flex-col gap-4 rounded-xl border border-line bg-surface p-6">
-        {data.messages.map((message) => (
-          <div
-            key={message.id}
-            className={`max-w-[85%] whitespace-pre-wrap break-words rounded-xl px-4 py-3 text-[0.94rem] leading-relaxed ${
-              message.direction === "out"
-                ? "ms-auto bg-brand-tint text-body"
-                : "border border-line bg-surface text-body"
-            }`}
-          >
-            <div className="mb-1.5 text-xs text-faint">
-              {message.direction === "out"
-                ? `${message.sent_by_name || "—"} → ${message.to_email}`
-                : message.from_email}
-              {" · "}
-              {new Date(message.created_at).toLocaleString()}
-            </div>
-            {message.body}
-            {message.attachments.map((attachment) => (
-              <a
-                key={attachment.id}
-                href={attachment.url}
-                className="mt-2 block text-sm text-brand-600 hover:underline"
-              >
-                📎 {attachment.filename}
-              </a>
-            ))}
-          </div>
-        ))}
-      </div>
-
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (reply.trim()) sendReply.mutate(reply);
-        }}
-        className="rounded-xl border border-line bg-surface p-6"
-      >
-        <label htmlFor="reply" className="mb-2 block text-sm font-semibold">{t("reply")}</label>
-        <textarea
-          id="reply"
-          rows={6}
-          value={reply}
-          onChange={(event) => setReply(event.target.value)}
-          className="field-input resize-y"
-          required
-        />
-        <button type="submit" disabled={sendReply.isPending} className="btn-primary mt-4 disabled:opacity-60">
-          {sendReply.isPending ? t("sending") : t("replySend")}
-        </button>
-        {sendReply.isError && (
-          <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{t("contactError")}</p>
+      <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-muted">
+        <Pill tone={THREAD_TONE[data.status]}>{statusLabel(data.status)}</Pill>
+        <span>
+          {dt("from")}: <span className="font-medium text-body">{data.correspondent.name || "—"}</span>{" "}
+          <a href={`mailto:${data.correspondent.email}`} dir="ltr" className="text-brand-600 hover:underline dark:text-brand-300">
+            {data.correspondent.email}
+          </a>
+        </span>
+        {data.assigned_to_name && (
+          <span>
+            · {dt("assignedTo")}: {data.assigned_to_name}
+          </span>
         )}
-      </form>
+      </div>
+
+      <Panel className="mb-5">
+        <ol className="flex flex-col gap-4">
+          {data.messages.map((message) => (
+            <li
+              key={message.id}
+              className={`max-w-[88%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-[0.94rem] leading-relaxed ${
+                message.direction === "out" ? "ms-auto bg-brand-tint text-body" : "border border-line bg-subtle text-body"
+              }`}
+            >
+              <div className="mb-1.5 text-xs text-faint">
+                {message.direction === "out" ? `${message.sent_by_name || "—"} → ${message.to_email}` : message.from_email}
+                {" · "}
+                {formatDate(message.created_at, lang, true)}
+              </div>
+              {message.body}
+              {message.attachments.map((attachment) => (
+                <a
+                  key={attachment.id}
+                  href={attachment.url}
+                  className="mt-2 flex items-center gap-1.5 text-sm text-brand-600 hover:underline dark:text-brand-300"
+                >
+                  <PaperclipIcon className="h-4 w-4" />
+                  {attachment.filename}
+                </a>
+              ))}
+            </li>
+          ))}
+        </ol>
+      </Panel>
+
+      {canReply ? (
+        <Panel title={dt("reply")}>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (reply.trim()) sendReply.mutate(reply);
+            }}
+          >
+            <textarea
+              id="reply"
+              aria-label={dt("reply")}
+              rows={6}
+              value={reply}
+              onChange={(event) => setReply(event.target.value)}
+              className="field-input resize-y"
+              required
+            />
+            {sendReply.isError && (
+              <div className="mt-3">
+                <Notice tone="error">{dt("sendFailed")}</Notice>
+              </div>
+            )}
+            <button type="submit" disabled={sendReply.isPending} className={`${primaryBtn} mt-4`}>
+              {sendReply.isPending ? dt("sending") : dt("send")}
+            </button>
+          </form>
+        </Panel>
+      ) : (
+        <Notice>{dt("readOnlyInbox")}</Notice>
+      )}
     </>
+  );
+}
+
+export default function ThreadPage() {
+  return (
+    <RequireCap capability="view_messages">
+      <Thread />
+    </RequireCap>
   );
 }

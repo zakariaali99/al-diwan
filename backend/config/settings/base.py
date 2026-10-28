@@ -205,6 +205,10 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
+    "DEFAULT_THROTTLE_RATES": {
+        # Failed and successful logins alike, per client IP.
+        "login": "10/min",
+    },
 }
 
 UNFOLD = {

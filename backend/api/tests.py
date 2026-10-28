@@ -1,10 +1,13 @@
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.core import mail
+from django.core.cache import cache
 from django.core.management import call_command
 from django.test import TestCase
 
 from messaging.models import Message, Thread
 from messaging.services import create_inbound_from_contact_form
+from accounts.capabilities import set_capabilities
+from accounts.models import ROLES
 from posts.models import Post
 
 
@@ -17,10 +20,15 @@ class ApiTestBase(TestCase):
         # language tests pass vacuously.
         call_command("seed_english", verbosity=0)
 
-    def make_user(self, username, group=None):
-        user = User.objects.create_user(username, password="pw-12345")
-        if group:
-            user.groups.set([Group.objects.get(name=group)])
+    def setUp(self):
+        # Throttle counters live in the cache and would leak between tests.
+        cache.clear()
+        super().setUp()
+
+    def make_user(self, username, role=None, *, staff=True):
+        user = User.objects.create_user(username, password="pw-12345", is_staff=staff)
+        if role:
+            set_capabilities(user, ROLES[role], role)
         return user
 
 
@@ -57,11 +65,12 @@ class PublicApiTests(ApiTestBase):
 
         self.assertIn("We provide", response.json()["home_hero"]["body"])
 
-    def test_posts_list_and_detail_with_arabic_slug(self):
+    def test_posts_list_and_detail_by_id(self):
         listing = self.client.get("/api/posts/").json()
         self.assertGreaterEqual(len(listing), 1)
+        self.assertNotIn("slug", listing[0])
 
-        detail = self.client.get("/api/posts/اهلا-وسهلا/")
+        detail = self.client.get(f"/api/posts/{listing[0]['id']}/")
         self.assertEqual(detail.status_code, 200)
         self.assertIn("body", detail.json())
 
@@ -69,8 +78,7 @@ class PublicApiTests(ApiTestBase):
         post = Post.objects.first()
         post.status = Post.Status.DRAFT
         post.save()
-        slug = post.safe_translation_getter("slug", any_language=True)
-        self.assertEqual(self.client.get(f"/api/posts/{slug}/").status_code, 404)
+        self.assertEqual(self.client.get(f"/api/posts/{post.pk}/").status_code, 404)
 
     def test_contact_creates_thread(self):
         response = self.client.post("/api/contact/", {
@@ -93,16 +101,23 @@ class AuthApiTests(ApiTestBase):
     def test_me_is_anonymous_before_login(self):
         self.assertFalse(self.client.get("/api/auth/me/").json()["isAuthenticated"])
 
-    def test_login_returns_permission_flags(self):
-        self.make_user("editor", "Editors")
+    def test_login_returns_capabilities(self):
+        self.make_user("editor", "editor")
         response = self.client.post("/api/auth/login/", {
             "username": "editor", "password": "pw-12345",
         }, content_type="application/json")
 
         self.assertEqual(response.status_code, 200)
-        perms = response.json()["permissions"]
-        self.assertTrue(perms["canViewPosts"])
-        self.assertFalse(perms["canViewThreads"])
+        capabilities = response.json()["capabilities"]
+        self.assertIn("view_posts", capabilities)
+        self.assertNotIn("view_messages", capabilities)
+
+    def test_non_staff_cannot_log_in(self):
+        self.make_user("visitor", staff=False)
+        response = self.client.post("/api/auth/login/", {
+            "username": "visitor", "password": "pw-12345",
+        }, content_type="application/json")
+        self.assertEqual(response.status_code, 401)
 
     def test_bad_credentials_rejected(self):
         response = self.client.post("/api/auth/login/", {
@@ -111,7 +126,7 @@ class AuthApiTests(ApiTestBase):
         self.assertEqual(response.status_code, 401)
 
     def test_logout(self):
-        self.make_user("editor", "Editors")
+        self.make_user("editor", "editor")
         self.client.login(username="editor", password="pw-12345")
         self.assertEqual(self.client.post("/api/auth/logout/").status_code, 204)
         self.assertFalse(self.client.get("/api/auth/me/").json()["isAuthenticated"])
@@ -126,13 +141,13 @@ class DashboardApiPermissionTests(ApiTestBase):
         self.assertIn(self.client.get("/api/dashboard/threads/").status_code, (401, 403))
 
     def test_editor_can_read_posts_but_not_threads(self):
-        self.make_user("editor", "Editors")
+        self.make_user("editor", "editor")
         self.client.login(username="editor", password="pw-12345")
         self.assertEqual(self.client.get("/api/dashboard/posts/").status_code, 200)
         self.assertEqual(self.client.get("/api/dashboard/threads/").status_code, 403)
 
     def test_support_can_read_threads_but_not_posts(self):
-        self.make_user("support", "Support")
+        self.make_user("support", "support")
         self.client.login(username="support", password="pw-12345")
         self.assertEqual(self.client.get("/api/dashboard/threads/").status_code, 200)
         self.assertEqual(self.client.get("/api/dashboard/posts/").status_code, 403)
@@ -140,17 +155,18 @@ class DashboardApiPermissionTests(ApiTestBase):
 
 class DashboardPostApiTests(ApiTestBase):
     def setUp(self):
-        self.editor = self.make_user("editor", "Editors")
+        super().setUp()
+        self.editor = self.make_user("editor", "editor")
         self.client.login(username="editor", password="pw-12345")
 
     def test_create_sets_author_and_publish_date(self):
         response = self.client.post("/api/dashboard/posts/", {
-            "title": "مقال تجريبي", "slug": "test-post",
+            "title": "مقال تجريبي",
             "body": "<p>محتوى</p>", "status": "published", "language": "ar",
         }, content_type="application/json")
 
         self.assertEqual(response.status_code, 201, response.content)
-        post = Post.objects.get(translations__slug="test-post")
+        post = Post.objects.get(pk=response.json()["id"])
         self.assertEqual(post.author, self.editor)
         self.assertIsNotNone(post.published_at)
 
@@ -159,12 +175,12 @@ class DashboardPostApiTests(ApiTestBase):
         current language, so the language must be set explicitly or an English
         edit silently overwrites the Arabic translation."""
         created = self.client.post("/api/dashboard/posts/", {
-            "title": "مقال تجريبي", "slug": "test-post",
+            "title": "مقال تجريبي",
             "body": "<p>محتوى</p>", "status": "published", "language": "ar",
         }, content_type="application/json").json()
 
         self.client.patch(f"/api/dashboard/posts/{created['id']}/", {
-            "title": "Test Article", "slug": "test-post-en",
+            "title": "Test Article",
             "body": "<p>English</p>", "language": "en",
         }, content_type="application/json")
 
@@ -176,7 +192,7 @@ class DashboardPostApiTests(ApiTestBase):
 
     def test_delete(self):
         created = self.client.post("/api/dashboard/posts/", {
-            "title": "للحذف", "slug": "to-delete", "status": "draft", "language": "ar",
+            "title": "للحذف", "status": "draft", "language": "ar",
         }, content_type="application/json").json()
         self.assertEqual(
             self.client.delete(f"/api/dashboard/posts/{created['id']}/").status_code, 204
@@ -186,7 +202,8 @@ class DashboardPostApiTests(ApiTestBase):
 
 class DashboardThreadApiTests(ApiTestBase):
     def setUp(self):
-        self.agent = self.make_user("support", "Support")
+        super().setUp()
+        self.agent = self.make_user("support", "support")
         self.client.login(username="support", password="pw-12345")
         self.thread = create_inbound_from_contact_form(
             name="عميل", email="c@example.com", subject="استفسار", body="سؤال"
@@ -243,7 +260,7 @@ class DashboardThreadApiTests(ApiTestBase):
 
 class RoutingTests(ApiTestBase):
     def test_spa_catchall_serves_react_shell(self):
-        for path in ["/ar/", "/en/about-us/", "/ar/posts/some-slug/"]:
+        for path in ["/ar/", "/en/about-us/", "/ar/posts/12/"]:
             with self.subTest(path=path):
                 self.assertEqual(self.client.get(path).status_code, 200)
 

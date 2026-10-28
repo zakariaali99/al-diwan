@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { api } from "@/lib/api";
 import { useLinkTo, useT } from "@/lib/hooks";
+import { useDT } from "./strings";
+import { Field, Notice, PageHeader, Panel, RequireCap, primaryBtn, smallBtn } from "./ui";
 
 interface ComposeValues {
   to_name: string;
@@ -12,12 +14,12 @@ interface ComposeValues {
   body: string;
 }
 
-export default function ComposePage() {
+function Compose() {
   const t = useT();
+  const dt = useDT();
   const linkTo = useLinkTo();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
   const { register, handleSubmit, formState: { errors } } = useForm<ComposeValues>();
 
   const send = useMutation({
@@ -30,68 +32,51 @@ export default function ComposePage() {
 
   return (
     <>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-body">{t("newMessage")}</h1>
-        <Link to={linkTo("dashboard/inbox/")} className="btn-ghost">{t("back")}</Link>
-      </div>
-
-      <form
-        onSubmit={handleSubmit((values) => send.mutate(values))}
-        className="flex flex-col gap-5 rounded-xl border border-line bg-surface p-6"
-      >
-        <div>
-          <label htmlFor="to_name" className="mb-2 block text-sm font-semibold">{t("recipientName")}</label>
-          <input id="to_name" {...register("to_name")} className="field-input" />
-        </div>
-
-        <div>
-          <label htmlFor="to_email" className="mb-2 block text-sm font-semibold">
-            {t("recipientEmail")} <span className="text-red-600 dark:text-red-400" aria-hidden>*</span>
-          </label>
-          <input
-            id="to_email"
-            type="email"
-            dir="ltr"
-            {...register("to_email", { required: true })}
-            className="field-input"
-            aria-invalid={Boolean(errors.to_email)}
-          />
-          {errors.to_email && <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{t("required")}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="subject" className="mb-2 block text-sm font-semibold">
-            {t("subject")} <span className="text-red-600 dark:text-red-400" aria-hidden>*</span>
-          </label>
-          <input
-            id="subject"
-            {...register("subject", { required: true })}
-            className="field-input"
-            aria-invalid={Boolean(errors.subject)}
-          />
-          {errors.subject && <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{t("required")}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="body" className="mb-2 block text-sm font-semibold">
-            {t("messageLabel")} <span className="text-red-600 dark:text-red-400" aria-hidden>*</span>
-          </label>
-          <textarea
-            id="body"
-            rows={8}
-            {...register("body", { required: true })}
-            className="field-input resize-y"
-            aria-invalid={Boolean(errors.body)}
-          />
-          {errors.body && <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{t("required")}</p>}
-        </div>
-
-        <button type="submit" disabled={send.isPending} className="btn-primary self-start disabled:opacity-60">
-          {send.isPending ? t("sending") : t("replySend")}
-        </button>
-
-        {send.isError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{t("contactError")}</p>}
-      </form>
+      <PageHeader
+        title={dt("newMessage")}
+        actions={
+          <Link to={linkTo("dashboard/inbox/")} className={smallBtn}>
+            {dt("back")}
+          </Link>
+        }
+      />
+      <Panel>
+        <form onSubmit={handleSubmit((values) => send.mutate(values))} className="flex flex-col gap-5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label={dt("recipientName")} htmlFor="to_name">
+              <input id="to_name" {...register("to_name")} className="field-input" />
+            </Field>
+            <Field label={`${dt("recipientEmail")} *`} htmlFor="to_email" error={errors.to_email && t("required")}>
+              <input
+                id="to_email"
+                type="email"
+                dir="ltr"
+                {...register("to_email", { required: true })}
+                className="field-input"
+                aria-invalid={Boolean(errors.to_email)}
+              />
+            </Field>
+          </div>
+          <Field label={`${dt("subject")} *`} htmlFor="subject" error={errors.subject && t("required")}>
+            <input id="subject" {...register("subject", { required: true })} className="field-input" />
+          </Field>
+          <Field label={`${dt("messageBody")} *`} htmlFor="body" error={errors.body && t("required")}>
+            <textarea id="body" rows={9} {...register("body", { required: true })} className="field-input resize-y" />
+          </Field>
+          {send.isError && <Notice tone="error">{dt("sendFailed")}</Notice>}
+          <button type="submit" disabled={send.isPending} className={`${primaryBtn} self-start`}>
+            {send.isPending ? dt("sending") : dt("send")}
+          </button>
+        </form>
+      </Panel>
     </>
+  );
+}
+
+export default function ComposePage() {
+  return (
+    <RequireCap capability="reply_messages">
+      <Compose />
+    </RequireCap>
   );
 }

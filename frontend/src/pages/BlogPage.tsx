@@ -39,10 +39,10 @@ export default function BlogPage() {
                 <button
                   key={category.id}
                   type="button"
-                  onClick={() => setSearchParams({ category: category.slug })}
-                  aria-current={activeCategory === category.slug ? "true" : undefined}
+                  onClick={() => setSearchParams({ category: String(category.id) })}
+                  aria-current={activeCategory === String(category.id) ? "true" : undefined}
                   className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                    activeCategory === category.slug
+                    activeCategory === String(category.id)
                       ? "bg-brand-600 text-white"
                       : "border border-line text-muted hover:border-brand-600 hover:text-brand-600"
                   }`}

@@ -64,6 +64,39 @@ class Post(TranslatableModel):
 
     @property
     def is_published(self):
-        return self.status == self.Status.PUBLISHED and (
-            self.published_at is None or self.published_at <= timezone.now()
+        if self.status == self.Status.DRAFT:
+            return False
+        if self.status == self.Status.SCHEDULED and self.published_at is None:
+            return False
+        return self.published_at is None or self.published_at <= timezone.now()
+
+    @classmethod
+    def visible(cls):
+        """Posts the public may read: published, or scheduled and now due."""
+        now = timezone.now()
+        return cls.objects.filter(
+            models.Q(status=cls.Status.PUBLISHED, published_at__lte=now)
+            | models.Q(status=cls.Status.PUBLISHED, published_at__isnull=True)
+            | models.Q(status=cls.Status.SCHEDULED, published_at__lte=now)
         )
+
+
+class Comment(models.Model):
+    """A visitor's comment on a post. The email is kept for staff only and is
+    never returned by the public API."""
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    body = models.TextField(max_length=3000)
+    is_visible = models.BooleanField(default=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "تعليق"
+        verbose_name_plural = "التعليقات"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name} — {self.post}"

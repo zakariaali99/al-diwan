@@ -64,12 +64,20 @@ export function usePosts(category?: string) {
   });
 }
 
-export function usePost(slug: string) {
+export function usePost(id: number) {
   const lang = useLang();
   return useQuery({
-    queryKey: ["post", lang, slug],
-    queryFn: () => api.post(lang, slug),
-    enabled: Boolean(slug),
+    queryKey: ["post", lang, id],
+    queryFn: () => api.post(lang, id),
+    enabled: Number.isInteger(id) && id > 0,
+  });
+}
+
+export function usePostComments(id: number) {
+  return useQuery({
+    queryKey: ["post-comments", id],
+    queryFn: () => api.comments(id),
+    enabled: Number.isInteger(id) && id > 0,
   });
 }
 
