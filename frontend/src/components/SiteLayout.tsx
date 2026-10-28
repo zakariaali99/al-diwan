@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import logo from "@/assets/logo.png";
@@ -14,6 +14,18 @@ import {
 } from "./Icons";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeToggle from "./ThemeToggle";
+
+// Only page loads that land on the home page download the intro.
+const SiteIntro = lazy(() => import("./intro/SiteIntro"));
+
+/** The intro plays on every page load (or reload) that lands on the home page,
+ *  but not when navigating back to it inside the site. Decided once per load
+ *  because StrictMode calls state initialisers twice. */
+let introPending: boolean | undefined;
+function claimIntro(): boolean {
+  if (introPending === undefined) introPending = /^\/([a-z]{2}\/?)?$/.test(window.location.pathname);
+  return introPending;
+}
 
 function Header() {
   const t = useT();
@@ -302,8 +314,22 @@ function Footer() {
 
 export default function SiteLayout() {
   const t = useT();
+  const [showIntro, setShowIntro] = useState(claimIntro);
+
   return (
     <div className="flex min-h-screen flex-col">
+      {showIntro && (
+        // The cover matches the intro's backdrop so the page never flashes
+        // while its chunk loads.
+        <Suspense fallback={<div className="fixed inset-0 z-[90] bg-[#0C2E4C]" />}>
+          <SiteIntro
+            onDone={() => {
+              introPending = false;
+              setShowIntro(false);
+            }}
+          />
+        </Suspense>
+      )}
       <a
         href="#main"
         className="absolute start-4 top-[-100px] z-[100] rounded-b-lg bg-brand-600 px-5 py-3 font-semibold text-white transition-all focus:top-0"

@@ -416,6 +416,18 @@ const strings = {
     tr: "Henüz hiçbir bölüme erişiminiz yok. Bir yöneticiyle iletişime geçin.",
   },
 
+  // --- Site intro ---
+  introConforms: { ar: "مطابق!", en: "Conforms!", es: "¡Conforme!", it: "Conforme!", zh: "合规！", tr: "Uygun!" },
+  introTagline: {
+    ar: "نرى ما بداخل الشحنة.",
+    en: "We see what's inside the shipment.",
+    es: "Vemos lo que hay dentro del envío.",
+    it: "Vediamo cosa c'è dentro la spedizione.",
+    zh: "我们看清货物的内部。",
+    tr: "Sevkiyatın içini görüyoruz.",
+  },
+  introSkip: { ar: "تخطّي المقدمة", en: "Skip intro", es: "Saltar intro", it: "Salta intro", zh: "跳过片头", tr: "Girişi atla" },
+
   // --- Generic ---
   loading: { ar: "جارٍ التحميل…", en: "Loading…", es: "Cargando…", it: "Caricamento…", zh: "加载中…", tr: "Yükleniyor…" },
   errorLoading: { ar: "تعذّر تحميل البيانات.", en: "Couldn't load data.", es: "No se pudieron cargar los datos.", it: "Impossibile caricare i dati.", zh: "数据加载失败。", tr: "Veriler yüklenemedi." },
