@@ -9,8 +9,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/aldiwanl/al-diwan.ly
-    - export VENV=/home/aldiwanl/virtualenv/al-diwan.ly/3.12/bin/activate
+    - export DEPLOYPATH=/home/aldiwanl/test
+    - export VENV=/home/aldiwanl/virtualenv/test/3.12/bin/activate
 
     # Copy backend folder contents (including the pre-built backend/dist React bundle).
     - /bin/cp -R backend/config backend/accounts backend/api backend/messaging backend/pages backend/posts backend/services backend/siteconfig backend/templates backend/static backend/dist backend/locale backend/manage.py backend/requirements.txt $DEPLOYPATH/
