@@ -5,10 +5,11 @@ from .base import *  # noqa: F401,F403
 DEBUG = False
 
 # Hashed + compressed filenames so static assets can be cached indefinitely.
+# Vite's own output is already hashed and is left alone (see config/storage.py).
 # Requires `collectstatic` on every deploy (wired into .cpanel.yml).
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    "staticfiles": {"BACKEND": "config.storage.ViteAwareStaticFilesStorage"},
 }
 
 # cPanel/Passenger sits behind Apache doing TLS termination.
